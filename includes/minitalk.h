@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minitalk.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:01:49 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/03/11 12:56:08 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/05/08 13:13:28 by francfer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,7 @@
 # include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 
 #endif
