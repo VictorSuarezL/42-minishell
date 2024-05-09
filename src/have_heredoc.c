@@ -1,5 +1,4 @@
-//#include <minishell.h>
-#include <stdio.h>
+#include <minishell.h>
 
 int	have_heredoc(char *str, int *pos)
 {
@@ -17,11 +16,35 @@ int	have_heredoc(char *str, int *pos)
 	return (0);
 }
 
-//int main()
-//{
-//	char str[100] = "grep -i `patron` <<  END       << END";
-//	int pos = 0;
+void	launch_heredoc(char *delimiter)
+{
+	char	*line = NULL;
+	char	*result = NULL;
+	char	*temp;
 
-//	printf("%d\n", have_heredoc(str, &pos));
-//	printf("%d\n", pos);
-//}
+	while (1)
+	{
+		ft_putchar_fd('>', 1);
+		line = get_next_line(1);
+		if (!line)
+		{
+			ft_putstr_fd("Error!\n", 2);
+			exit(1);
+		}
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free (line);
+			break;
+		}
+		if (!result)
+			result = ft_strdup(line);
+		else
+		{
+			temp = ft_strjoin(result, line);
+			free (result);
+			result = temp;
+		}
+		free (line);
+	}
+	return (result);
+}
