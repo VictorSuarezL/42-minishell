@@ -49,6 +49,8 @@ SRC_FILES		= $(SRC_DIR)/ft_isalpha.c \
 			$(SRC_DIR)/ft_error.c \
 			$(SRC_DIR)/ft_atod.c \
 			$(SRC_DIR)/ft_abs.c \
+			$(SRC_DIR)/ft_strtok.c \
+			$(SRC_DIR)/ft_strtok_r.c \
 
 
 SRC_BONUS_FILES	= $(SRC_DIR)/ft_lstnew_bonus.c \

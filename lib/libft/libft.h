@@ -69,6 +69,10 @@ void				ft_putnbr_fd(int n, int fd);
 void				ft_error(char *msg);
 double				ft_atod(char *str);
 double				ft_abs(double n);
+char	*ft_strtok_r(char *str, const char *delim, char **save_ptr);
+char	*ft_strtok(char *str, const char *delim);
+
+
 
 /* GET NEXT LINE */
 char				*get_next_line(int fd);

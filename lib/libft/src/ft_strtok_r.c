@@ -1,7 +1,4 @@
-#include <minishell.h>
-
-#include <stdio.h>
-#include <string.h>
+#include <libft.h>
 
 char	*ft_strtok_r(char *str, const char *delim, char **save_ptr)
 {
@@ -28,19 +25,4 @@ char	*ft_strtok_r(char *str, const char *delim, char **save_ptr)
 	else
 		*save_ptr = NULL;
 	return (start);
-}
-
-int main()
-{
-	char str[] = "Hola,** mundo   este* * es*un,ejemplo";
-	const char delim[] = "    *,";
-	char *save_ptr;
-	char *token = my_strtok(str, delim, &save_ptr);
-
-	while (token != NULL)
-	{
-		printf("%s\n", token);
-		token = my_strtok(NULL, delim, &save_ptr);
-	}
-	return 0;
 }

@@ -9,8 +9,9 @@ LIBFT_SRC = ./lib/libft/
 # Compiler
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
-CFLAGS				=	-Wall -Werror -Wextra 
-CC					=	gcc $(CFLAGS) $(INCLUDE)
+# CFLAGS				=	-Wall -Werror -Wextra 
+# CC					=	gcc $(CFLAGS) $(INCLUDE)
+CC					=	gcc $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -21,7 +22,7 @@ CYAN				=	\033[0;36m
 WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
-SRC_FILES = $(SRC_DIR)/server.c
+SRC_FILES = $(SRC_DIR)/main.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
