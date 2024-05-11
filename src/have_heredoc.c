@@ -44,7 +44,7 @@ void	create_file(char *info)
 {
 	int fd;
     
-	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(".heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if (fd == -1)
 	{
         perror("open");
@@ -62,7 +62,7 @@ void	launch_heredoc(char *delimiter)
 
 	while (1)
 	{
-		ft_putchar_fd('>', 1);
+		ft_putstr_fd("> ", 1);
 		line = get_next_line(1);
 		if (!line)
 		{
