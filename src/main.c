@@ -2,27 +2,15 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <fcntl.h>
 
 int main()
 {
-	char str[] = "Hola,** mundo   este* * es*un,ejemplo de ft_strtok_r";
-	const char delim[] = "    *,";
-	char *save_ptr;
-	char *token = ft_strtok_r(str, delim, &save_ptr);
-
-	while (token != NULL)
+	char	str[100] = "cat << ENF      ";
+	char	*delimiter = NULL;
+	if (have_heredoc(str, &delimiter))
 	{
-		printf("%s\n", token);
-		token = ft_strtok_r(NULL, delim, &save_ptr);
-	}
-
-    char strb[] = "Hola,mundo,este,es,un,ejemplo";
-    const char delimb[] = ",";
-    char *tokenb = ft_strtok(strb, delimb);
-
-	while (tokenb != NULL)
-	{
-		printf("%s\n", tokenb);
-		tokenb = ft_strtok(NULL, delimb);
+		//printf("%s", delimiter);
+		launch_heredoc("ENF\n");
 	}
 }
