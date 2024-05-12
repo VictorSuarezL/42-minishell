@@ -10,7 +10,8 @@ int main()
 	char	*delimiter = NULL;
 	if (have_heredoc(str, &delimiter))
 	{
-		//printf("%s", delimiter);
+		// printf("%s", delimiter);
 		launch_heredoc("ENF\n");
 	}
 }
+
