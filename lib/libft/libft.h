@@ -71,6 +71,7 @@ double				ft_atod(char *str);
 double				ft_abs(double n);
 char	*ft_strtok_r(char *str, const char *delim, char **save_ptr);
 char	*ft_strtok(char *str, const char *delim);
+int	ft_strcmp(const char *s1, const char *s2);
 
 
 
