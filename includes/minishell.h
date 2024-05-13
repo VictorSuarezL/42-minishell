@@ -6,7 +6,7 @@
 /*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:01:49 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/11 12:26:03 by francfer         ###   ########.fr       */
+/*   Updated: 2024/05/13 08:10:04 by francfer         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -29,5 +29,10 @@ char	*get_delimiter(char **delimiter);
 int	    have_heredoc(char *str, char **delimiter);
 void	create_file(char *info);
 void	launch_heredoc(char *delimiter);
+void    echo_builtin(char *input);
+void    cd_builtin(const char *path);
+void    pwd_builtin(void);
+void    exit_builtin(int status);
+void    env_builtin(char **env);
 
 #endif

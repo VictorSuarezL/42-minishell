@@ -22,7 +22,9 @@ CYAN				=	\033[0;36m
 WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
-SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c $(SRC_DIR)/ft_strcmp.c
+SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c $(SRC_DIR)/ft_strcmp.c \
+$(SRC_DIR)/echo_builtin.c $(SRC_DIR)/cd_builtin.c $(SRC_DIR)/pwd_builtin.c \
+$(SRC_DIR)/exit_builtin.c $(SRC_DIR)/env_builtin.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
