@@ -1,14 +1,15 @@
 NAME = minishell
 OBJ_DIR = obj
 SRC_DIR = src
-
+USERNAME = $(shell whoami)
 # Libft
 LIBFT = libft.a
 LIBFT_SRC = ./lib/libft/
 
 # Compiler
 RM					=	rm -f
-INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
+INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC) -I /Users/$(USERNAME)/.brew/opt/readline/include
+
 # CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc $(CFLAGS) $(INCLUDE)
 CC					=	gcc $(INCLUDE)
@@ -22,9 +23,10 @@ CYAN				=	\033[0;36m
 WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
-SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c $(SRC_DIR)/ft_strcmp.c \
+SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c\
 $(SRC_DIR)/echo_builtin.c $(SRC_DIR)/cd_builtin.c $(SRC_DIR)/pwd_builtin.c \
-$(SRC_DIR)/exit_builtin.c $(SRC_DIR)/env_builtin.c
+$(SRC_DIR)/exit_builtin.c $(SRC_DIR)/env_builtin.c $(SRC_DIR)/display_prompt.c \
+$(SRC_DIR)/unset_builtin.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
@@ -39,7 +41,7 @@ $(OBJ_DIR)/%.o: %.c Makefile
 	$(CC) -c $< -o $@
 
 $(NAME): $(LIBFT_SRC)/libft.a $(OBJ_FILES)
-	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -o $(NAME)
+	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -L/Users/francfer/.brew/opt/readline/lib -lreadline -o $(NAME)
 
 clean:
 	$(RM) $(OBJ_FILES)

@@ -50,5 +50,3 @@ void echo_builtin(char *input)
     if (line)
         ft_putchar_fd('\n', 1);
 }
-
-

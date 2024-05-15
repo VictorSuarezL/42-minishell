@@ -1,26 +1,27 @@
 #include <minishell.h>
 
-char *get_delimiter(char **delimiter)
+char	*get_delimiter(char **delimiter)
 {
-    char *start;
+	char	*start;
 
 	start = *delimiter;
-    if (*delimiter)
+	if (*delimiter)
 	{
 		while (**delimiter == '<' || **delimiter == ' ')
 			(*delimiter)++;
 		start = *delimiter;
 		while (**delimiter != ' ' && **delimiter != '\0')
 			(*delimiter)++;
-		if (**delimiter == ' ')
-			**delimiter = '\0';
 	}
+	**delimiter = '\n';
+	(*delimiter)++;
+	**delimiter = '\0';
 	return (start);
 }
 
-int have_heredoc(char *str, char **delimiter)
+int	have_heredoc(char *str, char **delimiter)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i + 1])
@@ -34,7 +35,6 @@ int have_heredoc(char *str, char **delimiter)
 		i++;
 	}
 	*delimiter = get_delimiter(delimiter);
-	//treat_delimiter(delimiter);
 	if (*delimiter && **delimiter)
 		return (1);
 	return (0);
@@ -42,24 +42,27 @@ int have_heredoc(char *str, char **delimiter)
 
 void	create_file(char *info)
 {
-	int fd;
-    
+	int	fd;
+
 	fd = open(".heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
+	if (fd == -1)
 	{
-        perror("open");
+		perror("open");
 		free(info);
-        exit(1);
-    }
+		exit(1);
+	}
 	ft_putstr_fd(info, fd);
 }
 
 void	launch_heredoc(char *delimiter)
 {
-	char	*line = NULL;
-	char	*result = NULL;
-	char	*temp = NULL;
+	char	*line;
+	char	*result;
+	char	*temp;
 
+	line = NULL;
+	result = NULL;
+	temp = NULL;
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
@@ -72,7 +75,7 @@ void	launch_heredoc(char *delimiter)
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free (line);
-			break;
+			break ;
 		}
 		if (!result)
 			result = ft_strdup(line);

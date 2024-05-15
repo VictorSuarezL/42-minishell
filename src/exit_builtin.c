@@ -1,7 +1,8 @@
 #include <minishell.h>
 
-void    exit_builtin(int status)
+int	exit_builtin(void)
 {
-    ft_putstr_fd("exit\n", 1);
-    exit(status);
+	if (write(1, "", 0) == 0)
+		return (ft_putstr_fd("exit\n", 1), 0);
+	return (1);
 }

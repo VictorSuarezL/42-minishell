@@ -1,13 +1,11 @@
 #include <minishell.h>
 
-void pwd_builtin(void)
+int	pwd_builtin(void)
 {
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-        printf("%s\n", cwd);
-    else
-    {
-        perror("getcwd() error");
-        exit(EXIT_FAILURE);
-    }
+	char	cwd[4096];
+
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		return (printf("%s\n", cwd), 0);
+	else
+		return (perror("getcwd() error"), 1);
 }
