@@ -11,7 +11,7 @@ RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 # CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc $(CFLAGS) $(INCLUDE)
-CC					=	gcc $(INCLUDE)
+CC					=	gcc -g $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
