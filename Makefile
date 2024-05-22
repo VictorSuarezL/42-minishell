@@ -31,6 +31,7 @@ all: $(NAME)
 
 $(LIBFT_SRC)/libft.a:
 	make -C $(LIBFT_SRC)
+	make bonus -C $(LIBFT_SRC)
 
 $(OBJ_DIR)/%.o: %.c Makefile
 	@mkdir -p $(dir $@)
