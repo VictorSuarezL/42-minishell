@@ -1,14 +1,3 @@
-/******************************************************************************/
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/09 20:01:49 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/11 12:26:03 by francfer         ###   ########.fr       */
-/*                                                                            */
-/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -29,5 +18,6 @@ char	*get_delimiter(char **delimiter);
 int	    have_heredoc(char *str, char **delimiter);
 void	create_file(char *info);
 void	launch_heredoc(char *delimiter);
+char	**ft_split_m(char const *s);
 
 #endif
