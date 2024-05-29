@@ -70,7 +70,7 @@ BONUS_OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_BONUS_FILES))
 # DEP = $(addsuffix .d, $(basename $(SRC_FILES)))
 
 # Comandos y variables adicionales
-CC			= gcc -Wall -Wextra -Werror -MMD -I$(INCLUDE)
+CC			= clang -Wall -Wextra -Werror -MMD -I$(INCLUDE)
 RM			= rm -f
 
 # Colours

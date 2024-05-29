@@ -23,18 +23,39 @@ int	is_pipe_end(char *str)
 int	quote_counter(char *str)
 {
 	int	i;
-	int	flag;
+	int flag;
+	int	flag_a;
+	int	flag_b;
 
 	i = 0;
 	flag = 0;
+	flag_a = 0;
+	flag_b = 0;
 	while (str[i])
 	{
-		if (str[i] == '\"' || str[i] == '\'')
+		if (str[i] == '\'' && flag == 0)	
 		{
 			flag = 1;
 		}
+		else if (str[i] == '\'' && flag == 1)
+		{
+			flag = 0;
+		}
+		if (str[i] == '\"' && flag == 0)	
+		{
+			flag = 1;
+		}
+		else if (str[i] == '\"' && flag == 1)
+		{
+			flag = 0;
+		}
 		i++;
 	}
+	if (flag_a || flag_b)
+	{
+		flag = 1;
+	}
+	
 	return (flag);
 }
 
@@ -65,6 +86,10 @@ int	validator(char *str)
 	{
 		return (0);
 	}
+	else if (is_pipe_end(str))
+	{
+		return 0;
+	}
 	else
 	{
 		return 1;
@@ -74,14 +99,14 @@ int	validator(char *str)
 int	main(void)
 {
 	t_list	**lst;
-	char	str[100] = "echo -E 'Hola $USER Esto     es un ejemplo' >> miarchivo.txt '";
+	char	str[100] = "echo -E 'Hola $USER Esto '   es un ejemplo >> miarchivo.txt |";
 	char	**args_split;
 	int		i;
 	t_list	*current;
 
 	if (!validator(str))
 	{
-		ft_error("Wrong input!");
+		ft_error("Wrong input!!!");
 		return 0;
 	}
 	
