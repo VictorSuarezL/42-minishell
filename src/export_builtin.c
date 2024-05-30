@@ -53,14 +53,14 @@ int add_variable(char *variable, char ***export) {
 
     key = ft_strdup(variable);
     value = ft_strchr(key, '=');
-    if (value != NULL)
-	{
+    if (value != NULL) {
         *value = '\0';
         value++; 
     }
+
     if (*export != NULL) {
         for (current = *export; *current != NULL; current++) {
-            if (ft_strncmp(*current, key, ft_strlen(key)) == 0 && (*current)[ft_strlen(key)] == '=') {
+            if (ft_strncmp(*current, key, ft_strlen(key)) == 0 && ((*current)[ft_strlen(key)] == '=' || (*current)[ft_strlen(key)] == '\0')) {
                 free(*current);
                 *current = ft_strdup(variable);
                 free(key);
@@ -70,18 +70,19 @@ int add_variable(char *variable, char ***export) {
         while ((*export)[count] != NULL)
             count++;
     }
+
     new_export = realloc(*export, sizeof(char *) * (count + 2));
     if (new_export == NULL) {
         perror("Failed to allocate memory");
         free(key);
         return 1;
     }
+    *export = new_export;
+
     if (value != NULL) {
-        // If value is not NULL, it means there is an '=' in the variable
         new_export[count] = ft_strdup(variable);
     } else {
-        // If value is NULL, it means there is no '=' in the variable
-        new_export[count] = ft_strdup(key); // Assign key only
+        new_export[count] = ft_strdup(key);
     }
 
     if (new_export[count] == NULL) {
@@ -90,10 +91,10 @@ int add_variable(char *variable, char ***export) {
         return 1;
     }
     new_export[count + 1] = NULL;
-    *export = new_export;
     free(key);
     return 0;
 }
+
 
 int	export_builtin(char **variables, char ***export)
 {
