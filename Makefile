@@ -8,11 +8,11 @@ LIBFT_SRC = ./lib/libft/
 
 # Compiler
 RM					=	rm -f
-INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC) -I /Users/$(USERNAME)/.brew/opt/readline/include
+INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 
 # CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc $(CFLAGS) $(INCLUDE)
-CC					=	gcc $(INCLUDE)
+CC					=	clang $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -26,7 +26,7 @@ RESET				=	\033[0m
 SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c\
 $(SRC_DIR)/echo_builtin.c $(SRC_DIR)/cd_builtin.c $(SRC_DIR)/pwd_builtin.c \
 $(SRC_DIR)/exit_builtin.c $(SRC_DIR)/env_builtin.c $(SRC_DIR)/display_prompt.c \
-$(SRC_DIR)/unset_builtin.c
+$(SRC_DIR)/unset_builtin.c $(SRC_DIR)/export_builtin.c $(SRC_DIR)/realloc.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
@@ -41,7 +41,7 @@ $(OBJ_DIR)/%.o: %.c Makefile
 	$(CC) -c $< -o $@
 
 $(NAME): $(LIBFT_SRC)/libft.a $(OBJ_FILES)
-	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -L/Users/francfer/.brew/opt/readline/lib -lreadline -o $(NAME)
+	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -lreadline -o $(NAME)
 
 clean:
 	$(RM) $(OBJ_FILES)

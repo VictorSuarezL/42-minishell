@@ -48,10 +48,10 @@ int	unset_builtin(char **env, char *var)
 	size_t	i;
 
 	if (!var)
-		return (-1);
+		return (1);
 	new_env = malloc((count_env_vars(env) + 1) * sizeof(char *));
 	if (!new_env)
-		return (-1);
+		return (1);
 	new_index = 0;
 	i = -1;
 	while (env[++i])
