@@ -44,57 +44,65 @@ void	print_str(char **str_array)
 	}
 }
 
-int add_variable(char *variable, char ***export) {
-    int count = 0;
-    char **new_export;
-    char *key;
-    char *value;
-    char **current;
+int	add_variable(char *variable, char ***export)
+{
+	int		count;
+	char	**new_export;
+	char	*key;
+	char	*value;
+	char	**current;
 
-    key = ft_strdup(variable);
-    value = ft_strchr(key, '=');
-    if (value != NULL) {
-        *value = '\0';
-        value++; 
-    }
-
-    if (*export != NULL) {
-        for (current = *export; *current != NULL; current++) {
-            if (ft_strncmp(*current, key, ft_strlen(key)) == 0 && ((*current)[ft_strlen(key)] == '=' || (*current)[ft_strlen(key)] == '\0')) {
-                free(*current);
-                *current = ft_strdup(variable);
-                free(key);
-                return (*current == NULL) ? 1 : 0;
-            }
-        }
-        while ((*export)[count] != NULL)
-            count++;
-    }
-
-    new_export = realloc(*export, sizeof(char *) * (count + 2));
-    if (new_export == NULL) {
-        perror("Failed to allocate memory");
-        free(key);
-        return 1;
-    }
-    *export = new_export;
-
-    if (value != NULL) {
-        new_export[count] = ft_strdup(variable);
-    } else {
-        new_export[count] = ft_strdup(key);
-    }
-
-    if (new_export[count] == NULL) {
-        perror("Failed to allocate memory for variable");
-        free(key);
-        return 1;
-    }
-    new_export[count + 1] = NULL;
-    free(key);
-    return 0;
+	count = 0;
+	key = ft_strdup(variable);
+	value = ft_strchr(key, '=');
+	if (value != NULL)
+	{
+		*value = '\0';
+		value++;
+	}
+	if (*export != NULL)
+	{
+		for (current = *export; *current != NULL; current++)
+		{
+			if (ft_strncmp(*current, key, ft_strlen(key)) == 0
+				&& ((*current)[ft_strlen(key)] == '='
+					|| (*current)[ft_strlen(key)] == '\0'))
+			{
+				free(*current);
+				*current = ft_strdup(variable);
+				free(key);
+				return ((*current == NULL) ? 1 : 0);
+			}
+		}
+		while ((*export)[count] != NULL)
+			count++;
+	}
+	new_export = realloc(*export, sizeof(char *) * (count + 2));
+	if (new_export == NULL)
+	{
+		perror("Failed to allocate memory");
+		free(key);
+		return (1);
+	}
+	*export = new_export;
+	if (value != NULL)
+	{
+		new_export[count] = ft_strdup(variable);
+	}
+	else
+	{
+		new_export[count] = ft_strdup(key);
+	}
+	if (new_export[count] == NULL)
+	{
+		perror("Failed to allocate memory for variable");
+		free(key);
+		return (1);
+	}
+	new_export[count + 1] = NULL;
+	free(key);
+	return (0);
 }
-
 
 int	export_builtin(char **variables, char ***export)
 {
