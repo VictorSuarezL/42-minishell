@@ -27,7 +27,7 @@ SRC_FILES = $(SRC_DIR)/have_heredoc.c $(SRC_DIR)/main.c\
 $(SRC_DIR)/echo_builtin.c $(SRC_DIR)/cd_builtin.c $(SRC_DIR)/pwd_builtin.c \
 $(SRC_DIR)/exit_builtin.c $(SRC_DIR)/env_builtin.c $(SRC_DIR)/display_prompt.c \
 $(SRC_DIR)/unset_builtin.c $(SRC_DIR)/export_builtin.c $(SRC_DIR)/realloc.c \
-$(SRC_DIR)/builtins_utils.c $(SRC_DIR)/builtins1_utils.c
+$(SRC_DIR)/builtins_utils.c $(SRC_DIR)/builtins1_utils.c $(SRC_DIR)/ft_strcpy.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 

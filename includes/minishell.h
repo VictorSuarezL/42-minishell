@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
+/*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:01:49 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/06/03 15:38:32 by  francfer        ###   ########.fr       */
+/*   Updated: 2024/06/03 21:01:28 by francfer         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -23,6 +23,9 @@
 # include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
+
+char *ft_strcpy(char *dest, const char *src);
+char *get_oldpwd(char **env);
 
 int		ft_strcmp(const char *s1, const char *s2);
 char	*get_delimiter(char **delimiter);

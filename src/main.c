@@ -109,23 +109,23 @@ int	main(void)
 	return (0);
 } */
 
-int main(int argc, char *argv[], char *envp[])
-{
-    const char *path = argv[1];
-    if (cd_builtin(path, envp) == 1) {
-        printf("Failed to change directory to %s\n", path);
-        return 1;
-    }
+// int main(int argc, char *argv[], char *envp[])
+// {
+//     const char *path = argv[1];
+//     if (cd_builtin(path, envp) == 1) {
+//         printf("Failed to change directory to %s\n", path);
+//         return 1;
+//     }
 
-    char cwd[1024];
-    if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        printf("Current working directory: %s\n", cwd);
-    } else {
-        perror("getcwd");
-    }	
-	print_str(envp);
-    return 0;
-}
+//     char cwd[1024];
+//     if (getcwd(cwd, sizeof(cwd)) != NULL) {
+//         printf("Current working directory: %s\n", cwd);
+//     } else {
+//         perror("getcwd");
+//     }	
+// 	print_str(envp);
+//     return 0;
+// }
 
 /* int main(int argc, char *argv[], char *envp[])
 {
@@ -185,6 +185,47 @@ int main(int argc, char *argv[])
 //     if (env_builtin(argv[1], envp) == 1) {
 //         return 1;
 //     }
+
+//     return 0;
+// }
+
+// int main(int argc, char **argv, char **envp)
+// {
+//     if (argc < 2) {
+//         fprintf(stderr, "Usage: %s <directory> [<directory> ...]\n", argv[0]);
+//         return 1;
+//     }
+
+//     // Create a copy of the environment
+//     int env_count;
+//     for (env_count = 0; envp[env_count] != NULL; env_count++);
+//     char **env = malloc((env_count + 1) * sizeof(char *));
+//     for (int i = 0; i < env_count; i++) {
+//         env[i] = ft_strdup(envp[i]);
+//     }
+//     env[env_count] = NULL;
+
+//     // Call cd_builtin for each directory provided as argument
+//     for (int i = 1; i < argc; i++) {
+//         printf("Changing directory to: %s\n", argv[i]);
+//         if (cd_builtin(argv[i], env) != 0) {
+//             fprintf(stderr, "Failed to change directory to %s\n", argv[i]);
+//         }
+
+//         // Print the value of OLDPWD
+//         char *oldpwd = get_oldpwd(env);
+//         if (oldpwd) {
+//             printf("OLDPWD is now: %s\n", oldpwd);
+//         } else {
+//             printf("OLDPWD is not set\n");
+//         }
+//     }
+
+//     // Free the copied environment
+//     for (int i = 0; i < env_count; i++) {
+//         free(env[i]);
+//     }
+//     free(env);
 
 //     return 0;
 // }
