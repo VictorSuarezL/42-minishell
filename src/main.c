@@ -48,30 +48,20 @@ int	main(void)
 		launch_heredoc(del);
 	}
 } */
-/* int main(int argc, char *argv[], char *envp[])
-{
-	env_copy = copy_env(envp);
-	if (!env_copy)
-		return (printf("Failed to copy environment\n"),1);
-	printf("Original environment:\n");
-	for (int i = 0; envp[i]; i++)
-		printf("%s\n", envp[i]);
-	variable_to_unset = argv[1];
-	if (unset_builtin(env_copy, variable_to_unset) == -1)
-		return (printf("Failed to unset variable %s\n", variable_to_unset),
-			free_double(env_copy), 1);
-	printf("\nEnvironment after unsetting %s:\n", variable_to_unset);
-	for (int i = 0; env_copy[i]; i++)
-		printf("%s\n", env_copy[i]);
-	free_double(env_copy);
-	return (0);
-} */
+// int main(int argc, char *argv[], char *envp[])
+// {
+// 	char **env_copy = copy_env(envp);
+// 	if (!env_copy)
+// 		return (printf("Failed to copy environment\n"),1);
+// 	if (unset_builtin(env_copy, argv) == 1)
+// 		return (printf("Failed to unset variable %s\n", "xd"),
+// 			free_double(env_copy), 1);
+// 	for (int i = 0; env_copy[i]; i++)
+// 		printf("%s\n", env_copy[i]);
+// 	free_double(env_copy);
+// 	return (0);
+// }
 
-/* int main ()
-{
-	if (pwd_builtin())
-		printf("Ha fallado pwd\n");
-} */
 
 /* int main()
 {
@@ -93,50 +83,12 @@ int	main(void)
 	return (0);
 } */
 
-/* int	export_builtin(char *variable, char ***export)
-{
-	int		count;
-	char	**new_export;
-	int		i;
 
-	if (empty_string(variable))
-	{
-		print_str(*export);
-		return (0);
-	}
-	else
-	{
-		count = 0;
-		if (*export != NULL)
-			while ((*export)[count] != NULL)
-				count++;
-		new_export = malloc(sizeof(char *) * (count + 2));
-		if (new_export == NULL)
-		{
-			perror("Failed to allocate memory");
-			return (1);
-		}
-		i = -1;
-		while (++i < count)
-			new_export[i] = (*export)[i];
-		new_export[count] = ft_strdup(variable);
-		if (new_export[count] == NULL)
-		{
-			perror("Failed to allocate memory for variable");
-			free(new_export);
-			return (1);
-		}
-		new_export[count + 1] = NULL;
-		*export = new_export;
-		return (0);
-	}
-} */
-
-/* int main(int args, char **argv, char **env)
-{
-	cd_builtin(argv[1], env);
-	pwd_builtin();
-} */
+// int main(int args, char **argv, char **env)
+// {
+// 	cd_builtin(argv[1], env);
+// 	pwd_builtin();
+// }
 
 int	main(int argc, char *argv[], char **env)
 {
@@ -164,3 +116,75 @@ int	main(int argc, char *argv[], char **env)
 	free(export);
 	return (0);
 }
+
+// int main(int argc, char *argv[], char *envp[])
+// {
+//     const char *path = argv[1];
+//     if (cd_builtin(path, envp) == 1) {
+//         printf("Failed to change directory to %s\n", path);
+//         return 1;
+//     }
+
+//     char cwd[1024];
+//     if (getcwd(cwd, sizeof(cwd)) != NULL) {
+//         printf("Current working directory: %s\n", cwd);
+//     } else {
+//         perror("getcwd");
+//     }
+
+//     return 0;
+// }
+
+// int main(int argc, char *argv[], char *envp[])
+// {
+//     if (pwd_builtin() == 1) {
+//         printf("Failed to get current working directory\n");
+//         return 1;
+//     }
+
+//     return 0;
+// }
+
+
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
+// #include <unistd.h>
+// int main(int argc, char *argv[])
+// {
+//     // Combine all command line arguments into a single string
+//     size_t input_len = 0;
+//     for (int i = 1; i < argc; i++) {
+//         input_len += strlen(argv[i]) + 1;
+//     }
+
+//     char *input = malloc(input_len);
+//     if (!input) {
+//         perror("malloc");
+//         return 1;
+//     }
+
+//     input[0] = '\0';
+//     for (int i = 1; i < argc; i++) {
+//         strcat(input, argv[i]);
+//         if (i < argc - 1) {
+//             strcat(input, " ");
+//         }
+//     }
+//     echo_builtin(input);
+
+//     free(input);
+//     return 0;
+// }
+
+// int main(int argc, char *argv[], char *envp[])
+// {
+//     (void)argc;  // Suppress unused parameter warning
+//     (void)argv;  // Suppress unused parameter warning
+    
+//     if (env_builtin(argv[1], envp) == 1) {
+//         return 1;
+//     }
+
+//     return 0;
+// }
