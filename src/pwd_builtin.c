@@ -5,7 +5,7 @@ int	pwd_builtin(void)
 	char	cwd[4096];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		return (printf("%s\n", cwd), 0);
+		return (ft_printf("%s\n", cwd), 0);
 	else
 		return (perror("getcwd() error"), 1);
 }

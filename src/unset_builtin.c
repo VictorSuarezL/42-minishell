@@ -48,6 +48,7 @@ int	unset_builtin(char **env, char **vars)
 	size_t	i;
 	size_t	j;
 	size_t	var_len;
+	int		should_free;
 
 	if (!vars[0])
 		return (1);
@@ -58,16 +59,17 @@ int	unset_builtin(char **env, char **vars)
 	i = 0;
 	while (env[i])
 	{
-		int should_free = 0;
+		should_free = 0;
 		j = 0;
 		while (vars[j])
 		{
 			var_len = ft_strlen(vars[j]);
-			if (ft_strncmp(env[i], vars[j], var_len) == 0 && env[i][var_len] == '=')
+			if (ft_strncmp(env[i], vars[j], var_len) == 0
+				&& env[i][var_len] == '=')
 			{
 				free(env[i]);
 				should_free = 1;
-				break;
+				break ;
 			}
 			j++;
 		}

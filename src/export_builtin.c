@@ -1,106 +1,97 @@
 #include <minishell.h>
 
-void	ft_swap(char **a, char **b)
+// Function to split the variable into key and value
+void	split_variable(char *variable, char **key, char **value)
 {
-	char	*temp;
-
-	temp = *a;
-	*a = *b;
-	*b = temp;
+	*key = ft_strdup(variable);
+	*value = ft_strchr(*key, '=');
+	if (*value != NULL)
+	{
+		**value = '\0';
+		(*value)++;
+	}
 }
 
-void	sort_strings(char **str)
+// Function to find if the key already exists and update it
+int	find_and_update(char **export, char *variable, char *key)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	while (str[i])
+	for (char **current = export; *current != NULL; current++)
 	{
-		j = 0;
-		while (str[j + 1])
+		if (ft_strncmp(*current, key, ft_strlen(key)) == 0
+			&& ((*current)[ft_strlen(key)] == '='
+			|| (*current)[ft_strlen(key)] == '\0'))
 		{
-			if (ft_strcmp(str[j], str[j + 1]) > 0)
-				ft_swap(&str[j], &str[j + 1]);
-			j++;
+			free(*current);
+			*current = ft_strdup(variable);
+			return ((*current == NULL) ? 1 : 0);
 		}
-		i++;
 	}
+	return (-1); // Not found
 }
 
-int	empty_string(char *str)
+// Function to allocate new export array
+char	**allocate_new_export(char **export, int count)
 {
-	return (str == NULL || *str == '\0');
-}
+	char	**new_export;
 
-void	print_str(char **str_array)
-{
-	if (str_array == NULL)
-		return ;
-	while (*str_array)
+	new_export = (char **)malloc(sizeof(char *) * (count + 2));
+	if (new_export == NULL)
 	{
-        ft_printf("declare -x ");
-		ft_printf("%s\n", *str_array);
-		str_array++;
+		perror("Failed to allocate memory");
 	}
+	return (new_export);
 }
 
-int add_variable(char *variable, char ***export)
+// Function to add new variable to export array
+int	add_new_variable(char ***export, char *variable, char *key, char *value,
+		int count)
 {
-    int count = 0;
-    char **new_export;
-    char *key;
-    char *value;
-    char **current;
+	char	**new_export;
 
-    key = ft_strdup(variable);
-    value = ft_strchr(key, '=');
-    if (value != NULL)
-    {
-        *value = '\0';
-        value++;
-    }
-    if (*export != NULL)
-    {
-        for (current = *export; *current != NULL; current++)
-        {
-            if (ft_strncmp(*current, key, ft_strlen(key)) == 0 && ((*current)[ft_strlen(key)] == '=' || (*current)[ft_strlen(key)] == '\0'))
-            {
-                free(*current);
-                *current = ft_strdup(variable);
-                free(key);
-                return (*current == NULL) ? 1 : 0;
-            }
-        }
-        while ((*export)[count] != NULL)
-            count++;
-    }
-    new_export = (char **)malloc(sizeof(char *) * (count + 2));
-    if (new_export == NULL)
-    {
-        perror("Failed to allocate memory");
-        free(key);
-        return 1;
-    }
-    for (int i = 0; i < count; i++)
-        new_export[i] = (*export)[i];
-    if (*export != NULL)
-        free(*export);
-    if (value != NULL)
-        new_export[count] = ft_strdup(variable);
-    else
-        new_export[count] = ft_strdup(key);
-    if (new_export[count] == NULL)
-    {
-        perror("Failed to allocate memory for variable");
-        free(key);
-        free(new_export);
-        return 1;
-    }
-    new_export[count + 1] = NULL;
-    *export = new_export;
-    free(key);
-    return 0;
+	new_export = allocate_new_export(*export, count);
+	if (new_export == NULL)
+	{
+		free(key);
+		return (1);
+	}
+	copy_export(new_export, *export, count);
+	if (*export != NULL)
+		free(*export);
+	new_export[count] = (value != NULL) ? ft_strdup(variable) : ft_strdup(key);
+	if (new_export[count] == NULL)
+	{
+		perror("Failed to allocate memory for variable");
+		free(key);
+		free(new_export);
+		return (1);
+	}
+	new_export[count + 1] = NULL;
+	*export = new_export;
+	free(key);
+	return (0);
+}
+
+int	add_variable(char *variable, char ***export)
+{
+	int		count;
+	int		update_result;
+	char	*key;
+	char	*value;
+
+	count = 0;
+	split_variable(variable, &key, &value);
+	if (*export != NULL)
+	{
+		update_result = find_and_update(*export, variable, key);
+		if (update_result != -1)
+		{
+			free(key);
+			return (update_result);
+		}
+		while ((*export)[count] != NULL)
+			count++;
+	}
+	return (add_new_variable(export, variable, key, value, count));
 }
 
 int	export_builtin(char **variables, char ***export)

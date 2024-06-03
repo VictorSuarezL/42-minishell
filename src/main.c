@@ -62,25 +62,17 @@ int	main(void)
 // 	return (0);
 // }
 
-
-/* int main()
+/* int main(int argc, char **argv)
 {
-	printf("Testing input: \"%s\"\n", input1);
-	printf("---------------------------------\n");
-	echo_builtin(input1);
-	printf("Testing input: \"%s\"\n", input2);
-	printf("---------------------------------\n");
-	echo_builtin(input2);
-	printf("Testing input: \"%s\"\n", input3);
-	printf("---------------------------------\n");
-	echo_builtin(input3);
-	printf("Testing input: \"%s\"\n", input4);
-	printf("---------------------------------\n");
-	echo_builtin(input4);
-	printf("Testing input: \"%s\"\n", input5);
-	printf("---------------------------------\n");
-	echo_builtin(input5);
-	return (0);
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: %s <string>\n", argv[0]);
+        return 1;
+    }
+
+    echo_builtin(argv[1]);
+
+    return 0;
 } */
 
 
@@ -90,7 +82,7 @@ int	main(void)
 // 	pwd_builtin();
 // }
 
-int	main(int argc, char *argv[], char **env)
+/* int	main(int argc, char *argv[], char **env)
 {
 	char **export = copy_env(env);
 
@@ -115,67 +107,75 @@ int	main(int argc, char *argv[], char **env)
 	}
 	free(export);
 	return (0);
+} */
+
+int main(int argc, char *argv[], char *envp[])
+{
+    const char *path = argv[1];
+    if (cd_builtin(path, envp) == 1) {
+        printf("Failed to change directory to %s\n", path);
+        return 1;
+    }
+
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("Current working directory: %s\n", cwd);
+    } else {
+        perror("getcwd");
+    }	
+	print_str(envp);
+    return 0;
 }
 
-// int main(int argc, char *argv[], char *envp[])
-// {
-//     const char *path = argv[1];
-//     if (cd_builtin(path, envp) == 1) {
-//         printf("Failed to change directory to %s\n", path);
-//         return 1;
-//     }
+/* int main(int argc, char *argv[], char *envp[])
+{
+    const char *path = argv[1];
+    if (cd_builtin(path, envp) == 1) {
+        printf("Failed to change directory to %s\n", path);
+        return 1;
+    }
 
-//     char cwd[1024];
-//     if (getcwd(cwd, sizeof(cwd)) != NULL) {
-//         printf("Current working directory: %s\n", cwd);
-//     } else {
-//         perror("getcwd");
-//     }
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("Current working directory: %s\n", cwd);
+    } else {
+        perror("getcwd");
+    }	
 
-//     return 0;
-// }
-
-// int main(int argc, char *argv[], char *envp[])
-// {
-//     if (pwd_builtin() == 1) {
-//         printf("Failed to get current working directory\n");
-//         return 1;
-//     }
-
-//     return 0;
-// }
+    return 0;
+} */
 
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <unistd.h>
-// int main(int argc, char *argv[])
-// {
-//     // Combine all command line arguments into a single string
-//     size_t input_len = 0;
-//     for (int i = 1; i < argc; i++) {
-//         input_len += strlen(argv[i]) + 1;
-//     }
+/* #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+int main(int argc, char *argv[])
+{
+    // Combine all command line arguments into a single string
+    size_t input_len = 0;
+    for (int i = 1; i < argc; i++) {
+        input_len += strlen(argv[i]) + 1;
+    }
 
-//     char *input = malloc(input_len);
-//     if (!input) {
-//         perror("malloc");
-//         return 1;
-//     }
+    char *input = malloc(input_len);
+    if (!input) {
+        perror("malloc");
+        return 1;
+    }
 
-//     input[0] = '\0';
-//     for (int i = 1; i < argc; i++) {
-//         strcat(input, argv[i]);
-//         if (i < argc - 1) {
-//             strcat(input, " ");
-//         }
-//     }
-//     echo_builtin(input);
+    input[0] = '\0';
+    for (int i = 1; i < argc; i++) {
+        strcat(input, argv[i]);
+        if (i < argc - 1) {
+            strcat(input, " ");
+        }
+    }
+    echo_builtin(input);
 
-//     free(input);
-//     return 0;
-// }
+    free(input);
+    return 0;
+} */
 
 // int main(int argc, char *argv[], char *envp[])
 // {

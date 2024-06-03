@@ -6,7 +6,7 @@
 /*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:01:49 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/05/30 13:46:59 by  francfer        ###   ########.fr       */
+/*   Updated: 2024/06/03 15:38:32 by  francfer        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ void	launch_heredoc(char *delimiter);
 void	echo_builtin(char *input);
 int		cd_builtin(const char *path, char **env);
 char	*get_path(char **env);
+void	update_env_var(char **env, const char *var, const char *value);
+char	*get_path(char **env);
 int		pwd_builtin(void);
 int		exit_builtin(void);
-int		env_builtin(char **env);
+int		env_builtin(char *input, char **env);
 char	*display_prompt(void);
-int		unset_builtin(char **env, char *variable);
+int		unset_builtin(char **env, char **vars);
 void	free_double(char **str);
 size_t	count_env_vars(char **env);
 char	**copy_env(char **env);
@@ -49,5 +51,11 @@ size_t	get_block_size(void *ptr);
 void	*my_malloc(size_t size);
 void	my_free(void *ptr);
 void	*ft_realloc(void *ptr, size_t new_size);
+void	copy_export(char **new_export, char **export, int count);
+int		skip_spaces(char *input, int i);
+void	ft_swap(char **a, char **b);
+void	sort_strings(char **str);
+int		empty_string(char *str);
+void	print_str(char **str_array);
 
 #endif
