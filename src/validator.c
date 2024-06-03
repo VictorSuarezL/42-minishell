@@ -55,14 +55,46 @@ static int	quote_counter(char *str)
 	return (flag);
 }
 
-static int	is_metacharacter_end(char *str)
+// int scape_special_characters(char *str)
+// {
+// 	int	i;
+// 	int	flag;
+
+// 	i = 0;
+// 	flag = 0;
+
+// 	if (/* condition */)
+// 	{
+// 		/* code */
+// 	}
+	
+
+// 	return (flag);
+// }
+
+int	ignore_sep(char *line, int i)
+{
+	if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == ';')
+		return (1);
+	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '|')
+		return (1);
+	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>')
+		return (1);
+	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>'
+				&& line[i + 2] && line[i + 2] == '>')
+		return (1);
+	return (0);
+}
+
+int	is_metacharacter_end(char *str)
 {
 	int	i;
 	int	len;
 
 	i = 0;
+	len = 0;
 	len = ft_strlen(str);
-	if (str[len - 1] == '>' || str[len - 1] == '<')
+	if (str[len - 2] != '\\' && ft_strchr("<>|;", str[len - 1]))
 	{
 		return (1);
 	}

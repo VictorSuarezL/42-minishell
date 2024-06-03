@@ -15,7 +15,7 @@
 int	main(void)
 {
 	t_list	**tokens;
-	char	str[100] = "echo         -E 'Hola $USER Esto '   es un ejemplo >> miarchivo.txt";
+	char	str[100] = "echo         -E 'Hola $USER Esto '   es un ejemplo >> miarchivo.txt \\>";
 	// char	str[100] = 'echo "Hola $USER Esto "';
 	char	**args_split;
 	int		i;
