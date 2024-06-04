@@ -22,11 +22,12 @@ CYAN				=	\033[0;36m
 WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
-SRC_FILES 	= $(SRC_DIR)/have_heredoc.c \
-				$(SRC_DIR)/split_m.c \
-				$(SRC_DIR)/main.c \
-				$(SRC_DIR)/validator.c \
+# SRC_FILES 	= $(SRC_DIR)/have_heredoc.c \
+# 				$(SRC_DIR)/split_m.c \
+# 				$(SRC_DIR)/main.c \
+# 				$(SRC_DIR)/validator.c \
 
+SRC_FILES = $(SRC_DIR)/sh.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
