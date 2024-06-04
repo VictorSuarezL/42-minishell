@@ -72,19 +72,7 @@ static int	quote_counter(char *str)
 // 	return (flag);
 // }
 
-int	ignore_sep(char *line, int i)
-{
-	if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == ';')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '|')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>')
-		return (1);
-	else if (line[i] && line[i] == '\\' && line[i + 1] && line[i + 1] == '>'
-				&& line[i + 2] && line[i + 2] == '>')
-		return (1);
-	return (0);
-}
+
 
 int	is_metacharacter_end(char *str)
 {
@@ -129,3 +117,4 @@ int	validator(char *str)
 		return (1);
 	}
 }
+
