@@ -226,6 +226,7 @@ backcmd(struct cmd *subcmd)
 // Parsing
 char whitespace[] = " \t\r\n\v";
 char symbols[] = "<|>&;()";
+
 int
 gettoken(char **ps, char *es, char **q, char **eq)
 {
@@ -268,8 +269,23 @@ gettoken(char **ps, char *es, char **q, char **eq)
   *ps = s;
   return ret;
 }
-int
-peek(char **ps, char *es, char *toks)
+
+
+/**
+ * Function: peek
+ * ----------------
+ * This function is used to check if the current character in the string `s` is one of the 
+ * characters in the `toks` string. In summary, the `peek` function skips any leading whitespace 
+ * in the string and then checks if the next character is one of the specified tokens. 
+ * It updates `ps` to point to this character and returns a boolean value indicating whether the character is a token character.
+ *
+ * ps: A pointer to a pointer to the current character in the string `s`.
+ * es: A pointer to the end of the string `s`.
+ * toks: A string containing the characters to be checked.
+ *
+ * returns: 1 if the current character is one of the characters in `toks`, 0 otherwise.
+ */
+int peek(char **ps, char *es, char *toks)
 {
   char *s;
   s = *ps;
@@ -282,6 +298,7 @@ struct cmd *parseline(char**, char*);
 struct cmd *parsepipe(char**, char*);
 struct cmd *parseexec(char**, char*);
 struct cmd *nulterminate(struct cmd*);
+
 struct cmd*
 parsecmd(char *s)
 {
@@ -297,11 +314,13 @@ parsecmd(char *s)
   nulterminate(cmd);
   return cmd;
 }
+
 struct cmd*
 parseline(char **ps, char *es)
 {
   struct cmd *cmd;
   cmd = parsepipe(ps, es);
+  // Maneja comandos en segundo plano, así cada vez que encuentre un & se llama a gettoken
   while(peek(ps, es, "&")){
     gettoken(ps, es, 0, 0);
     cmd = backcmd(cmd);
@@ -312,6 +331,7 @@ parseline(char **ps, char *es)
   }
   return cmd;
 }
+
 struct cmd*
 parsepipe(char **ps, char *es)
 {
