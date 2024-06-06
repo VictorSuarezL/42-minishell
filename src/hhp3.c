@@ -24,74 +24,74 @@ struct cmd
 
 int gettoken(char **ps, char *es, char **q, char **eq)
 {
-    char *s;
+    char *aux;
     int ret;
-    s = *ps;
-    while (s < es && strchr(whitespace, *s))
-        s++;
+    aux = *ps;
+    while (aux < es && ft_strchr(whitespace, *aux))
+        aux++;
     if (q)
-        *q = s;
-    ret = *s;
+        *q = aux;
+    ret = *aux;
 
-    if (*s == 0) 
+    if (*aux == 0) 
     {
         // No operation needed
     } 
     // else if (*s == '|' || *s == '(' || *s == ')' || *s == ';' || *s == '&' || *s == '<') 
-    else if (ft_strchr("|();&<", *s)) 
+    else if (ft_strchr("|();&<", *aux)) 
     {
-        s++;
+        aux++;
     } 
-    else if (*s == '>') 
+    else if (*aux == '>') 
     {
-        s++;
-        if (*s == '>') 
+        aux++;
+        if (*aux == '>') 
         {
             ret = '+';  // Indicate append redirection
-            s++;
+            aux++;
         }
     }
-    else if (*s == '"' || *s == '\'') 
+    else if (*aux == '"' || *aux == '\'') 
     { // Añadir manejo de comillas
-        char quote = *s;
-        s++;
+        char quote = *aux;
+        aux++;
         ret = 'a'; // Argumento entre comillas
-        while (s < es && *s != quote) 
+        while (aux < es && *aux != quote) 
         {
-            s++;
+            aux++;
         }
-        if (*s == quote) 
+        if (*aux == quote) 
         {
-            s++;
+            aux++;
         } 
     }
     else 
     {
         ret = 'a';
-        while (s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
-            s++;
+        while (aux < es && !strchr(whitespace, *aux) && !strchr(symbols, *aux))
+            aux++;
     }
 
     if (eq)
-        *eq = s;
+        *eq = aux;
     
-    while (s < es && strchr(whitespace, *s))
-        s++;
-    *ps = s;
+    while (aux < es && strchr(whitespace, *aux))
+        aux++;
+    *ps = aux;
     return ret;
 }
 
 
 int peek(char **ps, char *es, char *toks)
 {
-    char *s;
-    s = *ps;
-    while (s < es && ft_strchr(" \t\r\n\v", *s))
+    char *aux;
+    aux = *ps;
+    while (aux < es && ft_strchr(" \t\r\n\v", *aux))
     {
-        s++;
+        aux++;
     }
-    *ps = s;
-    if (*s && ft_strchr(toks, *s))
+    *ps = aux;
+    if (*aux && ft_strchr(toks, *aux))
         return 1;
     else
         return 0;
@@ -116,7 +116,7 @@ struct cmd*execcmd(void)
   return (struct cmd*)cmd;
 }
 
-struct cmd*parseexec(char **ps, char *es)
+struct cmd*parseexec(char **p_str, char *end_str)
 {
   char *q, *eq;
   int tok; 
@@ -129,9 +129,9 @@ struct cmd*parseexec(char **ps, char *es)
   cmd = (struct execcmd*)ret;
   argc = 0;
 //   ret = parseredirs(ret, ps, es);
-  while(!peek(ps, es, "|)&;"))
+  while(!peek(p_str, end_str, "|)&;"))
   {
-    tok=gettoken(ps, es, &q, &eq);
+    tok=gettoken(p_str, end_str, &q, &eq);
     if(tok == 0)
       break;
     if(tok != 'a')
@@ -139,8 +139,8 @@ struct cmd*parseexec(char **ps, char *es)
     cmd->argv[argc] = q;
     cmd->eargv[argc] = eq;
     argc++;
-    if(argc >= MAXARGS)
-      ft_error("too many args");
+    // if(argc >= MAXARGS)
+    //   ft_error("too many args");
     // ret = parseredirs(ret, ps, es);
   }
   cmd->argv[argc] = 0;
@@ -178,22 +178,24 @@ struct cmd *parseline(char **ps, char *es)
     return cmd;
 }
 
-struct cmd *parsecmd(char *s)
+struct cmd *parsecmd(char *str)
 {
-    char *es;
+    char *end_str;
     struct cmd *cmd;
-    es = s + ft_strlen(s);
-
-    cmd = parseline(&s, es);
+    // len = ft_strlen(str);
+    // end_str = str + ft_strlen(str);
+    end_str = &str[ft_strlen(str)];
+    // printf("end_str: %s\n", end_str);
+    cmd = parseline(&str, end_str);
 
     // Este bloque se asegura que todo el texto ha sido procesado y no queda nada más
-    peek(&s, es, "");
-    if (s != es)
-    {
-        // ft_putendl_fd(s, STDERR_FILENO);
-        ft_error("syntax error");
-    }
-    // printf("cool!");
+    // peek(&s, es, "");
+    // if (s != es)
+    // {
+    //     // ft_putendl_fd(s, STDERR_FILENO);
+    //     ft_error("syntax error");
+    // }
+    // // printf("cool!");
     return cmd;
 }
 
