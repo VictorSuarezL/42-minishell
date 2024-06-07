@@ -343,6 +343,7 @@ parsepipe(char **ps, char *es)
   }
   return cmd;
 }
+
 struct cmd*
 parseredirs(struct cmd *cmd, char **ps, char *es)
 {
@@ -366,6 +367,7 @@ parseredirs(struct cmd *cmd, char **ps, char *es)
   }
   return cmd;
 }
+
 struct cmd*
 parseblock(char **ps, char *es)
 {
@@ -380,6 +382,7 @@ parseblock(char **ps, char *es)
   cmd = parseredirs(cmd, ps, es);
   return cmd;
 }
+
 struct cmd*
 parseexec(char **ps, char *es)
 {
@@ -410,6 +413,7 @@ parseexec(char **ps, char *es)
   return ret;
 }
 // NUL-terminate all the counted strings.
+
 struct cmd*
 nulterminate(struct cmd *cmd)
 {
