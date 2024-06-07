@@ -37,7 +37,6 @@ int gettoken(char **ps, char *es, char **q, char **eq)
     {
         // No operation needed
     } 
-    // else if (*s == '|' || *s == '(' || *s == ')' || *s == ';' || *s == '&' || *s == '<') 
     else if (ft_strchr("|();&<", *aux)) 
     {
         aux++;
@@ -51,20 +50,20 @@ int gettoken(char **ps, char *es, char **q, char **eq)
             aux++;
         }
     }
-    else if (*aux == '"' || *aux == '\'') 
-    { // Añadir manejo de comillas
-        char quote = *aux;
-        aux++;
-        ret = 'a'; // Argumento entre comillas
-        while (aux < es && *aux != quote) 
-        {
-            aux++;
-        }
-        if (*aux == quote) 
-        {
-            aux++;
-        } 
-    }
+    // else if (*aux == '"' || *aux == '\'') 
+    // { // Añadir manejo de comillas
+    //     char quote = *aux;
+    //     aux++;
+    //     ret = 'a'; // Argumento entre comillas
+    //     while (aux < es && *aux != quote) 
+    //     {
+    //         aux++;
+    //     }
+    //     if (*aux == quote) 
+    //     {
+    //         aux++;
+    //     } 
+    // }
     else 
     {
         ret = 'a';
@@ -84,18 +83,23 @@ int gettoken(char **ps, char *es, char **q, char **eq)
 
 int peek(char **ps, char *es, char *toks)
 {
-    char *aux;
-    aux = *ps;
-    while (aux < es && ft_strchr(" \t\r\n\v", *aux))
-    {
-        aux++;
-    }
-    *ps = aux;
-    if (*aux && ft_strchr(toks, *aux))
+    int i = 0;  // Índice para el acceso a través del string
+    char *s = *ps;
+    int length = es - s;  // Longitud máxima calculada basada en es
+
+    // Salta caracteres de espacio en blanco
+    while (i < length && ft_strchr(" \t\r\n\v", s[i]))
+        i++;
+    
+    *ps = &s[i];  // Usando &s[i] para la claridad
+
+    // Verifica si el caracter actual está dentro de los toks buscados
+    if (i < length && s[i] && ft_strchr(toks, s[i]))
         return 1;
     else
         return 0;
 }
+
 
 // int peek(char **ps, char *es, char *toks)
 // {
@@ -201,9 +205,9 @@ struct cmd *parsecmd(char *str)
 
 int main(void)
 {
-    char line[100] = "echo '>'";
+    char line[100] = "echo -n hola";
     parsecmd(line);
 
-    char l[100] = "echo '-n mundo'";
-    parsecmd(l);
+    // char l[100] = "echo '-n mundo'";
+    // parsecmd(l);
 }
