@@ -29,7 +29,7 @@ RESET				=	\033[0m
 
 SRC_FILES = $(SRC_DIR)/sh.c
 # SRC_FILES = $(SRC_DIR)/main.c
-# SRC_FILES = $(SRC_DIR)/hhp3.c
+SRC_FILES = $(SRC_DIR)/hhp3.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
