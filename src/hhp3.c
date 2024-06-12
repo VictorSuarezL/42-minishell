@@ -1,4 +1,11 @@
-#include <minishell.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <errno.h>
 
 #define MAXARGS 10
 
@@ -27,7 +34,7 @@ int gettoken(char **ps, char *es, char **q, char **eq)
     char *aux;
     int ret;
     aux = *ps;
-    while (aux < es && ft_strchr(whitespace, *aux))
+    while (aux < es && strchr(whitespace, *aux))
         aux++;
     if (q)
         *q = aux;
@@ -37,7 +44,7 @@ int gettoken(char **ps, char *es, char **q, char **eq)
     {
         // No operation needed
     } 
-    else if (ft_strchr("|();&<", *aux)) 
+    else if (strchr("|();&<", *aux)) 
     {
         aux++;
     } 
@@ -50,20 +57,20 @@ int gettoken(char **ps, char *es, char **q, char **eq)
             aux++;
         }
     }
-    // else if (*aux == '"' || *aux == '\'') 
-    // { // Añadir manejo de comillas
-    //     char quote = *aux;
-    //     aux++;
-    //     ret = 'a'; // Argumento entre comillas
-    //     while (aux < es && *aux != quote) 
-    //     {
-    //         aux++;
-    //     }
-    //     if (*aux == quote) 
-    //     {
-    //         aux++;
-    //     } 
-    // }
+    else if (*aux == '"' || *aux == '\'') 
+    { // Añadir manejo de comillas
+        char quote = *aux;
+        aux++;
+        ret = 'a'; // Argumento entre comillas
+        while (aux < es && *aux != quote) 
+        {
+            aux++;
+        }
+        if (*aux == quote) 
+        {
+            aux++;
+        } 
+    }
     else 
     {
         ret = 'a';
@@ -88,13 +95,13 @@ int peek(char **ps, char *es, char *toks)
     int length = es - s;  // Longitud máxima calculada basada en es
 
     // Salta caracteres de espacio en blanco
-    while (i < length && ft_strchr(" \t\r\n\v", s[i]))
+    while (i < length && strchr(" \t\r\n\v", s[i]))
         i++;
     
     *ps = &s[i];  // Usando &s[i] para la claridad
 
     // Verifica si el caracter actual está dentro de los toks buscados
-    if (i < length && s[i] && ft_strchr(toks, s[i]))
+    if (i < length && s[i] && strchr(toks, s[i]))
         return 1;
     else
         return 0;
@@ -139,7 +146,7 @@ struct cmd*parseexec(char **p_str, char *end_str)
     if(tok == 0)
       break;
     if(tok != 'a')
-      ft_error("syntax");
+        printf("syntax");
     cmd->argv[argc] = q;
     cmd->eargv[argc] = eq;
     argc++;
@@ -182,13 +189,54 @@ struct cmd *parseline(char **ps, char *es)
     return cmd;
 }
 
+
+struct cmd*
+nulterminate(struct cmd *cmd)
+{
+  int i;
+//   struct backcmd *bcmd;
+  struct execcmd *ecmd;
+//   struct listcmd *lcmd;
+//   struct pipecmd *pcmd;
+//   struct redircmd *rcmd;
+  if(cmd == 0)
+    return 0;
+  switch(cmd->type){
+  case EXEC:
+    ecmd = (struct execcmd*)cmd;
+    for(i=0; ecmd->argv[i]; i++)
+      *ecmd->eargv[i] = 0;
+    break;
+//   case REDIR:
+//     rcmd = (struct redircmd*)cmd;
+//     nulterminate(rcmd->cmd);
+//     *rcmd->efile = 0;
+//     break;
+//   case PIPE:
+//     pcmd = (struct pipecmd*)cmd;
+//     nulterminate(pcmd->left);
+//     nulterminate(pcmd->right);
+//     break;
+//   case LIST:
+//     lcmd = (struct listcmd*)cmd;
+//     nulterminate(lcmd->left);
+//     nulterminate(lcmd->right);
+//     break;
+//   case BACK:
+//     bcmd = (struct backcmd*)cmd;
+//     nulterminate(bcmd->cmd);
+//     break;
+  }
+  return cmd;
+}
+
 struct cmd *parsecmd(char *str)
 {
     char *end_str;
     struct cmd *cmd;
-    // len = ft_strlen(str);
-    // end_str = str + ft_strlen(str);
-    end_str = &str[ft_strlen(str)];
+    // len = strlen(str);
+    // end_str = str + strlen(str);
+    end_str = &str[strlen(str)];
     // printf("end_str: %s\n", end_str);
     cmd = parseline(&str, end_str);
 
@@ -200,12 +248,13 @@ struct cmd *parsecmd(char *str)
     //     ft_error("syntax error");
     // }
     // // printf("cool!");
+    nulterminate(cmd);
     return cmd;
 }
 
 int main(void)
 {
-    char line[100] = "echo -n hola";
+    char line[100] = "echo -n hola | hola";
     parsecmd(line);
 
     // char l[100] = "echo '-n mundo'";

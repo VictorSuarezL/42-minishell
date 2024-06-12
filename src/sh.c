@@ -128,7 +128,7 @@ getcmd(char *buf, int nbuf)
 int
 main(void)
 {
-  static char buf[100] = "echo hola";
+  static char buf[100] = "echo hola buenas tardes uno dos tres cuatro cinco seis sitete ocho nueve diez";
   int fd;
   // Asegurarse de que tres descriptores de archivo estén abiertos.
   // while((fd = open("/dev/tty", O_RDWR)) >= 0){
@@ -403,6 +403,9 @@ parseexec(char **ps, char *es)
       panic("syntax");
     cmd->argv[argc] = q;
     cmd->eargv[argc] = eq;
+    printf("argc: %d\n", argc);
+    printf("q: %s\n", q);
+    printf("eq: %s\n", eq);
     argc++;
     if(argc >= MAXARGS)
       panic("too many args");
