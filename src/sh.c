@@ -128,7 +128,7 @@ getcmd(char *buf, int nbuf)
 int
 main(void)
 {
-  static char buf[100] = "echo hola buenas tardes uno dos tres cuatro cinco seis sitete ocho nueve diez";
+  static char buf[100] = "ls > test.txt";
   int fd;
   // Asegurarse de que tres descriptores de archivo estén abiertos.
   // while((fd = open("/dev/tty", O_RDWR)) >= 0){
