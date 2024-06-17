@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <fcntl.h>
+#include <minishell.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,7 +54,6 @@ int	fork1(void)
 	return (pid);
 }
 
-
 size_t	count_env_vars(char **env)
 {
 	size_t	count;
@@ -76,7 +76,7 @@ char	**copy_env(char **env)
 	count = 0;
 	while (env[count])
 	{
-		copy[count] = ft_strdup(env[count]);
+		copy[count] = strdup(env[count]);
 		// if (!copy[count])
 		// 	return (free_double(copy), NULL);
 		count++;
@@ -85,13 +85,43 @@ char	**copy_env(char **env)
 	return (copy);
 }
 
+char	*find_path(char *command, char **export_env)
+{
+	int		i;
+	char	**paths;
+	char	*tmp;
 
-void	runcmd(struct cmd *cmd)
+	i = 0;
+	// char **export_env = copy_env(env);
+	while (export_env[i] && !strnstr(export_env[i], "PATH", 4))
+	{
+		// printf("Ejecutando execve para %s...\n", export_env[i]);
+		i++;
+	}
+	paths = ft_split(&export_env[i][5], ':');
+	i = 0;
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		tmp = ft_strjoin(tmp, command);
+		// printf("%i: %s\n", i, tmp);
+		if (access(tmp, F_OK) != -1 && access(tmp, X_OK) != -1)
+		{
+			return (tmp);
+		}
+		// break ;
+		i++;
+	}
+	return (NULL);
+}
+
+void	runcmd(struct cmd *cmd, char **env_copy)
 {
 	int				p[2];
 	struct execcmd	*ecmd;
 	struct pipecmd	*pcmd;
 	struct redircmd	*rcmd;
+	char			*binaryPath;
 
 	if (!cmd)
 	{
@@ -102,8 +132,12 @@ void	runcmd(struct cmd *cmd)
 		ecmd = (struct execcmd *)cmd;
 		if (!ecmd->argv[0])
 			exit(1);
-		execvp(ecmd->argv[0], ecmd->argv);
-        execve(ecmd->argv[0], ecmd->argv, )
+		if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv, env_copy) ==
+			-1)
+		{
+			printf("error: execve");
+			exit(EXIT_FAILURE);
+		}
 	}
 	else if (cmd->type == PIPE)
 	{
@@ -116,7 +150,7 @@ void	runcmd(struct cmd *cmd)
 			dup(p[1]);
 			close(p[0]);
 			close(p[1]);
-			runcmd(pcmd->left);
+			runcmd(pcmd->left, env_copy);
 		}
 		if (fork1() == 0)
 		{
@@ -124,7 +158,7 @@ void	runcmd(struct cmd *cmd)
 			dup(p[0]);
 			close(p[0]);
 			close(p[1]);
-			runcmd(pcmd->right);
+			runcmd(pcmd->right, env_copy);
 		}
 		close(p[0]);
 		close(p[1]);
@@ -141,7 +175,7 @@ void	runcmd(struct cmd *cmd)
 				strerror(errno));
 			exit(1);
 		}
-		runcmd(rcmd->cmd);
+		runcmd(rcmd->cmd, env_copy);
 	}
 	exit(0);
 }
@@ -379,9 +413,32 @@ struct cmd	*parse_cmd(char *str)
 	return (cmd);
 }
 
-int	main(void)
-{
-	char line[100] = "ls > e.txt > f.txt";
+// extern char		**environ;
 
-	runcmd(parse_cmd(line));
+int	main(int argc, char *argv[], char **env)
+{
+	char	**export_env;
+	char	line[100] = "ls -al";
+
+	export_env = copy_env(env);
+	// printf("%zu\n", count_env_vars(env));
+	// printf("%s\n", export_env[0]);
+	runcmd(parse_cmd(line), export_env);
 }
+
+// int main() {
+//     char *binaryPath = "/bin/ls";
+//     // char *binaryPath = "usr/bin";
+//     char *const argv[] = {"ls", "-l", NULL};
+//     char *const envp[] = { "MY_VAR=Hello", NULL };
+
+//     printf("Ejecutando execve...\n");
+
+//     if (execve(binaryPath, argv, envp) == -1) {
+//         perror("execve");
+//         exit(EXIT_FAILURE);
+//     }
+
+//     printf("Esto no debería imprimirse\n");
+//     return (0);
+// }
