@@ -10,8 +10,8 @@ LIBFT_SRC = ./lib/libft/
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 # CFLAGS				=	-Wall -Werror -Wextra 
-CC					=	gcc -g $(CFLAGS) $(INCLUDE)
-# CC					=	clang -g $(INCLUDE)
+# CC					=	gcc -g $(CFLAGS) $(INCLUDE)
+CC					=	clang -O0 -g $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -29,7 +29,12 @@ RESET				=	\033[0m
 
 # SRC_FILES = $(SRC_DIR)/sh.c
 # SRC_FILES = $(SRC_DIR)/search_path.c
-SRC_FILES = $(SRC_DIR)/main.c
+SRC_FILES = $(SRC_DIR)/search_path.c \
+			$(SRC_DIR)/parse.c \
+			$(SRC_DIR)/tokenize.c \
+			$(SRC_DIR)/constructor.c \
+			$(SRC_DIR)/main.c
+# SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
