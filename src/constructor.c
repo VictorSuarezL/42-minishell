@@ -1,12 +1,11 @@
 #include <minishell.h>
 
-// Constructores
 struct cmd	*exec_cmd(void)
 {
 	struct execcmd	*cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = EXEC;
 	return ((struct cmd *)cmd);
 }
@@ -16,7 +15,7 @@ struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right)
 	struct pipecmd	*cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = PIPE;
 	cmd->left = left;
 	cmd->right = right;

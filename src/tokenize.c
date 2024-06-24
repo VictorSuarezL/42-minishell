@@ -8,11 +8,11 @@ int	peek(char **ps, char *es, char *toks)
 	s = *ps;
 	int length = es - s; // Longitud máxima calculada basada en es
 	// Salta caracteres de espacio en blanco
-	while (i < length && strchr(" \t\r\n\v", s[i]))
+	while (i < length && ft_strchr(" \t\r\n\v", s[i]))
 		i++;
 	*ps = &s[i]; // Usando &s[i] para la claridad
 	// Verifica si el caracter actual está dentro de los toks buscados
-	if (i < length && s[i] && strchr(toks, s[i]))
+	if (i < length && s[i] && ft_strchr(toks, s[i]))
 		return (1);
 	else
 		return (0);
@@ -25,7 +25,7 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 	int		ret;
 
 	aux = *p_str;
-	while (aux < end_str && strchr(" \t\r\n\v", *aux))
+	while (aux < end_str && ft_strchr(" \t\r\n\v", *aux))
 	{
 		aux++;
 	}
@@ -36,7 +36,7 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 	{
 
 	}
-	else if (ft_strchr("|()<", *aux))
+	else if (ft_strchr("|<", *aux))
 	{
 		aux++;
 	}
@@ -51,22 +51,35 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 	}
 	else if (*aux == '"' || *aux == '\'')
 	{
+		int i = 0;
 		aux++;
 		quote = *aux;
 		ret = 'a';
+		aux++;
 		while (aux < end_str && *aux != quote)
 		{
 			aux++;
 		}
-		if (*aux == quote)
-		{
-			aux++;
-		}
 	}
+	
+	// else if (*aux == '"' || *aux == '\'')
+	// {
+	// 	aux++;
+	// 	quote = *aux;
+	// 	ret = 'a';
+	// 	while (aux < end_str && *aux != quote)
+	// 	{
+	// 		aux++;
+	// 	}
+	// 	if (*aux == quote)
+	// 	{
+	// 		aux++;
+	// 	}
+	// }
 	else
 	{
 		ret = 'a';
-		while (aux < end_str && !ft_strchr(" \t\r\n\v", *aux) && !ft_strchr("<|>&;()",
+		while (aux < end_str && !ft_strchr(" \t\r\n\v", *aux) && !ft_strchr("<|>",
 				*aux))
 			aux++;
 	}

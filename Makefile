@@ -11,7 +11,7 @@ RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 # CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc -g $(CFLAGS) $(INCLUDE)
-CC					=	clang -O0 -g $(INCLUDE)
+CC					=	clang -O0 -g -MMD $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -38,6 +38,7 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 # SRC_FILES = $(SRC_DIR)/hhp3.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
+DEP = $(addsuffix .d, $(basename $(SRC_FILES)))
 
 # Rules
 all: $(NAME)
@@ -53,8 +54,10 @@ $(OBJ_DIR)/%.o: %.c Makefile
 $(NAME): $(LIBFT_SRC)/libft.a $(OBJ_FILES)
 	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -o $(NAME)
 
+-include $(DEP)
+
 clean:
-	$(RM) $(OBJ_FILES)
+	$(RM) $(OBJ_FILES) $(DEP)
 	rm -rf ./$(OBJ_DIR)
 	make -C $(LIBFT_SRC) clean
 	@printf "$(BLUE)==> $(RED)Removed\n$(RESET)"

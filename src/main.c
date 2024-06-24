@@ -17,7 +17,46 @@
 char			whitespace[] = " \t\r\n\v";
 char			symbols[] = "<|>&;()";
 
-int	fork1(void)
+// int execute_builtin(char *input, char ***export, char ***env) {
+//     char **split_input;
+//     if (strncmp(input, "echo", 4) == 0)
+//         return (echo_builtin(input), 0);
+//     if (strncmp(input, "exit", 4) == 0)
+//         return (exit_builtin());
+//     if (strncmp(input, "env", 3) == 0)
+//         return (env_builtin(input, *env));
+//     if (strncmp(input, "export", 6) == 0) {
+//         split_input = ft_split(input, ' ');
+//         int result = export_builtin(split_input, export, env);
+//         free_double(split_input);
+//         return result;
+//     }
+//     if (strncmp(input, "pwd", 3) == 0)
+//         return (pwd_builtin(input));
+//     if (strncmp(input, "unset", 5) == 0) {
+//         split_input = ft_split(input, ' ');
+//         int result = unset_builtin(export, split_input);
+//         unset_builtin(env, split_input);
+//         free_double(split_input);
+//         return result;
+//     }
+//     return (47);
+// }
+// int is_builtin_env(char *input)
+// {
+//     if (ft_strncmp(input, "export", 6) == 0 || ft_strncmp(input, "unset", 5) == 0 || ft_strncmp(input, "env", 3) == 0 )
+//         return (1);
+//     return (0);
+// }
+// int is_builtin(char *input)
+// {
+//     if (ft_strncmp(input, "echo", 4) == 0 || ft_strncmp(input, "exit", 4) == 0 || ft_strncmp(input, "env", 3) == 0
+//         || ft_strncmp(input, "export", 6) == 0 || ft_strncmp(input, "pwd", 3) == 0 || ft_strncmp(input, "unset", 5) == 0)
+//         return (1);
+//     return (0);
+// }
+
+int	save_fork(void)
 {
 	int	pid;
 
@@ -49,7 +88,7 @@ char	**copy_env(char **env)
 	count = 0;
 	while (env[count])
 	{
-		copy[count] = strdup(env[count]);
+		copy[count] = ft_strdup(env[count]);
 		// if (!copy[count])
 		// 	return (free_double(copy), NULL);
 		count++;
@@ -64,7 +103,6 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 	struct execcmd	*ecmd;
 	struct pipecmd	*pcmd;
 	struct redircmd	*rcmd;
-	char			*binaryPath;
 	char *aux;
 
 	if (!cmd)
@@ -76,12 +114,21 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 		ecmd = (struct execcmd *)cmd;
 		if (!ecmd->argv[0])
 			exit(1);
+		// if (is_builtin(ecmd->argv[0]))
+		// {
+		// 	// Guardar en un entero la salida del execute_builtin
+		// 	execute_builtin(ecmd->argv[0], NULL, &env_copy);
+		// }
+		// else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv, env_copy) == -1)
+		// {
+		// 	ft_error("error: execve");
+		// }
 		if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv, env_copy) == -1)
 		{
 			ft_error("error: execve");
 		}
 		// aux = find_path(ecmd->argv[0], env_copy);
-		printf("path: %s\n", aux);
+		// printf("path: %s\n", aux);
 		free(aux);
 		// free(env_copy);
 		free(ecmd);
@@ -91,7 +138,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 		pcmd = (struct pipecmd *)cmd;
 		if (pipe(p) < 0)
 			ft_error("pipe");
-		if (fork1() == 0)
+		if (save_fork() == 0)
 		{
 			close(1);
 			dup(p[1]);
@@ -99,7 +146,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 			close(p[1]);
 			runcmd(pcmd->left, env_copy);
 		}
-		if (fork1() == 0)
+		if (save_fork() == 0)
 		{
 			close(0);
 			dup(p[0]);
@@ -118,9 +165,11 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 		close(rcmd->fd);
 		if (open(rcmd->file, rcmd->mode, 0644) < 0)
 		{
-			fprintf(stderr, "open %s failed: %s\n", rcmd->file,
-				strerror(errno));
-			exit(1);
+			ft_error("open failed: No such file or directory");
+
+			// fprintf(stderr, "open %s failed: %s\n", rcmd->file,
+			// 	strerror(errno));
+			// exit(1);
 		}
 		runcmd(rcmd->cmd, env_copy);
 	}
@@ -130,7 +179,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 int	main(int argc, char *argv[], char **env)
 {
 	char	**export_env;
-	char	line[100] = "ls -al";
+	char	line[100] = "echo 'hola echo mundo'";
 
 	export_env = copy_env(env);
 	runcmd(parse_cmd(line), export_env);
