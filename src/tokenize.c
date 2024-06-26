@@ -49,14 +49,14 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 			aux++;
 		}
 	}
-	else if (*aux == '"' || *aux == '\'')
+	else if (*aux == '\'')
 	{
 		int i = 0;
 		aux++;
 		quote = *aux;
 		ret = 'a';
 		aux++;
-		while (aux+1 < end_str && *aux+1 != quote)
+		while (aux < end_str && *aux+1 != '\'')
 		{
 			aux++;
 		}

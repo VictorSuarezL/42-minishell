@@ -197,53 +197,108 @@ int in_quote(char *str, int i, char c)
 
 
 
-char *escape_special_chars(char *buf, char *str)
+void escape_special_chars(char *str)
 {
 	int i = 0;
 	int count = 0;
-	// char *aux;
+	char *aux;
 	int j = 0;
 
-	// while (str[i])
-	// {
-	// 	if (str[i] == '$' || str[i] == '\'' || str[i] == '"')
-	// 		count++;
-	// 	i++;
-	// }
+	while (str[i])
+	{
+		if (ft_strchr("'<>|", str[i]))
+			count++;
+		i++;
+	}
 
-	// aux = malloc(sizeof(char) * (ft_strlen(str) + count + 1));
+	aux = malloc(sizeof(char) * (ft_strlen(str) + count + 1));
 	
 	i = 0;
 	while (str[i])
 	{
-		if (ft_strchr("'", str[i]) && in_quote(str, i, '"'))
+		if (str[i] == '"')
 		{
-			buf[j] = '\\';
+			aux[j] = str[i];
 			j++;
-			buf[j] = str[i];
-		} 
+			i++;
+			while (str[i] && str[i] != '"')
+			{
+				printf("here double quotes!\n");
+				if (ft_strchr("$'<>|", str[i]))
+				{
+					aux[j] = '\\';
+					j++;
+					aux[j] = str[i];
+					i++;	
+				}
+				else
+				{
+					aux[j] = str[i];
+				}
+				
+				j++;
+				i++;
+			}
+		}
+		else if (str[i] == '\'')
+		{
+			aux[j] = str[i];
+			j++;
+			i++;
+			printf("here single quotes!\n");
+			i++;
+			while (str[i] && str[i] != '\'')
+			{
+				printf("inside single quotes!\n");
+				if (ft_strchr("\"<>|", str[i]))
+				{
+					aux[j] = '\\';
+					j++;
+					aux[j] = str[i];	
+					i++;
+				}
+				else
+				{
+					aux[j] = str[i];
+				}
+				j++;
+				i++;
+			}
+		}
 		else
 		{
-			buf[j] = str[i];
+			aux[j] = str[i];
 		}
-		j++;
 		i++;
+		j++;
 	}
-	// printf("aux: %s\n", aux);
-	return buf;
+
+	
+	printf("aux: %s\n", aux);
+	strcpy(str, aux);
+	free(aux);
 }
+
+// int is_escaped(char pre, char c)
+// {
+// 	if (pre = '\\' && c = )
+// 	{
+// 		/* code */
+// 	}
+	
+// }
 
 int	main(int argc, char *argv[], char **env)
 {
 	char buf[4097];
 	char	**export_env;
-	char	line[100] = "echo 'hola mundo'";
-	char *aux;
-	buf = escape_special_chars(buf, line);
-
-	export_env = copy_env(env);
-	runcmd(parse_cmd(line), export_env);
-	free_all(export_env);
+	char	line[100] = "echo 'hola $HOME << > >  | mundo' estamos aqui";
+	
+	escape_special_chars(line);
+	printf("line: %s\n", line);
+	// export_env = copy_env(env);
+	// runcmd(parse_cmd(line), export_env);
+	// free_all(export_env);
 }
 
 // int main() {
