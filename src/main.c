@@ -176,10 +176,70 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 	exit(0);
 }
 
+int in_quote(char *str, int i, char c)
+{
+	int j = 0;
+	int flag = 0;
+	while (str[j] && j < i)
+	{
+		if (str[j] == c && flag == 0)
+		{
+			flag = 1;
+		}
+		else if (str[j] == c && flag == 1)
+		{
+			flag = 0;
+		}
+		j++;
+	}
+	return flag;
+}
+
+
+
+char *escape_special_chars(char *buf, char *str)
+{
+	int i = 0;
+	int count = 0;
+	// char *aux;
+	int j = 0;
+
+	// while (str[i])
+	// {
+	// 	if (str[i] == '$' || str[i] == '\'' || str[i] == '"')
+	// 		count++;
+	// 	i++;
+	// }
+
+	// aux = malloc(sizeof(char) * (ft_strlen(str) + count + 1));
+	
+	i = 0;
+	while (str[i])
+	{
+		if (ft_strchr("'", str[i]) && in_quote(str, i, '"'))
+		{
+			buf[j] = '\\';
+			j++;
+			buf[j] = str[i];
+		} 
+		else
+		{
+			buf[j] = str[i];
+		}
+		j++;
+		i++;
+	}
+	// printf("aux: %s\n", aux);
+	return buf;
+}
+
 int	main(int argc, char *argv[], char **env)
 {
+	char buf[4097];
 	char	**export_env;
-	char	line[100] = "echo 'hola echo mundo'";
+	char	line[100] = "echo 'hola mundo'";
+	char *aux;
+	buf = escape_special_chars(buf, line);
 
 	export_env = copy_env(env);
 	runcmd(parse_cmd(line), export_env);

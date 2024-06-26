@@ -56,7 +56,7 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 		quote = *aux;
 		ret = 'a';
 		aux++;
-		while (aux < end_str && *aux != quote)
+		while (aux+1 < end_str && *aux+1 != quote)
 		{
 			aux++;
 		}
