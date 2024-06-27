@@ -75,7 +75,6 @@ char	*find_path(char *command, char **export_env)
 		i++;
 	}
 	free_all(paths);
-	
 	return (NULL);
 }
 
