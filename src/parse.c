@@ -42,7 +42,7 @@ struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
 	{
 		tok = get_token(ps, es, 0, 0);
 		if (get_token(ps, es, &q, &eq) != 'a')
-			ft_error("missing file for redirection");
+			ft_perror("missing file for redirection");
 		if (tok == '<')
 		{
 			cmd = redir_cmd(cmd, q, eq, O_RDONLY, 0);
@@ -81,7 +81,7 @@ struct cmd	*parse_exec(char **p_str, char *e_str)
 		}
 		if (tok != 'a')
 		{
-			ft_error("syntax!\n");
+			ft_perror("syntax!\n");
 		}
 		struct_execcmd->argv[argc] = q;
 		struct_execcmd->eargv[argc] = end_q;

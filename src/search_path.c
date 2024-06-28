@@ -54,9 +54,14 @@ char	*find_path(char *command, char **export_env)
 	char	*tmp;
 	char *tmp2;
 
+	if (!export_env[i])
+		ft_perror("new error found!");
 	i = 0;
 	while (export_env[i] && !ft_strnstr(export_env[i], "PATH", 4))
 		i++;
+	if (!export_env[i])
+		ft_perror("new error found!");
+	
 	
 	paths = ft_split(&export_env[i][5], ':');
 	i = 0;

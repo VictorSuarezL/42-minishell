@@ -56,6 +56,7 @@ struct			redircmd
 // int		validator(char *str);
 
 // SEARCH_PATH.C
+void ft_perror(char *msg);
 void free_all(char **str);
 char	*find_path(char *command, char **export_env);
 struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);

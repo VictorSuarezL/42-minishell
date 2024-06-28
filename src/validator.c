@@ -1,5 +1,6 @@
 #include <minishell.h>
 
+
 static int	is_pipe_end(char *str)
 {
 	int	i;

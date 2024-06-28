@@ -131,25 +131,25 @@ main(void)
   static char buf[100] = "ls > test.txt";
   int fd;
   // Asegurarse de que tres descriptores de archivo estén abiertos.
-  // while((fd = open("/dev/tty", O_RDWR)) >= 0){
-  //   if(fd >= 3){
-  //     close(fd);
-  //     break;
-  //   }
-  // }
-  // // Leer y ejecutar comandos de entrada.
-  // while(getcmd(buf, sizeof(buf)) >= 0){
-  //   if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
-  //     // Chdir debe ser llamado por el padre, no el hijo.
-  //     buf[strlen(buf)-1] = 0;  // cortar \n
-  //     if(chdir(buf+3) < 0)
-  //       fprintf(stderr, "cannot cd %s\n", buf+3);
-  //     continue;
-  //   }
-    // if(save_fork() == 0)
+  while((fd = open("/dev/tty", O_RDWR)) >= 0){
+    if(fd >= 3){
+      close(fd);
+      break;
+    }
+  }
+  // Leer y ejecutar comandos de entrada.
+  while(getcmd(buf, sizeof(buf)) >= 0){
+    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
+      // Chdir debe ser llamado por el padre, no el hijo.
+      buf[strlen(buf)-1] = 0;  // cortar \n
+      if(chdir(buf+3) < 0)
+        fprintf(stderr, "cannot cd %s\n", buf+3);
+      continue;
+    }
+    if(save_fork() == 0)
       runcmd(parsecmd(buf));
     wait(0);
-  // }
+  }
   exit(0);
 }
 void
@@ -403,9 +403,9 @@ parseexec(char **ps, char *es)
       panic("syntax");
     cmd->argv[argc] = q;
     cmd->eargv[argc] = eq;
-    printf("argc: %d\n", argc);
-    printf("q: %s\n", q);
-    printf("eq: %s\n", eq);
+    // printf("argc: %d\n", argc);
+    // printf("q: %s\n", q);
+    // printf("eq: %s\n", eq);
     argc++;
     if(argc >= MAXARGS)
       panic("too many args");
