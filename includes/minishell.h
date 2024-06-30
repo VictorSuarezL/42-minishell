@@ -55,6 +55,9 @@ struct			redircmd
 // char	**ft_split_m(char const *s);
 // int		validator(char *str);
 
+
+int wait_status(void);
+
 // SEARCH_PATH.C
 void ft_perror(char *msg);
 void free_all(char **str);

@@ -113,6 +113,10 @@ int	validator(char *str)
 	{
 		return (0);
 	}
+	else if (ft_strchr("|&", str[0]))
+	{
+		return (0);
+	}
 	else
 	{
 		return (1);

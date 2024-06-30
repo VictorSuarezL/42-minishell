@@ -54,14 +54,16 @@ char	*find_path(char *command, char **export_env)
 	char	*tmp;
 	char *tmp2;
 
+	if (access(command, F_OK) != -1 && access(command, X_OK) != -1)
+		return command;
+	
 	if (!export_env[i])
-		ft_perror("new error found!");
+		ft_perror("Error: No env variables found");
 	i = 0;
 	while (export_env[i] && !ft_strnstr(export_env[i], "PATH", 4))
 		i++;
 	if (!export_env[i])
-		ft_perror("new error found!");
-	
+		ft_perror("Error: No PATH variable found");
 	
 	paths = ft_split(&export_env[i][5], ':');
 	i = 0;
@@ -80,7 +82,7 @@ char	*find_path(char *command, char **export_env)
 		i++;
 	}
 	free_all(paths);
-	return (NULL);
+	return (0);
 }
 
 // int	main(int argc, char *argv[], char **env)

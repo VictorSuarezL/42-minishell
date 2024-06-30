@@ -111,7 +111,7 @@ struct cmd	*parse_cmd(char *str)
 	struct cmd	*cmd;
 	char		*end_str;
 
-	end_str = &str[strlen(str)];
+	end_str = &str[ft_strlen(str)];
 	cmd = parse_pipe(&str, end_str);
 	nulterminate(cmd);
 	return (cmd);
