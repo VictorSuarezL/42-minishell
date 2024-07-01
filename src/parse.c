@@ -7,15 +7,12 @@ struct cmd	*nulterminate(struct cmd *cmd)
 	struct redircmd	*rcmd;
 	int				i;
 
-	i = 0;
+	i = -1;
 	if (cmd->type == EXEC)
 	{
 		ecmd = (struct execcmd *)cmd;
-		while (ecmd->argv[i])
-		{
+		while (ecmd->argv[++i])
 			*ecmd->eargv[i] = 0;
-			i++;
-		}
 	}
 	else if (cmd->type == PIPE)
 	{
@@ -34,9 +31,10 @@ struct cmd	*nulterminate(struct cmd *cmd)
 
 struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
 {
-	int	tok;
+	int		tok;
+	char	*q;
+	char	*eq;
 
-	char *q, *eq;
 	while (peek(ps, es, "<>"))
 	{
 		tok = get_token(ps, es, 0, 0);
@@ -44,17 +42,15 @@ struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
 			ft_perror("Error: missing file for redirection");
 		if (tok == '<')
 		{
-			cmd = redir_cmd(cmd, q, eq, O_RDONLY, STDIN_FILENO);
+			cmd = redir_in_cmd(cmd, q, eq, O_RDONLY);
 		}
 		else if (tok == '>')
 		{
-			cmd = redir_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC,
-					STDOUT_FILENO);
+			cmd = redir_out_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC);
 		}
 		else if (tok == '+')
 		{
-			cmd = redir_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND,
-					STDOUT_FILENO);
+			cmd = redir_out_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND);
 		}
 	}
 	return (cmd);
@@ -75,13 +71,9 @@ struct cmd	*parse_exec(char **p_str, char *e_str)
 	{
 		tok = get_token(p_str, e_str, &q, &end_q);
 		if (!tok)
-		{
 			break ;
-		}
 		if (tok != 'a')
-		{
 			ft_perror("syntax!\n");
-		}
 		((struct execcmd *)cmd)->argv[argc] = q;
 		((struct execcmd *)cmd)->eargv[argc] = end_q;
 		argc++;
@@ -107,8 +99,8 @@ struct cmd	*parse_pipe(char **p_str, char *end_str)
 
 struct cmd	*parse_cmd(char *str)
 {
-	struct cmd *cmd;
-	char *end_str;
+	struct cmd	*cmd;
+	char		*end_str;
 
 	end_str = &str[ft_strlen(str)];
 	cmd = parse_pipe(&str, end_str);

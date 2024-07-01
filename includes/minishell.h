@@ -63,7 +63,7 @@ void ft_perror(char *msg);
 void free_all(char **str);
 char	*find_path(char *command, char **export_env);
 struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);
-struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
+// struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
 struct cmd	*exec_cmd(void);
 
 // TOKENIZE.C
@@ -76,7 +76,10 @@ struct cmd	*parse_cmd(char *str);
 // CONSTRUCTOR.C
 struct cmd	*exec_cmd(void);
 struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);
-struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
+// struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
+struct cmd	*redir_out_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
+struct cmd	*redir_in_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
+
 
 
 

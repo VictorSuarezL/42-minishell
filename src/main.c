@@ -435,8 +435,11 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "ls -al | echo $?";
 	// char	line[100] = "echo $HOME";
 	// char	line[100] = "echa";
+	// char	line[100] = "/bin/echo hola";
+	char	line[100] = "echo hola";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
-	char	line[100] = "echo a";
+	// char	line[100] = "cat /dev/random | head";
+	// char	line[100] = "cat | cat | ls";
 
 	
 	replace_qmark(line, exit_status);
