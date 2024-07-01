@@ -57,9 +57,9 @@ char	*find_path(char *command, char **export_env)
 	if (access(command, F_OK) != -1 && access(command, X_OK) != -1)
 		return command;
 	
+	i = 0;
 	if (!export_env[i])
 		ft_perror("Error: No env variables found");
-	i = 0;
 	while (export_env[i] && !ft_strnstr(export_env[i], "PATH", 4))
 		i++;
 	if (!export_env[i])

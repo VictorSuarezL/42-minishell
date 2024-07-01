@@ -436,7 +436,7 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "echo $HOME";
 	// char	line[100] = "echa";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
-	char	line[100] = "echo a >| aa.txt";
+	char	line[100] = "echo a";
 
 	
 	replace_qmark(line, exit_status);
