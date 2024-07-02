@@ -12,6 +12,9 @@
 # include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
+#include <errno.h>
+#include <sys/wait.h>
+
 
 #define EXEC 1
 #define REDIR 2
@@ -54,10 +57,10 @@ struct			redircmd
 // void	launch_heredoc(char *delimiter);
 // char	**ft_split_m(char const *s);
 // int		validator(char *str);
-
-
+int	save_fork(void);
+void	runcmd(struct cmd *cmd, char **env_copy);
 int wait_status(void);
-
+int	validator(char *str);
 // SEARCH_PATH.C
 void ft_perror(char *msg);
 void free_all(char **str);

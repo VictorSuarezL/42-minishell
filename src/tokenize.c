@@ -84,15 +84,23 @@ int	handle_quote(char **aux, char *end)
 	return ('a');
 }
 
+int	get_special_token(char **aux)
+{
+	int	ret;
+
+	ret = **aux;
+	(*aux)++;
+	return (ret);
+}
+
 // Función principal refactorizada
 int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 {
 	char	*aux;
 	int		ret;
 
-	aux = *p_str;
 	ret = 0;
-	aux = skip_whitespace(aux, end_str);
+	aux = skip_whitespace(*p_str, end_str);
 	if (q)
 		*q = aux;
 	if (*aux == '\0')
@@ -110,8 +118,7 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 	}
 	if (end_q)
 		*end_q = aux;
-	aux = skip_whitespace(aux, end_str);
-	*p_str = aux;
+	*p_str = skip_whitespace(aux, end_str);
 	return (ret);
 }
 
@@ -148,30 +155,37 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 // 	}
 // 	else if (*aux == '\'')
 // 	{
-// 		i = 0;
+// 		int i = 0;
+
 // 		aux++;
-// 		quote = *aux;
+// 		// if (q)
+// 		// 	*q = aux;
 // 		ret = 'a';
-// 		aux++;
-// 		while (aux < end_str && *aux + 1 != '\'')
+// 		while (aux < end_str && *aux != '\'')
 // 		{
+// 			// printf("i = %i\t aux[i] = %c\n", i++, *aux);
+// 			aux++;
+// 		}
+// 		if (*aux == '\'')
+// 		{
+// 			// printf("aux = %c\n", *aux);
 // 			aux++;
 // 		}
 // 	}
-// 	else if (*aux == '"' || *aux == '\'')
-// 	{
-// 		aux++;
-// 		quote = *aux;
-// 		ret = 'a';
-// 		while (aux < end_str && *aux != quote)
-// 		{
-// 			aux++;
-// 		}
-// 		if (*aux == quote)
-// 		{
-// 			aux++;
-// 		}
-// 	}
+// 	// else if (*aux == '"' || *aux == '\'')
+// 	// {
+// 	// 	aux++;
+// 	// 	quote = *aux;
+// 	// 	ret = 'a';
+// 	// 	while (aux < end_str && *aux != quote)
+// 	// 	{
+// 	// 		aux++;
+// 	// 	}
+// 	// 	if (*aux == quote)
+// 	// 	{
+// 	// 		aux++;
+// 	// 	}
+// 	// }
 // 	else
 // 	{
 // 		ret = 'a';

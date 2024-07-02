@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-
 static int	is_pipe_end(char *str)
 {
 	int	i;
@@ -18,6 +17,29 @@ static int	is_pipe_end(char *str)
 	}
 }
 
+int	in_quote(char *str, int i, char c)
+{
+	int	j;
+	int	flag;
+
+	j = 0;
+	flag = 0;
+	while (str[j] && j < i)
+	{
+		if (str[j] == c && flag == 0)
+		{
+			flag = 1;
+		}
+		else if (str[j] == c && flag == 1)
+		{
+			flag = 0;
+		}
+		j++;
+	}
+	printf("in_quote = %i\n", flag);
+	return (flag);
+}
+
 static int	quote_counter(char *str)
 {
 	int	i;
@@ -31,49 +53,20 @@ static int	quote_counter(char *str)
 	flag_b = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' && flag == 0)
-		{
+		if (str[i] == '\'' && flag == 0 && in_quote(str, i, '"') == 0)
 			flag = 1;
-		}
-		else if (str[i] == '\'' && flag == 1)
-		{
+		else if (str[i] == '\'' && flag == 1 && in_quote(str, i, '"') == 0)
 			flag = 0;
-		}
-		if (str[i] == '\"' && flag == 0)
-		{
+		if (str[i] == '\"' && flag == 0 && in_quote(str, i, '\'') == 0)
 			flag = 1;
-		}
-		else if (str[i] == '\"' && flag == 1)
-		{
+		else if (str[i] == '\"' && flag == 1 && in_quote(str, i, '\'') == 0)
 			flag = 0;
-		}
 		i++;
 	}
 	if (flag_a || flag_b)
-	{
 		flag = 1;
-	}
 	return (flag);
 }
-
-// int scape_special_characters(char *str)
-// {
-// 	int	i;
-// 	int	flag;
-
-// 	i = 0;
-// 	flag = 0;
-
-// 	if (/* condition */)
-// 	{
-// 		/* code */
-// 	}
-	
-
-// 	return (flag);
-// }
-
-
 
 int	is_metacharacter_end(char *str)
 {
@@ -122,4 +115,3 @@ int	validator(char *str)
 		return (1);
 	}
 }
-

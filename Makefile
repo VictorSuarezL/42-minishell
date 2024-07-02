@@ -33,6 +33,8 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/parse.c \
 			$(SRC_DIR)/tokenize.c \
 			$(SRC_DIR)/constructor.c \
+			$(SRC_DIR)/validator.c \
+			$(SRC_DIR)/executor.c \
 			$(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c

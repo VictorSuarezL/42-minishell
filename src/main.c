@@ -70,224 +70,37 @@ int is_builtin(char *input)
 } */
 
 
-int	save_fork(void)
-{
-	int	pid;
 
-	pid = fork();
-	if (pid == -1)
-		ft_perror("fork");
-	return (pid);
-}
 
-size_t	count_env_vars(char **env)
-{
-	size_t	count;
-
-	count = 0;
-	while (env[count])
-		count++;
-	return (count);
-}
-
-char	**copy_env(char **env)
-{
-	size_t	count;
-	char	**copy;
-
-	count = count_env_vars(env);
-	copy = malloc((count + 1) * sizeof(char *));
-	if (!copy)
-		return (NULL);
-	count = 0;
-	while (env[count])
-	{
-		copy[count] = ft_strdup(env[count]);
-		// if (!copy[count])
-		// 	return (free_double(copy), NULL);
-		count++;
-	}
-	copy[count] = NULL;
-	return (copy);
-}
-
-// char *command_error(char *cmnd)
+// size_t	count_env_vars(char **env)
 // {
-// 	char *aux;
+// 	size_t	count;
 
-// 	aux = malloc(ft_strlen(str)+fr_strlen(cmnd)+1);
-// 	if (!aux)
-// 	{
-// 		ft_perror("Malloc error");
-// 	}
-// 	while ()
-// 	{
-
-// 	}
-	
-	
-
+// 	count = 0;
+// 	while (env[count])
+// 		count++;
+// 	return (count);
 // }
 
-void wait_pipe(void)
-{
-		int status;
-		int i = 0;
-
-		while (i < 2) 
-		{
-            if (wait(&status) == -1) 
-			{
-                perror("wait failed");
-                exit(errno);
-            }
-            if (WIFEXITED(status) && WEXITSTATUS(status) != 0) 
-			{
-                exit(WEXITSTATUS(status));
-            }
-			i++;
-        }
-}
-
-void	runcmd(struct cmd *cmd, char **env_copy)
-{
-	int				p[2];
-	struct execcmd	*ecmd;
-	struct pipecmd	*pcmd;
-	struct redircmd	*rcmd;
-	char *cmd_path;
-
-	if (!cmd)
-	{
-		exit(1);
-	}
-	if (cmd->type == EXEC)
-	{
-		ecmd = (struct execcmd *)cmd;
-		if (!ecmd->argv[0])
-			exit(1);
-		// if (is_builtin(ecmd->argv[0]))
-		// {
-		// 	// Guardar en un entero la salida del execute_builtin
-		// 	execute_builtin(ecmd->argv[0], NULL, &env_copy);
-		// }
-		// else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv, env_copy) == -1)
-		// {
-		// 	ft_perror("error: execve");
-		// }
-		cmd_path = find_path(ecmd->argv[0], env_copy);
-		if (!cmd_path)
-		{
-			ft_putendl_fd("Command not found", STDERR_FILENO);
-			// printf("hererer!!\n");
-			exit(127);
-			// errno = ENOENT;
-			// ft_perror("Error!");
-		}
-		// int i = -1;
-		// while (ecmd->argv[++i])
-		// {
-		// 	if (ft_strcmp("$?", ecmd->argv[i]) == 0)
-		// 	{
-		// 		ecmd->argv[i] = ft_itoa(errno);
-		// 		break;
-		// 	}
-			
-		// }
-		
-		if (execve(cmd_path, ecmd->argv, env_copy) == -1)
-		{
-			// printf("here!here!\n");
-			ft_perror("Error: execve");
-			// fprintf(stderr, "%s: %s\n", ecmd->argv[0], strerror(errno));
-			// exit(1);
-		// ft_putendl_fd(strerror(errno), STDERR_FILENO);
-		// exit(1);
-		}
-		// aux = find_path(ecmd->argv[0], env_copy);
-		// printf("path: %s\n", aux);
-		// free(aux);
-		// free(env_copy);
-		free(ecmd);
-	}
-	else if (cmd->type == PIPE)
-	{
-		pcmd = (struct pipecmd *)cmd;
-		if (pipe(p) < 0)
-			ft_perror("Error: piped out!");
-		if (save_fork() == 0)
-		{
-			close(1);
-			dup(p[1]);
-			close(p[0]);
-			close(p[1]);
-			runcmd(pcmd->left, env_copy);
-			// exit(errno);
-		}
-		if (save_fork() == 0)
-		{
-			close(0);
-			dup(p[0]);
-			close(p[0]);
-			close(p[1]);
-			runcmd(pcmd->right, env_copy);
-			// exit(errno);
-		}
-		close(p[0]);
-		close(p[1]);
-		wait_pipe();
-		// wait_status();
-		// wait_status();
-
-		// errno = wait_status();
-		// errno = wait_status();
-		// int status;
-		// for (int i = 0; i < 2; i++) {
-        //     if (wait(&status) == -1) {
-        //         perror("wait failed");
-        //         exit(errno);
-        //     }
-        //     if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
-        //         // Captura el código de salida si es diferente de 0
-        //         exit(WEXITSTATUS(status));
-        //     }
-        // }
-	}
-	else if (cmd->type == REDIR)
-	{
-		rcmd = (struct redircmd *)cmd;
-		close(rcmd->fd);
-		if (open(rcmd->file, rcmd->mode, 0644) < 0)
-		{
-			ft_perror("open failed: No such file or directory");
-			// exit(errno);
-			// ft_perror("mi error");
-			// fprintf(stderr, "%s: %s\n", rcmd->file,
-			// 	strerror(errno));
-			// exit(1);
-		}
-		runcmd(rcmd->cmd, env_copy);
-	}
-	exit(0);
-}
-
-// int in_quote(char *str, int i, char c)
+// char	**copy_env(char **env)
 // {
-// 	int j = 0;
-// 	int flag = 0;
-// 	while (str[j] && j < i)
+// 	size_t	count;
+// 	char	**copy;
+
+// 	count = count_env_vars(env);
+// 	copy = malloc((count + 1) * sizeof(char *));
+// 	if (!copy)
+// 		return (NULL);
+// 	count = 0;
+// 	while (env[count])
 // 	{
-// 		if (str[j] == c && flag == 0)
-// 		{
-// 			flag = 1;
-// 		}
-// 		else if (str[j] == c && flag == 1)
-// 		{
-// 			flag = 0;
-// 		}
-// 		j++;
+// 		copy[count] = ft_strdup(env[count]);
+// 		// if (!copy[count])
+// 		// 	return (free_double(copy), NULL);
+// 		count++;
 // 	}
-// 	return flag;
+// 	copy[count] = NULL;
+// 	return (copy);
 // }
 
 void escape_d_chars(char *str, char *aux, int *i, int *j) 
@@ -389,20 +202,20 @@ void replace_qmark(char *line, int exit_status)
     char *buffer;
 
     exit_status_str = ft_itoa(exit_status);
-    if (!exit_status_str) 
-	{
-        perror("ft_itoa failed");
-        exit(EXIT_FAILURE);
-    }
+    // if (!exit_status_str) 
+	// {
+    //     perror("ft_itoa failed");
+    //     exit(EXIT_FAILURE);
+    // }
 
     buffer_size = len + strlen(exit_status_str) - 2 + 1;
     buffer = malloc(sizeof(char) * buffer_size);
-    if (!buffer) 
-	{
-        free(exit_status_str);
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
-    }
+    // if (!buffer) 
+	// {
+    //     free(exit_status_str);
+    //     perror("malloc failed");
+    //     exit(EXIT_FAILURE);
+    // }
 
     pos = ft_strnstr(line, "$?", len);
     if (!pos || (line[0] == '$' && line[1] == '?')) 
@@ -431,18 +244,24 @@ int	main(int argc, char *argv[], char **env)
 	// int my_perror = 0;
 	char	**export_env;
 	// char	line[100] = "echo 'hola $HOME << > >  | mundo' estamos aqui 'aquí vamos $$$$$ otra vez' adfa";
-	// char	line[100] = "ls -al | grepa ";
+	char	line[100] = "ls -al | grep d";
 	// char	line[100] = "ls -al | echo $?";
 	// char	line[100] = "echo $HOME";
 	// char	line[100] = "echa";
 	// char	line[100] = "/bin/echo hola";
-	char	line[100] = "echo hola";
+	// char	line[100] = "echo 'hola echo mundo' esto es una prueba";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
 	// char	line[100] = "cat /dev/random | head";
 	// char	line[100] = "cat | cat | ls";
+	// char	line[100] = "ls -al | grep d | wc -l";
 
+	if (!validator(line))
+	{
+		printf("syntax error!\n");
+
+	}
 	
-	replace_qmark(line, exit_status);
+	// replace_qmark(line, exit_status);
 	// printf("line = %s\n", line);
 
 	// escape_special_chars(line);
@@ -469,40 +288,4 @@ int	main(int argc, char *argv[], char **env)
     }
 	exit_status = wait_status();
 	printf("Exit status = %d\n", exit_status);
-
-
-    // int status;
-    // wait(&status); // Wait for the child process to finish
-    // if (WIFEXITED(status)) 
-	// {
-	// 	errno = WEXITSTATUS(status);
-    // //   int exit_status = WEXITSTATUS(status);
-	// //   errno = exit_status;
-    // //   printf("Child process exited with status: %d\nErrno = %d\n", exit_status, errno);
-    // } 
-	// else if (WIFSIGNALED(status)) 
-	// {
-    //   int signal_number = WTERMSIG(status);
-	//   errno = signal_number;
-    //   printf("Child process terminated by signal: %d\n", signal_number);
-    // }
-	// printf("errno: %d\n", my_perror);
-	// free_all(export_env);
 }
-
-// int main() {
-//     char *binaryPath = "/bin/ls";
-//     // char *binaryPath = "usr/bin";
-//     char *const argv[] = {"ls", "-l", NULL};
-//     char *const envp[] = { "MY_VAR=Hello", NULL };
-
-//     printf("Ejecutando execve...\n");
-
-//     if (execve(binaryPath, argv, envp) == -1) {
-//         perror("execve");
-//         exit(EXIT_FAILURE);
-//     }
-
-//     printf("Esto no debería imprimirse\n");
-//     return (0);
-// }
