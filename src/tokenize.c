@@ -20,17 +20,9 @@ int	peek(char **ps, char *es, char *toks)
 		return (0);
 }
 
-#include <stdio.h>
-
-// Funciones auxiliares
-int	is_whitespace(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v');
-}
-
 char	*skip_whitespace(char *str, char *end)
 {
-	while (str < end && is_whitespace(*str))
+	while (str < end && ft_strchr(" \t\r\n\v", *str))
 	{
 		str++;
 	}
@@ -53,7 +45,7 @@ char	*skip_quote(char *str, char *end, char quote)
 
 char	*skip_token(char *str, char *end)
 {
-	while (str < end && !is_whitespace(*str) && !ft_strchr("<|>", *str))
+	while (str < end && !ft_strchr(" \t\r\n\v", *str) && !ft_strchr("<|>", *str))
 	{
 		str++;
 	}
