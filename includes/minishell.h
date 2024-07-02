@@ -5,6 +5,7 @@
 // BORRAR
 # include <fcntl.h>
 # include <libft.h>
+# include <string.h>
 
 // NO BORRAR
 # include <readline/history.h>
@@ -60,6 +61,9 @@ struct			redircmd
 int	save_fork(void);
 void	runcmd(struct cmd *cmd, char **env_copy);
 int wait_status(void);
+void	wait_pipe(void);
+void	remove_quotes(struct execcmd *ecmd);
+
 int	validator(char *str);
 // SEARCH_PATH.C
 void ft_perror(char *msg);
@@ -82,6 +86,18 @@ struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);
 // struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
 struct cmd	*redir_out_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
 struct cmd	*redir_in_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
+
+// ESCAPE.C
+void escape_d_chars(char *str, char *aux, int *i, int *j); 
+void escape_s_chars(char *str, char *aux, int *i, int *j);
+void escape_special_chars(char *str); 
+void pop_slash(char *str);
+void replace_qmark(char *line, int exit_status);
+
+// UTILS_TOK
+void ft_perror(char *msg);
+char	*skip_whitespace(char *str, char *end);
+
 
 
 

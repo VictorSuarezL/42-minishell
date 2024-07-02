@@ -1,55 +1,5 @@
 #include <minishell.h>
 
-int	save_fork(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == -1)
-		ft_perror("fork");
-	return (pid);
-}
-
-void	remove_quotes(struct execcmd *ecmd)
-{
-	int		i;
-	size_t	len;
-
-	i = -1;
-	while (ecmd->argv[++i])
-	{
-		len = strlen(ecmd->argv[i]);
-		if (len > 1 && ((ecmd->argv[i][0] == '"' && ecmd->argv[i][len
-					- 1] == '"') || (ecmd->argv[i][0] == '\''
-					&& ecmd->argv[i][len - 1] == '\'')))
-		{
-			ft_memmove(ecmd->argv[i], &ecmd->argv[i][1], len - 2);
-			ecmd->argv[i][len - 2] = '\0';
-		}
-	}
-}
-
-void	wait_pipe(void)
-{
-	int	status;
-	int	i;
-
-	i = 0;
-	while (i < 2)
-	{
-		if (wait(&status) == -1)
-		{
-			perror("wait failed");
-			exit(errno);
-		}
-		if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-		{
-			exit(WEXITSTATUS(status));
-		}
-		i++;
-	}
-}
-
 void	run_redir_cmd(struct cmd *cmd, char **env_copy)
 {
 	struct redircmd	*rcmd;

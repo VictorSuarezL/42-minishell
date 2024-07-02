@@ -5,38 +5,6 @@
 #include <string.h>
 #include <unistd.h>
 
-/*
-size_t	count_env_vars(char **env)
-{
-	size_t	count;
-
-	count = 0;
-	while (env[count])
-		count++;
-	return (count);
-}
-
-char	**copy_env(char **env)
-{
-	size_t	count;
-	char	**copy;
-
-	count = count_env_vars(env);
-	copy = malloc((count + 1) * sizeof(char *));
-	if (!copy)
-		return (NULL);
-	count = 0;
-	while (env[count])
-	{
-		copy[count] = ft_strdup(env[count]);
-		// if (!copy[count])
-		// 	return (free_double(copy), NULL);
-		count++;
-	}
-	copy[count] = NULL;
-	return (copy);
-}
- */
 void	free_all(char **str)
 {
 	int	i;

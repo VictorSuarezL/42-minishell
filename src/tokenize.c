@@ -1,51 +1,23 @@
 #include <minishell.h>
 
-int	peek(char **ps, char *es, char *toks)
-{
-	char	*s;
-	int		i;
-	int		length;
-
-	i = 0;
-	s = *ps;
-	length = es - s; // Longitud máxima calculada basada en es
-	// Salta caracteres de espacio en blanco
-	while (i < length && ft_strchr(" \t\r\n\v", s[i]))
-		i++;
-	*ps = &s[i]; // Usando &s[i] para la claridad
-	// Verifica si el caracter actual está dentro de los toks buscados
-	if (i < length && s[i] && ft_strchr(toks, s[i]))
-		return (1);
-	else
-		return (0);
-}
-
-char	*skip_whitespace(char *str, char *end)
-{
-	while (str < end && ft_strchr(" \t\r\n\v", *str))
-	{
-		str++;
-	}
-	return (str);
-}
-
-char	*skip_quote(char *str, char *end, char quote)
-{
-	str++;
-	while (str < end && *str != quote)
-	{
-		str++;
-	}
-	if (str < end && *str == quote)
-	{
-		str++;
-	}
-	return (str);
-}
+// char	*skip_quote(char *str, char *end, char quote)
+// {
+// 	str++;
+// 	while (str < end && *str != quote)
+// 	{
+// 		str++;
+// 	}
+// 	if (str < end && *str == quote)
+// 	{
+// 		str++;
+// 	}
+// 	return (str);
+// }
 
 char	*skip_token(char *str, char *end)
 {
-	while (str < end && !ft_strchr(" \t\r\n\v", *str) && !ft_strchr("<|>", *str))
+	while (str < end && !ft_strchr(" \t\r\n\v", *str) && !ft_strchr("<|>",
+			*str))
 	{
 		str++;
 	}
@@ -72,7 +44,16 @@ int	handle_quote(char **aux, char *end)
 
 	quote = **aux;
 	(*aux)++;
-	*aux = skip_quote(*aux, end, quote);
+	// *aux = skip_quote(*aux, end, quote);
+	(*aux)++; //TODO TENER EN CUENTA ESTO
+	while (*aux < end && **aux != quote)
+	{
+		(*aux)++;
+	}
+	if (*aux < end && **aux == quote)
+	{
+		(*aux)++;
+	}
 	return ('a');
 }
 

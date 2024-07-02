@@ -10,8 +10,8 @@ LIBFT_SRC = ./lib/libft/
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 # CFLAGS				=	-Wall -Werror -Wextra 
-# CC					=	gcc -g $(CFLAGS) $(INCLUDE)
-CC					=	clang -O0 -g -MMD $(INCLUDE)
+CC					=	gcc -g $(CFLAGS) $(INCLUDE)
+# CC					=	clang -O0 -g -MMD $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -35,6 +35,9 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/constructor.c \
 			$(SRC_DIR)/validator.c \
 			$(SRC_DIR)/executor.c \
+			$(SRC_DIR)/utils.c \
+			$(SRC_DIR)/utils_tok.c \
+			$(SRC_DIR)/escape.c \
 			$(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c

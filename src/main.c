@@ -12,23 +12,7 @@
 #define BACK 5
 #define MAXARGS 10
 
-void ft_perror(char *msg)
-{
-    if (errno) // Si hay un error definido en errno
-    {
-		// printf("inside ft_error with errno!\n original msg: %s\t errno = %d\n", msg, errno);
-        perror("Error"); // Imprime el mensaje de error asociado a errno
-	    exit(errno); // Sale del programa con un código de error
-    }
-    else // Si errno es 0, es decir, no hay error
-    {
-		// printf("inside ft_error!\n");
-        ft_putendl_fd(msg, STDERR_FILENO); // Imprime el mensaje de error personalizado
-	    exit(1); // Sale del programa con un código de error
-    }
-        // ft_putendl_fd(msg, STDERR_FILENO); // Imprime el mensaje de error personalizado
-	    // exit(1); // Sale del programa con un código de error
-}
+
 
 /* int execute_builtin(char *input, char ***export, char ***env) {
     char **split_input;
@@ -103,139 +87,23 @@ int is_builtin(char *input)
 // 	return (copy);
 // }
 
-void escape_d_chars(char *str, char *aux, int *i, int *j) 
-{
-	aux[(*j)++] = str[(*i)++];
-    while (str[*i] && str[*i] != '"') 
-	{
-		if (ft_strchr("'<>|\\", str[*i]))
-		{
-		    aux[*j] = '\\';
-			(*j)++;
-		}
-	aux[(*j)++] = str[(*i)++];
-    }
-    if (str[*i] == '"') 
-		aux[(*j)++] = str[(*i)++];
-}
 
-void escape_s_chars(char *str, char *aux, int *i, int *j) 
-{
-	aux[(*j)++] = str[(*i)++];
-    while (str[*i] && str[*i] != '\'') 
-	{
-        if (ft_strchr("$\"<>|\\", str[*i])) 
-		{
-            aux[*j] = '\\';
-			(*j)++;
-        }
-	aux[(*j)++] = str[(*i)++];
-    }
-    if (str[*i] == '\'') 
-		aux[(*j)++] = str[(*i)++];
-}
+// int wait_status(void)
+// {
+// 	int status;
+// 	int out_status = 0;
 
-// Función principal para escapar caracteres especiales en una cadena
-void escape_special_chars(char *str) {
-    int i = 0;
-	int j = 0;
-    char *aux;
-	
-	aux = malloc(strlen(str) * 2 + 1);
-	if (!aux)
-		ft_perror("Error in malloc");
+// 	wait(&status);
+//     if (WIFEXITED(status) && WEXITSTATUS(status) != 0) 
+// 		out_status = WEXITSTATUS(status);
+// 	else if (WIFEXITED(status) && WIFSIGNALED(status) != 0) 
+// 		out_status = WTERMSIG(status);
+// 	else
+// 		out_status = 0;
+// 	return(out_status);
+// }
 
-    while (str[i]) 
-	{
-        if (str[i] == '"') 
-            escape_d_chars(str, aux, &i, &j);
-		else if (str[i] == '\'') 
-            escape_s_chars(str, aux, &i, &j);
-		else 
-            aux[j++] = str[i++];
-    }
-    aux[j] = '\0';
-    strcpy(str, aux);
-    free(aux);
-}
 
-void pop_slash(char *str)
-{
-	int i = 0;
-	int j = 0;
-	char *aux;
-
-	aux = malloc(ft_strlen(str));
-
-	while (str[i])
-	{
-		if (str[i] == '\\')
-			i++;
-		else
-			aux[j++] = str[i++];
-	}
-	strcpy(str, aux);
-	free(aux);
-}
-
-int wait_status(void)
-{
-	int status;
-	int out_status = 0;
-
-	wait(&status);
-    if (WIFEXITED(status) && WEXITSTATUS(status) != 0) 
-		out_status = WEXITSTATUS(status);
-	else if (WIFEXITED(status) && WIFSIGNALED(status) != 0) 
-		out_status = WTERMSIG(status);
-	else
-		out_status = 0;
-	return(out_status);
-}
-
-void replace_qmark(char *line, int exit_status) 
-{
-    char *pos;
-    char *exit_status_str;
-    int len = strlen(line);
-    int buffer_size; 
-    char *buffer;
-
-    exit_status_str = ft_itoa(exit_status);
-    // if (!exit_status_str) 
-	// {
-    //     perror("ft_itoa failed");
-    //     exit(EXIT_FAILURE);
-    // }
-
-    buffer_size = len + strlen(exit_status_str) - 2 + 1;
-    buffer = malloc(sizeof(char) * buffer_size);
-    // if (!buffer) 
-	// {
-    //     free(exit_status_str);
-    //     perror("malloc failed");
-    //     exit(EXIT_FAILURE);
-    // }
-
-    pos = ft_strnstr(line, "$?", len);
-    if (!pos || (line[0] == '$' && line[1] == '?')) 
-	{
-        free(buffer);
-        free(exit_status_str);
-        return;
-    }
-
-    // int prefix_len = pos - line;
-    ft_strlcpy(buffer, line, pos - line + 1);
-
-    ft_strlcat(buffer, exit_status_str, buffer_size);
-    ft_strlcat(buffer, pos + 2, buffer_size);
-
-    strcpy(line, buffer);
-
-    free(buffer);
-    free(exit_status_str);
-}
 
 int	main(int argc, char *argv[], char **env)
 {
@@ -244,12 +112,12 @@ int	main(int argc, char *argv[], char **env)
 	// int my_perror = 0;
 	char	**export_env;
 	// char	line[100] = "echo 'hola $HOME << > >  | mundo' estamos aqui 'aquí vamos $$$$$ otra vez' adfa";
-	char	line[100] = "ls -al | grep d";
+	// char	line[100] = "ls -al | grep d";
 	// char	line[100] = "ls -al | echo $?";
 	// char	line[100] = "echo $HOME";
 	// char	line[100] = "echa";
 	// char	line[100] = "/bin/echo hola";
-	// char	line[100] = "echo 'hola echo mundo' esto es una prueba";
+	char	line[100] = "echo 'hola echo mundo' esto es una prueba";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
 	// char	line[100] = "cat /dev/random | head";
 	// char	line[100] = "cat | cat | ls";
