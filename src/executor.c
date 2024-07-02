@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-int	save_fork(void) 
+int	save_fork(void)
 {
 	int	pid;
 
@@ -103,7 +103,8 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 	// 	// Guardar en un entero la salida del execute_builtin
 	// 	execute_builtin(ecmd->argv[0], NULL, &env_copy);
 	// }
-	// else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv, env_copy) == -1)
+	// else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv,
+			// env_copy) == -1)
 	// {
 	// 	ft_perror("error: execve");
 	// }
@@ -115,15 +116,6 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 	}
 	remove_quotes(ecmd);
 	execve(cmd_path, ecmd->argv, env_copy);
-	// if (execve(cmd_path, ecmd->argv, env_copy) == -1)
-	// {
-	// 	// printf("here!here!\n");
-	// 	ft_perror("Error: execve");
-	// 	// fprintf(stderr, "%s: %s\n", ecmd->argv[0], strerror(errno));
-	// 	// exit(1);
-	// 	// ft_putendl_fd(strerror(errno), STDERR_FILENO);
-	// 	// exit(1);
-	// }
 }
 
 void	runcmd(struct cmd *cmd, char **env_copy)
@@ -144,7 +136,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 	}
 	else if (cmd->type == REDIR)
 	{
-        run_redir_cmd(cmd, env_copy);
+		run_redir_cmd(cmd, env_copy);
 	}
 	exit(0);
 }
