@@ -17,53 +17,53 @@ static int	is_pipe_end(char *str)
 	}
 }
 
-int	in_quote(char *str, int i, char c)
-{
-	int	j;
-	int	flag;
+// int	in_quote(char *str, int i, char c)
+// {
+// 	int	j;
+// 	int	flag;
 
-	j = 0;
-	flag = 0;
-	while (str[j] && j < i)
-	{
-		if (str[j] == c && flag == 0)
-		{
-			flag = 1;
-		}
-		else if (str[j] == c && flag == 1)
-		{
-			flag = 0;
-		}
-		j++;
-	}
-	printf("in_quote = %i\n", flag);
-	return (flag);
-}
+// 	j = 0;
+// 	flag = 0;
+// 	while (str[j] && j < i)
+// 	{
+// 		if (str[j] == c && flag == 0)
+// 		{
+// 			flag = 1;
+// 		}
+// 		else if (str[j] == c && flag == 1)
+// 		{
+// 			flag = 0;
+// 		}
+// 		j++;
+// 	}
+// 	printf("in_quote = %i\n", flag);
+// 	return (flag);
+// }
 
 static int	quote_counter(char *str)
 {
 	int	i;
 	int	flag;
-	int	flag_a;
-	int	flag_b;
+	int	flag_double;
+	int	flag_single;
 
 	i = 0;
 	flag = 0;
-	flag_a = 0;
-	flag_b = 0;
+	flag_double = 0;
+	flag_single = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' && flag == 0 && in_quote(str, i, '"') == 0)
-			flag = 1;
-		else if (str[i] == '\'' && flag == 1 && in_quote(str, i, '"') == 0)
-			flag = 0;
-		if (str[i] == '\"' && flag == 0 && in_quote(str, i, '\'') == 0)
-			flag = 1;
-		else if (str[i] == '\"' && flag == 1 && in_quote(str, i, '\'') == 0)
-			flag = 0;
+		if (str[i] == '\'' && flag_double == 0 && flag_single == 0)
+			flag_single = 1;
+		else if (str[i] == '\'' && flag_single == 1 && flag_double == 0)
+			flag_single = 0;
+		if (str[i] == '\"' && flag_single == 0 && flag_double == 0)
+			flag_double = 1;
+		else if (str[i] == '\"' && flag_double == 1 && flag_single == 0)
+			flag_double = 0;
 		i++;
 	}
-	if (flag_a || flag_b)
+	if (flag_double || flag_single)
 		flag = 1;
 	return (flag);
 }

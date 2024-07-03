@@ -122,15 +122,18 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "cat /dev/random | head";
 	// char	line[100] = "cat | cat | ls";
 	// char	line[100] = "ls -al | grep d | wc -l";
-	char	line[100] = "ls -al > aa.txt";
+	// char	line[100] = "ls -al > aa.txt";
+	// char	line[100] = "echo 'hola \" son unas comillas'";
+	char	line[100] = "echo 'hola \" son unas comillas' esto esta \" mal";
 
 	if (!validator(line))
 	{
 		printf("syntax error!\n");
+		exit(1);
 
 	}
 	
-	// replace_qmark(line, exit_status);
+	replace_qmark(line, exit_status);
 	// printf("line = %s\n", line);
 
 	// escape_special_chars(line);

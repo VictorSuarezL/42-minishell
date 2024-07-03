@@ -64,7 +64,7 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 		ft_putendl_fd("Command not found", STDERR_FILENO);
 		exit(127);
 	}
-	// remove_quotes(ecmd);
+	remove_quotes(ecmd);
 	// for (size_t i = 0; ecmd->argv[i]; i++)
 	// {
 	// 	printf("argv[%zu] = %s\n", i, ecmd->argv[i]);
