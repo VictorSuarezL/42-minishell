@@ -21,6 +21,8 @@
 #define REDIR 2
 #define PIPE 3
 #define LIST 4
+#define REDIR_IN 4
+#define REDIR_OUT 4
 
 struct			cmd
 {
@@ -97,8 +99,6 @@ void replace_qmark(char *line, int exit_status);
 // UTILS_TOK
 void ft_perror(char *msg);
 char	*skip_whitespace(char *str, char *end);
-
-
 
 
 

@@ -117,11 +117,12 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "echo $HOME";
 	// char	line[100] = "echa";
 	// char	line[100] = "/bin/echo hola";
-	char	line[100] = "echo 'hola echo mundo' esto es una prueba";
+	// char	line[100] = "echo 'hola echo mundo' esto es una prueba";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
 	// char	line[100] = "cat /dev/random | head";
 	// char	line[100] = "cat | cat | ls";
 	// char	line[100] = "ls -al | grep d | wc -l";
+	char	line[100] = "ls -al > aa.txt";
 
 	if (!validator(line))
 	{
@@ -147,13 +148,14 @@ int	main(int argc, char *argv[], char **env)
 
 
 
+    runcmd(parse_cmd(line), env);
 
 	
-	if(save_fork() == 0) 
-	{
-      runcmd(parse_cmd(line), env);
-      exit(0); // Exit the child process after executing the command
-    }
+	// if(save_fork() == 0) 
+	// {
+    //   runcmd(parse_cmd(line), env);
+    //   exit(0); // Exit the child process after executing the command
+    // }
 	exit_status = wait_status();
 	printf("Exit status = %d\n", exit_status);
 }
