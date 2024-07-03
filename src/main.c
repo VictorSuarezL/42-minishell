@@ -459,88 +459,127 @@ void procesarredirecciones(char *entrada)
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
-
+void ft_strcat(char *dest, const char *src)
+{
+    int i;
+    int j;
+    i = 0;
+    j = 0;
+    while (dest[i])
+        i++;
+    while (src[j])
+        dest[i++] = src[j++];
+    dest[i] = '\0';
+}
 // Función para verificar si una cadena coincide con un patrón de wildcard
 int match_pattern(const char *pattern, const char *str)
 {
-    // Si llegamos al final del patrón y la cadena, es una coincidencia
-    if (*pattern == '\0' && *str == '\0') {
+    if (*pattern == '\0' && *str == '\0')
         return 1;
-    }
-
-    // Si el patrón es '*', intenta coincidir con cualquier cosa
-    if (*pattern == '*') {
-        // Avanza el patrón y verifica si coincide con el resto de la cadena
+    if (*pattern == '*')
+    {
+        // Evitar bucles infinitos si hay múltiples '*' consecutivos
+        while (*(pattern + 1) == '*')
+            pattern++;
+        // Avanzar el patrón y verificar si coincide con el resto de la cadena
         return match_pattern(pattern + 1, str) || (*str && match_pattern(pattern, str + 1));
     }
-
-    // Si los caracteres actuales coinciden, avanza en ambos
-    if (*pattern == *str) {
+    if (*pattern == *str)
         return match_pattern(pattern + 1, str + 1);
-    }
-
-    // Si no coinciden y el patrón no es '*', no hay coincidencia
     return 0;
 }
-
+// Declaración de funciones auxiliares
+void initialize_variables(char *result, int *pattern_found, int *any_pattern_found, int *wildcard_present);
+int process_token(char *token);
+int expand_token(char *token, char *result, int *pattern_found);
+void finalize_result(char *buf, char *result);
+int wildcard_result(int wildcard_present, int any_pattern_found);
+void    add_buf(char *result, char *token);
+void    add_buf(char *result, char *token)
+{
+    ft_strcat(result, token);
+    ft_strcat(result, " ");
+}
+int wildcard_result(int wildcard_present, int any_pattern_found)
+{
+    if (!wildcard_present)
+        return 0;  // No hay wildcards
+    else if (any_pattern_found)
+        return 1;  // Hay wildcards y coincidencias
+    else
+        return -1; // Hay wildcards pero no coincidencias
+}
 int expand_wildcards(char *buf)
 {
-    char result[1000] = "";
-    char *token = strtok(buf, " ");
-    int pattern_found = 0;
-    int any_pattern_found = 0;
-    int wildcard_present = 0;
-
-    while (token != NULL) {
-        if (strchr(token, '*') != NULL) {
+    char result[1000];
+    char *token;
+    int pattern_found;
+    int any_pattern_found;
+    int wildcard_present;
+    // Inicialización de variables
+    initialize_variables(result, &pattern_found, &any_pattern_found, &wildcard_present);
+    token = ft_strtok(buf, " ");
+    while (token != NULL)
+    {
+        if (process_token(token))
+        {
             wildcard_present = 1;
             pattern_found = 0;
-            DIR *d;
-            struct dirent *dir;
-            d = opendir(".");
-            if (d) {
-                while ((dir = readdir(d)) != NULL) {
-                    // Ignorar '.' y '..'
-                    if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) {
-                        continue;
-                    }
-                    if (match_pattern(token, dir->d_name)) {
-                        strcat(result, dir->d_name);
-                        strcat(result, " ");
-                        pattern_found = 1;
-                    }
-                }
-                closedir(d);
-            }
-            if (!pattern_found) {
-                // Si no se encontró ninguna coincidencia, se agrega el patrón original
-                strcat(result, token);
-                strcat(result, " ");
-            } else {
+            if (!expand_token(token, result, &pattern_found))
+                add_buf(result, token);
+            else
                 any_pattern_found = 1;
-            }
         } else {
-            strcat(result, token);
-            strcat(result, " ");
+            add_buf(result, token);
         }
-        token = strtok(NULL, " ");
+        token = ft_strtok(NULL, " ");
     }
-    // Eliminar el espacio final si existe
-    size_t len = strlen(result);
-    if (len > 0 && result[len - 1] == ' ') {
+    finalize_result(buf, result);
+    return (wildcard_result(wildcard_present, any_pattern_found));
+}
+void initialize_variables(char *result, int *pattern_found, int *any_pattern_found, int *wildcard_present)
+{
+    result[0] = '\0'; // Inicializa result a una cadena vacía
+    *pattern_found = 0;
+    *any_pattern_found = 0;
+    *wildcard_present = 0;
+}
+int process_token(char *token)
+{
+    if (ft_strchr(token, '*') != NULL)
+        return 1;
+    return 0;
+}
+int expand_token(char *token, char *result, int *pattern_found)
+{
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(".");
+    if (d)
+    {
+        while ((dir = readdir(d)) != NULL)
+        {
+            // Ignorar '.' y '..'
+            if (ft_strcmp(dir->d_name, ".") == 0 || ft_strcmp(dir->d_name, "..") == 0)
+                continue;
+            if (match_pattern(token, dir->d_name))
+            {
+                ft_strcat(result, dir->d_name);
+                ft_strcat(result, " ");
+                *pattern_found = 1;
+            }
+        }
+        closedir(d);
+    }
+    return (*pattern_found);
+}
+void finalize_result(char *buf, char *result)
+{
+    size_t len;
+    len  = ft_strlen(result);
+    if (len > 0 && result[len - 1] == ' ')
         result[len - 1] = '\0';
-    }
-
-    // Copiar el resultado de nuevo en el buffer original
     ft_strcpy(buf, result);
-
-    if (!wildcard_present) {
-        return 0;  // No hay wildcards
-    } else if (any_pattern_found) {
-        return 1;  // Hay wildcards y coincidencias
-    } else {
-        return -1; // Hay wildcards pero no coincidencias
-    }
 }
 
 #include <minishell.h>
@@ -930,9 +969,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
     }
     expand(buf, *copy_en);
     procesarredirecciones(buf);
-    ft_printf("%s\n", buf);
-    if (expand_wildcards(buf) == -1)
-        return;
+    expand_wildcards(buf);
     if (execute_cd(buf, *copy_en, *copy_export) == 0)
         return;
     if (is_builtin_env(buf) && (!strstr(buf, "|") || !strstr(buf, ">") || !strstr(buf, "<")))
@@ -991,7 +1028,5 @@ int main(int args, char **argv, char **env)
         }
         process_input(input, &copy_en, &copy_export);
     }
-    // char buf[1000];
-    // setup_executor(buf, copy_en);
     final_clean(copy_export, copy_en);
 }
