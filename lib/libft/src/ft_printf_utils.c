@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsanz-su <vsanz-su@student.42malaga.com    +#+  +:+       +#+        */
+/*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 13:36:00 by vsanz-su          #+#    #+#             */
-/*   Updated: 2023/11/03 17:45:03 by vsanz-su         ###   ########.fr       */
+/*   Updated: 2024/07/03 10:18:47 by  francfer        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
-
-size_t	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		i++;
-	}
-	return (i);
-}
 
 void	ft_putchar(char c, int *n_chr)
 {

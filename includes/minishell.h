@@ -100,7 +100,55 @@ char	*skip_whitespace(char *str, char *end);
 
 
 
+//BUILTINS
+int cd_builtin(const char *path, char **env, char **export);
+char *get_env_value(const char *name, char **envp);
+int find_env_var(char **env, const char *var);
+void allocate_new_env_var(char **env, int i, const char *var, const char *value);
+void free_and_allocate_env_var(char **env, int i, const char *var, const char *value);
+void update_existing_env_var(char **env, int i, const char *var, const char *value);
+void update_env_var(char **env, const char *var, const char *value);
+char *create_expanded_path(const char *home, const char *path);
+char *handle_virguline(const char *path, char **env);
+int is_empty_or_spaces(const char *str);
 
+char	*display_prompt(void);
 
+int	skip_command(char *input, int i);
+int	is_echo_command(char *input, int *i);
+int	handle_n_option(char *input, int i, int *line);
+int	handle_escape_sequences(char *input, int i);
+void	handle_output(char *input, int i);
+void	echo_builtin(char *input);
 
+int	exit_builtin(void);
+
+int	env_builtin(char *input, char **env);
+void	split_variable(char *variable, char **key, char **value);
+int find_and_update(char **export, char *variable, char *key);
+char	**allocate_new_export(char **export, int count);
+int	add_new_variable(char ***export, char *variable, char *key, char *value, int count);
+int is_valid_variable_name(const char *name);
+int add_variable(char *variable, char ***export);
+int	export_builtin(char **variables, char ***export, char ***env);
+
+int	pwd_builtin(char *input);
+
+void	free_double(char **str);
+size_t	count_env_vars(char **env);
+char	**copy_env(char **env);
+int should_remove_env_var(char *env_var, char **vars);
+size_t populate_new_env(char **new_env, char **old_env, char **vars);
+int unset_builtin(char ***env, char **vars);
+
+int	skip_spaces(char *input, int i);
+void	ft_swap(char **a, char **b);
+void	sort_strings(char **str);
+int	empty_string(char *str);
+void	print_str(char **str_array);
+void	copy_export(char **new_export, char **export, int count);
+
+int	is_builtin_env(char *input);
+int	is_builtin(char *input);
+int execute_builtin(char *input, char ***export, char ***env);
 #endif

@@ -10,8 +10,8 @@ LIBFT_SRC = ./lib/libft/
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 # CFLAGS				=	-Wall -Werror -Wextra 
-CC					=	gcc -g $(CFLAGS) $(INCLUDE)
-# CC					=	clang -O0 -g -MMD $(INCLUDE)
+# CC					=	gcc -g $(CFLAGS) $(INCLUDE)
+CC					=	clang -O0 -g -MMD $(INCLUDE)
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -38,7 +38,19 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/utils.c \
 			$(SRC_DIR)/utils_tok.c \
 			$(SRC_DIR)/escape.c \
-			$(SRC_DIR)/main.c
+			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/builtins_utils.c \
+			$(SRC_DIR)/builtins1_utils.c \
+			$(SRC_DIR)/cd_builtin.c \
+			$(SRC_DIR)/display_prompt.c \
+			$(SRC_DIR)/echo_builtin.c \
+			$(SRC_DIR)/exit_builtin.c \
+			$(SRC_DIR)/env_builtin.c \
+			$(SRC_DIR)/export_builtin.c \
+			$(SRC_DIR)/have_heredoc.c \
+			$(SRC_DIR)/pwd_builtin.c \
+			$(SRC_DIR)/unset_builtin.c \
+
 # SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c
 
@@ -57,7 +69,7 @@ $(OBJ_DIR)/%.o: %.c Makefile
 	$(CC) -c $< -o $@
 
 $(NAME): $(LIBFT_SRC)/libft.a $(OBJ_FILES)
-	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lft -o $(NAME)
+	$(CC) $(OBJ_FILES) -L$(LIBFT_SRC) -lreadline -lft -o $(NAME)
 
 -include $(DEP)
 

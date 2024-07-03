@@ -54,7 +54,7 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 	// 	execute_builtin(ecmd->argv[0], NULL, &env_copy);
 	// }
 	// else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv,
-			// env_copy) == -1)
+	// 		env_copy) == -1)
 	// {
 	// 	ft_perror("error: execve");
 	// }
