@@ -56,16 +56,16 @@ struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
 	return (cmd);
 }
 
-struct cmd	*parse_exec(char **p_str, char *e_str)
+struct cmd	*parse_exec(char **p_str, char *e_str, int argc)
 {
-	char		*q;
-	char		*end_q;
-	int			tok;
-	int			argc;
-	struct cmd	*cmd;
+	char			*q;
+	char			*end_q;
+	int				tok;
+	struct execcmd	*struct_execcmd;
+	struct cmd		*cmd;
 
 	cmd = exec_cmd();
-	argc = 0;
+	struct_execcmd = (struct execcmd *)cmd;
 	cmd = parse_redirs(cmd, p_str, e_str);
 	while (!peek(p_str, e_str, "|"))
 	{
@@ -74,21 +74,49 @@ struct cmd	*parse_exec(char **p_str, char *e_str)
 			break ;
 		if (tok != 'a')
 			ft_perror("syntax!\n");
-		((struct execcmd *)cmd)->argv[argc] = q;
-		((struct execcmd *)cmd)->eargv[argc] = end_q;
+		struct_execcmd->argv[argc] = q;
+		struct_execcmd->eargv[argc] = end_q;
 		argc++;
 		cmd = parse_redirs(cmd, p_str, e_str);
 	}
-	((struct execcmd *)cmd)->argv[argc] = NULL;
-	((struct execcmd *)cmd)->eargv[argc] = NULL;
+	struct_execcmd->argv[argc] = NULL;
+	struct_execcmd->eargv[argc] = NULL;
 	return (cmd);
 }
+
+// struct cmd	*parse_exec(char **p_str, char *e_str)
+// {
+// 	char		*q;
+// 	char		*end_q;
+// 	int			tok;
+// 	int			argc;
+// 	struct cmd	*cmd;
+
+// 	cmd = exec_cmd();
+// 	argc = 0;
+// 	cmd = parse_redirs(cmd, p_str, e_str);
+// 	while (!peek(p_str, e_str, "|"))
+// 	{
+// 		tok = get_token(p_str, e_str, &q, &end_q);
+// 		if (!tok)
+// 			break ;
+// 		if (tok != 'a')
+// 			ft_perror("syntax!\n");
+// 		((struct execcmd *)cmd)->argv[argc] = q;
+// 		((struct execcmd *)cmd)->eargv[argc] = end_q;
+// 		argc++;
+// 		cmd = parse_redirs(cmd, p_str, e_str);
+// 	}
+// 	((struct execcmd *)cmd)->argv[argc] = NULL;
+// 	((struct execcmd *)cmd)->eargv[argc] = NULL;
+// 	return (cmd);
+// }
 
 struct cmd	*parse_pipe(char **p_str, char *end_str)
 {
 	struct cmd	*cmd;
 
-	cmd = parse_exec(p_str, end_str);
+	cmd = parse_exec(p_str, end_str, 0);
 	if (peek(p_str, end_str, "|"))
 	{
 		get_token(p_str, end_str, NULL, NULL);
