@@ -70,8 +70,6 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 
 void	runcmd(struct cmd *cmd, char **env_copy)
 {
-	struct execcmd	*ecmd;
-
 	if (!cmd)
 	{
 		exit(1);

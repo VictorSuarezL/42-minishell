@@ -1016,6 +1016,8 @@ int main(int args, char **argv, char **env)
     char **copy_export;
     char **copy_en;
 
+    (void)args;
+    argv++;
     setup_shell(&copy_export, &copy_en, env);
     while(1)
     {

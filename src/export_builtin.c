@@ -41,7 +41,7 @@ int find_and_update(char **export, char *variable, char *key)
 
 
 // Function to allocate new export array
-char	**allocate_new_export(char **export, int count)
+char	**allocate_new_export(int count)
 {
 	char	**new_export;
 
@@ -56,7 +56,7 @@ int	add_new_variable(char ***export, char *variable, char *key, char *value, int
 {
 	char	**new_export;
 
-	new_export = allocate_new_export(*export, count);
+	new_export = allocate_new_export(count);
 	if (new_export == NULL)
 	{
 		free(key);

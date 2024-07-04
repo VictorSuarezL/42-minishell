@@ -18,7 +18,7 @@ void	free_all(char **str)
 	free(str);
 }
 
-int	check_path(char *command, char **export_env)
+int	check_path(char **export_env)
 {
 	int	i;
 
@@ -41,7 +41,7 @@ char	*find_path(char *command, char **export_env)
 
 	if (access(command, F_OK) != -1 && access(command, X_OK) != -1)
 		return (command);
-	i = check_path(command, export_env);
+	i = check_path(export_env);
 	paths = ft_split(&export_env[i][5], ':');
 	i = -1;
 	while (paths[++i])

@@ -126,7 +126,7 @@ int	exit_builtin(void);
 int	env_builtin(char *input, char **env);
 void	split_variable(char *variable, char **key, char **value);
 int find_and_update(char **export, char *variable, char *key);
-char	**allocate_new_export(char **export, int count);
+char	**allocate_new_export(int count);
 int	add_new_variable(char ***export, char *variable, char *key, char *value, int count);
 int is_valid_variable_name(const char *name);
 int add_variable(char *variable, char ***export);
