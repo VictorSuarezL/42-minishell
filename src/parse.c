@@ -71,7 +71,7 @@ struct cmd	*parse_exec(char **p_str, char *e_str, int argc)
 	{
 		tok = get_token(p_str, e_str, &q, &end_q);
 		if (!tok)
-			break ;
+			break;
 		if (tok != 'a')
 			ft_perror("syntax!\n");
 		struct_execcmd->argv[argc] = q;

@@ -21,8 +21,6 @@
 #define REDIR 2
 #define PIPE 3
 #define LIST 4
-#define REDIR_IN 4
-#define REDIR_OUT 4
 
 struct			cmd
 {
