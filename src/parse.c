@@ -105,5 +105,6 @@ t_cmd	*parse_cmd(char *str)
 	end_str = &str[ft_strlen(str)];
 	cmd = parse_pipe(&str, end_str);
 	nulterminate(cmd);
+	// printf("cmd->type = %d\n", cmd->type);
 	return (cmd);
 }
