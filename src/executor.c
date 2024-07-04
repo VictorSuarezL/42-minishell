@@ -1,22 +1,22 @@
 #include <minishell.h>
 
-void	run_redir_cmd(struct cmd *cmd, char **env_copy)
+void	run_redir_cmd(t_cmd *cmd, char **env_copy)
 {
-	struct redircmd	*rcmd;
+	t_redircmd	*rcmd;
 
-	rcmd = (struct redircmd *)cmd;
+	rcmd = (t_redircmd *)cmd;
 	close(rcmd->fd);
 	if (open(rcmd->file, rcmd->mode, 0644) < 0)
 		ft_perror("open failed: No such file or directory");
 	runcmd(rcmd->cmd, env_copy);
 }
 
-void	run_pipe_cmd(struct cmd *cmd, char **env_copy)
+void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
 {
-	struct pipecmd	*pcmd;
+	t_pipecmd	*pcmd;
 	int				p[2];
 
-	pcmd = (struct pipecmd *)cmd;
+	pcmd = (t_pipecmd *)cmd;
 	if (pipe(p) < 0)
 		ft_perror("Error: piped out!");
 	if (save_fork() == 0)
@@ -40,12 +40,12 @@ void	run_pipe_cmd(struct cmd *cmd, char **env_copy)
 	wait_pipe();
 }
 
-void	run_exec_cmd(struct cmd *cmd, char **env_copy)
+void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 {
-	struct execcmd	*ecmd;
+	t_execcmd	*ecmd;
 	char			*cmd_path;
 
-	ecmd = (struct execcmd *)cmd;
+	ecmd = (t_execcmd *)cmd;
 	if (!ecmd->argv[0])
 		exit(1);
 	// if (is_builtin(ecmd->argv[0]))
@@ -73,9 +73,9 @@ void	run_exec_cmd(struct cmd *cmd, char **env_copy)
 	execve(cmd_path, ecmd->argv, env_copy);
 }
 
-void	runcmd(struct cmd *cmd, char **env_copy)
+void	runcmd(t_cmd *cmd, char **env_copy)
 {
-	struct execcmd	*ecmd;
+	t_execcmd	*ecmd;
 
 	if (!cmd)
 	{
@@ -96,12 +96,12 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 	exit(0);
 }
 
-// void	runcmd(struct cmd *cmd, char **env_copy)
+// void	runcmd(t_cmd *cmd, char **env_copy)
 // {
 // 	int				p[2];
-// 	struct execcmd	*ecmd;
-// 	struct pipecmd	*pcmd;
-// 	struct redircmd	*rcmd;
+// 	t_execcmd	*ecmd;
+// 	t_pipecmd	*pcmd;
+// 	t_redircmd	*rcmd;
 // 	char *cmd_path;
 
 // 	if (!cmd)
@@ -110,7 +110,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 // 	}
 // 	if (cmd->type == EXEC)
 // 	{
-// 		ecmd = (struct execcmd *)cmd;
+// 		ecmd = (t_execcmd *)cmd;
 // 		if (!ecmd->argv[0])
 // 			exit(1);
 // 		// if (is_builtin(ecmd->argv[0]))
@@ -159,7 +159,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 // 	}
 // 	else if (cmd->type == PIPE)
 // 	{
-// 		pcmd = (struct pipecmd *)cmd;
+// 		pcmd = (t_pipecmd *)cmd;
 // 		if (pipe(p) < 0)
 // 			ft_perror("Error: piped out!");
 // 		if (save_fork() == 0)
@@ -202,7 +202,7 @@ void	runcmd(struct cmd *cmd, char **env_copy)
 // 	}
 // 	else if (cmd->type == REDIR)
 // 	{
-// 		rcmd = (struct redircmd *)cmd;
+// 		rcmd = (t_redircmd *)cmd;
 // 		close(rcmd->fd);
 // 		if (open(rcmd->file, rcmd->mode, 0644) < 0)
 // 		{

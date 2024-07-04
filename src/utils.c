@@ -67,7 +67,7 @@ int	save_fork(void)
 }
 
 // Utils
-void	remove_quotes(struct execcmd *ecmd)
+void	remove_quotes(t_execcmd *ecmd)
 {
 	int		i;
 	size_t	len;

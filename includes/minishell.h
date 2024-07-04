@@ -16,40 +16,47 @@
 #include <errno.h>
 #include <sys/wait.h>
 
+typedef struct s_cmd	t_cmd;
+typedef struct s_pipecmd	t_pipecmd;
+typedef struct s_execcmd	t_execcmd;
+typedef struct s_redircmd	t_redircmd;
 
-#define EXEC 1
-#define REDIR 2
-#define PIPE 3
-#define LIST 4
-
-struct			cmd
+typedef enum e_type
 {
-	int			type;
-};
+	EXEC,
+	REDIR,
+	PIPE,
+	LIST
+}	t_type;
 
-struct			pipecmd
+typedef struct s_cmd
 {
-	int			type;
-	struct cmd	*left;
-	struct cmd	*right;
-};
+	int	type;
+}	t_cmd;
 
-struct			execcmd
+typedef struct s_pipecmd
 {
-	int			type;
-	char		*argv[100];
-	char		*eargv[100];
-};
+	int		type;
+	t_cmd	*left;
+	t_cmd	*right;
+}	t_pipecmd;
 
-struct			redircmd
+typedef struct s_execcmd
 {
-	int			type;
-	struct cmd	*cmd;
-	char		*file;
-	char		*efile;
-	int			mode;
-	int			fd;
-};
+	int		type;
+	char	*argv[100];
+	char	*eargv[100];
+}	t_execcmd;
+
+typedef struct s_redircmd
+{
+	int		type;
+	t_cmd	*cmd;
+	char	*file;
+	char	*efile;
+	int		mode;
+	int		fd;
+}	t_redircmd;
 
 // int		ft_strcmp(const char *s1, const char *s2);
 // char	*get_delimiter(char **delimiter);
@@ -59,33 +66,33 @@ struct			redircmd
 // char	**ft_split_m(char const *s);
 // int		validator(char *str);
 int	save_fork(void);
-void	runcmd(struct cmd *cmd, char **env_copy);
+void	runcmd(t_cmd *cmd, char **env_copy);
 int wait_status(void);
 void	wait_pipe(void);
-void	remove_quotes(struct execcmd *ecmd);
+void	remove_quotes(t_execcmd *ecmd);
 
 int	validator(char *str);
 // SEARCH_PATH.C
 void ft_perror(char *msg);
 void free_all(char **str);
 char	*find_path(char *command, char **export_env);
-struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);
-// struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
-struct cmd	*exec_cmd(void);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+// t_cmd	*redir_cmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd);
+t_cmd	*exec_cmd(void);
 
 // TOKENIZE.C
 int	peek(char **ps, char *es, char *toks);
 int	get_token(char **p_str, char *end_str, char **q, char **end_q);
 
 // PARSE.C
-struct cmd	*parse_cmd(char *str);
+t_cmd	*parse_cmd(char *str);
 
 // CONSTRUCTOR.C
-struct cmd	*exec_cmd(void);
-struct cmd	*pipe_cmd(struct cmd *left, struct cmd *right);
-// struct cmd	*redir_cmd(struct cmd *subcmd, char *file, char *efile, int mode, int fd);
-struct cmd	*redir_out_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
-struct cmd	*redir_in_cmd(struct cmd *subcmd, char *file, char *efile, int mode);
+t_cmd	*exec_cmd(void);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
+// t_cmd	*redir_cmd(t_cmd *subcmd, char *file, char *efile, int mode, int fd);
+t_cmd	*redir_out_cmd(t_cmd *subcmd, char *file, char *efile, int mode);
+t_cmd	*redir_in_cmd(t_cmd *subcmd, char *file, char *efile, int mode);
 
 // ESCAPE.C
 void escape_d_chars(char *str, char *aux, int *i, int *j); 

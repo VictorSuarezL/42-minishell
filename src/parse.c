@@ -1,35 +1,35 @@
 #include <minishell.h>
 
-struct cmd	*nulterminate(struct cmd *cmd)
+t_cmd	*nulterminate(t_cmd *cmd)
 {
-	struct execcmd	*ecmd;
-	struct pipecmd	*pcmd;
-	struct redircmd	*rcmd;
+	t_execcmd	*ecmd;
+	t_pipecmd	*pcmd;
+	t_redircmd	*rcmd;
 	int				i;
 
 	i = -1;
 	if (cmd->type == EXEC)
 	{
-		ecmd = (struct execcmd *)cmd;
+		ecmd = (t_execcmd *)cmd;
 		while (ecmd->argv[++i])
 			*ecmd->eargv[i] = 0;
 	}
 	else if (cmd->type == PIPE)
 	{
-		pcmd = (struct pipecmd *)cmd;
+		pcmd = (t_pipecmd *)cmd;
 		nulterminate(pcmd->left);
 		nulterminate(pcmd->right);
 	}
 	else if (cmd->type == REDIR)
 	{
-		rcmd = (struct redircmd *)cmd;
+		rcmd = (t_redircmd *)cmd;
 		nulterminate(rcmd->cmd);
 		*rcmd->efile = 0;
 	}
 	return (cmd);
 }
 
-struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
+t_cmd	*parse_redirs(t_cmd *cmd, char **ps, char *es)
 {
 	int		tok;
 	char	*q;
@@ -56,16 +56,16 @@ struct cmd	*parse_redirs(struct cmd *cmd, char **ps, char *es)
 	return (cmd);
 }
 
-struct cmd	*parse_exec(char **p_str, char *e_str, int argc)
+t_cmd	*parse_exec(char **p_str, char *e_str, int argc)
 {
 	char			*q;
 	char			*end_q;
 	int				tok;
-	struct execcmd	*struct_execcmd;
-	struct cmd		*cmd;
+	t_execcmd	*struct_execcmd;
+	t_cmd		*cmd;
 
 	cmd = exec_cmd();
-	struct_execcmd = (struct execcmd *)cmd;
+	struct_execcmd = (t_execcmd *)cmd;
 	cmd = parse_redirs(cmd, p_str, e_str);
 	while (!peek(p_str, e_str, "|"))
 	{
@@ -84,13 +84,13 @@ struct cmd	*parse_exec(char **p_str, char *e_str, int argc)
 	return (cmd);
 }
 
-// struct cmd	*parse_exec(char **p_str, char *e_str)
+// t_cmd	*parse_exec(char **p_str, char *e_str)
 // {
 // 	char		*q;
 // 	char		*end_q;
 // 	int			tok;
 // 	int			argc;
-// 	struct cmd	*cmd;
+// 	t_cmd	*cmd;
 
 // 	cmd = exec_cmd();
 // 	argc = 0;
@@ -102,19 +102,19 @@ struct cmd	*parse_exec(char **p_str, char *e_str, int argc)
 // 			break ;
 // 		if (tok != 'a')
 // 			ft_perror("syntax!\n");
-// 		((struct execcmd *)cmd)->argv[argc] = q;
-// 		((struct execcmd *)cmd)->eargv[argc] = end_q;
+// 		((t_execcmd *)cmd)->argv[argc] = q;
+// 		((t_execcmd *)cmd)->eargv[argc] = end_q;
 // 		argc++;
 // 		cmd = parse_redirs(cmd, p_str, e_str);
 // 	}
-// 	((struct execcmd *)cmd)->argv[argc] = NULL;
-// 	((struct execcmd *)cmd)->eargv[argc] = NULL;
+// 	((t_execcmd *)cmd)->argv[argc] = NULL;
+// 	((t_execcmd *)cmd)->eargv[argc] = NULL;
 // 	return (cmd);
 // }
 
-struct cmd	*parse_pipe(char **p_str, char *end_str)
+t_cmd	*parse_pipe(char **p_str, char *end_str)
 {
-	struct cmd	*cmd;
+	t_cmd	*cmd;
 
 	cmd = parse_exec(p_str, end_str, 0);
 	if (peek(p_str, end_str, "|"))
@@ -125,9 +125,9 @@ struct cmd	*parse_pipe(char **p_str, char *end_str)
 	return (cmd);
 }
 
-struct cmd	*parse_cmd(char *str)
+t_cmd	*parse_cmd(char *str)
 {
-	struct cmd	*cmd;
+	t_cmd	*cmd;
 	char		*end_str;
 
 	end_str = &str[ft_strlen(str)];
