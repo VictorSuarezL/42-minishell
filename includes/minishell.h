@@ -139,10 +139,9 @@ int							exit_builtin(void);
 int							env_builtin(char *input, char **env);
 void						split_variable(char *variable, char **key,
 								char **value);
-int							find_and_update(char **export, char *variable,
-								char *key);
+int							find_and_update(char **export, char *variable, char *key, char *value);
 char						**allocate_new_export(int count);
-int							add_new_variable(char ***export, char *variable, char *key, char *value, int count);
+int							add_new_variable(char ***export, char *variable, char *key, char *value);
 int							is_valid_variable_name(const char *name);
 int							add_variable(char *variable, char ***export);
 int							export_builtin(char **variables, char ***export,
