@@ -6,7 +6,7 @@
 /*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:03:14 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/07/03 10:03:22 by  francfer        ###   ########.fr       */
+/*   Updated: 2024/07/05 16:29:15 by  francfer        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ void				ft_putnbr_fd(int n, int fd);
 void				ft_error(char *msg);
 double				ft_atod(char *str);
 double				ft_abs(double n);
-char	*ft_strtok_r(char *str, const char *delim, char **save_ptr);
-char	*ft_strtok(char *str, const char *delim);
-int	ft_strcmp(const char *s1, const char *s2);
-char *ft_strcpy(char *dest, const char *src);
+char				*ft_strtok_r(char *str, const char *delim, char **save_ptr);
+char				*ft_strtok(char *str, const char *delim);
+int					ft_strcmp(const char *s1, const char *s2);
+char				*ft_strcpy(char *dest, const char *src);
+void				ft_strcat(char *dest, const char *src);
 
 
 

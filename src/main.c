@@ -459,18 +459,7 @@ void procesarredirecciones(char *entrada)
 #include <string.h>
 #include <stdlib.h>
 #include <dirent.h>
-void ft_strcat(char *dest, const char *src)
-{
-    int i;
-    int j;
-    i = 0;
-    j = 0;
-    while (dest[i])
-        i++;
-    while (src[j])
-        dest[i++] = src[j++];
-    dest[i] = '\0';
-}
+
 // Función para verificar si una cadena coincide con un patrón de wildcard
 int match_pattern(const char *pattern, const char *str)
 {
@@ -937,11 +926,12 @@ void eliminarArchivos(void)
     char nombreArchivo[256];
     int i = 1; // Comenzar con el primer archivo
 
-    while (1) { // Bucle infinito hasta que no se puedan eliminar más archivos
-        strcpy(nombreArchivo, "archivo_creado_");
+    while (1)
+    { // Bucle infinito hasta que no se puedan eliminar más archivos
+        ft_strcpy(nombreArchivo, "archivo_creado_");
         char heredocCountStr[10];
         int_to_str(i, heredocCountStr);
-        strcat(nombreArchivo, heredocCountStr);
+        ft_strcat(nombreArchivo, heredocCountStr);
         strcat(nombreArchivo, ".txt");
 
         if (unlink(nombreArchivo) == 0) {
