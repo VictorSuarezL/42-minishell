@@ -778,119 +778,158 @@ void	ft_handle_sigquit(int signum)
 	}
 }
 
+int construir_nuevo_archivo(char *heredocStart, char *input, char *delimiterEnd, char *nombreArchivo)
+{
+    size_t  lenBeforeHeredoc;
+    size_t  lenAfterDelimiter;
+    size_t  nuevoStringLen;
+    char    nuevoString[4096];
+
+    lenBeforeHeredoc = heredocStart - input;
+    lenAfterDelimiter = ft_strlen(delimiterEnd);
+    nuevoStringLen = lenBeforeHeredoc + ft_strlen("< ") + ft_strlen(nombreArchivo) + lenAfterDelimiter + 1;
+    if (nuevoStringLen > 4096)
+    {
+        ft_printf("El nuevo string excede el tamaño del buffer.\n");
+        return (1);
+    }
+    strncpy(nuevoString, input, lenBeforeHeredoc);
+    nuevoString[lenBeforeHeredoc] = '\0';
+    ft_strcat(nuevoString, "< ");
+    ft_strcat(nuevoString, nombreArchivo);
+    ft_strcat(nuevoString, delimiterEnd);
+    strncpy(input, nuevoString, 4096);
+    input[4095] = '\0';
+    heredocStart = input + lenBeforeHeredoc + ft_strlen("< ") + ft_strlen(nombreArchivo);
+    return (0);
+}
+
+void    construir_archivo_heredoc(char *nombreArchivo, int heredocCount)
+{
+    char heredocCountStr[10];
+    
+    heredocCount++;
+    g_signal = 2;
+    ft_strcpy(nombreArchivo, "archivo_creado_");
+    int_to_str(heredocCount, heredocCountStr);
+    strcat(nombreArchivo, heredocCountStr);
+    strcat(nombreArchivo, ".txt");
+}
+
+int hijo_done(pid_t pid)
+{
+    int status;
+
+    signal(SIGINT, ft_handle_sigint);
+    waitpid(pid, &status, 0);
+    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+    {
+        kill(pid, SIGINT);
+        return (1);  // Enviar SIGINT al hijo si se recibió en el padre
+    }
+    if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+        return (1);
+    return (0);
+}
+
+void lectura_heredoc(char *linea, char *delimiterStr, char **env, int archivo)
+{
+    while (1)
+    {
+        linea = readline("> ");
+        if (linea == NULL)
+        {
+            printf("warning: here-document at line delimited by end-of-file (wanted `%s')\n", delimiterStr);
+            break;
+        }
+        linea[strcspn(linea, "\n")] = 0;
+        if (ft_strcmp(linea, delimiterStr) == 0)
+        {
+            free(linea);
+            break;
+        }
+        expand_heredoc(linea, env);
+        ft_putstr_fd(linea, archivo);
+        ft_putchar_fd('\n', archivo);
+        free(linea);
+    }
+}
+
+void proceso_hijo(char *linea, char *delimiterStr, char **env, int archivo, char *nombreArchivo)
+{
+    archivo = open(nombreArchivo, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (archivo == -1)
+    {
+        perror("Error al crear el archivo");
+        exit(1);
+    }
+    signal(SIGINT, 0);  // Ignorar SIGINT en el hijo
+    lectura_heredoc(linea, delimiterStr, env, archivo);
+    close(archivo);
+    exit(0);
+}
+void extraer_delimiter(char *delimiter, char *delimiterStr, size_t *lenDelimiter)
+{
+    char *delimiterEnd;
+
+    delimiterEnd = delimiter;
+    while (*delimiterEnd != ' ' && *delimiterEnd != '\0' && *delimiterEnd != '|' && *delimiterEnd != '>')
+        delimiterEnd++;
+    *lenDelimiter = delimiterEnd - delimiter;
+    strncpy(delimiterStr, delimiter, *lenDelimiter);
+    delimiterStr[*lenDelimiter] = '\0';
+}
+
+void avanza_delimiter(char **delimiter, char *heredocStart)
+{
+    // Inicializar el delimitador con heredocStart + 2
+    *delimiter = heredocStart + 2;
+
+    // Saltar cualquier espacio en blanco después de "<<"
+    while (**delimiter == ' ') {
+        (*delimiter)++;
+    }
+}
+
+int manejarProcesoHeredoc(char *heredocStart, char *input, char **env)
+{
+    char *delimiter;
+    char nombreArchivo[256];
+    char delimiterStr[256];
+    size_t lenDelimiter;
+    pid_t pid;
+
+    avanza_delimiter(&delimiter, heredocStart);
+    extraer_delimiter(delimiter, delimiterStr, &lenDelimiter);
+    construir_archivo_heredoc(nombreArchivo, 0);
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("Error al crear el proceso hijo");
+        return (1);
+    } else if (pid == 0)
+    {
+        proceso_hijo(NULL, delimiterStr, env, 0, nombreArchivo);
+    } else
+    {
+        if (hijo_done(pid) || construir_nuevo_archivo(heredocStart, input, delimiter + lenDelimiter, nombreArchivo))
+            return (1);
+    }
+    return (0);
+}
+
 int procesarHeredoc(char *input, char **env)
 {
-    char *heredocStart, *delimiter, *linea;
-    char nombreArchivo[256];
-    int archivo;
-    size_t lenDelimiter;
-    int heredocCount = 0;
+    char *heredocStart;
 
     heredocStart = input;
-
-    while ((heredocStart = strstr(heredocStart, "<<")) != NULL) {
-        heredocCount++;
-        g_signal = 2;
-
-        // Construir el nombre del archivo de manera manual
-        strcpy(nombreArchivo, "archivo_creado_");
-        char heredocCountStr[10];
-        int_to_str(heredocCount, heredocCountStr);
-        strcat(nombreArchivo, heredocCountStr);
-        strcat(nombreArchivo, ".txt");
-
-        // Saltar sobre los caracteres "<<"
-        delimiter = heredocStart + 2;
-
-        // Saltar cualquier espacio en blanco después de "<<"
-        while (*delimiter == ' ') {
-            delimiter++;
-        }
-
-        // Encuentra el final del delimitador
-        char *delimiterEnd = delimiter;
-        while (*delimiterEnd != ' ' && *delimiterEnd != '\0') {
-            delimiterEnd++;
-        }
-
-        lenDelimiter = delimiterEnd - delimiter;
-        char delimiterStr[lenDelimiter + 1];
-        strncpy(delimiterStr, delimiter, lenDelimiter);
-        delimiterStr[lenDelimiter] = '\0';
-
-        pid_t pid = fork();
-        if (pid == -1) {
-            perror("Error al crear el proceso hijo");
-            return 1;
-        } else if (pid == 0) {
-            // Proceso hijo
-            archivo = open(nombreArchivo, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (archivo == -1) {
-                perror("Error al crear el archivo");
-                exit(1);
-            }
-
-            signal(SIGINT, 0);  // Ignorar SIGINT en el hijo
-
-            while (1) {
-                linea = readline("> ");
-                if (linea == NULL) {
-                    printf("warning: here-document at line delimited by end-of-file (wanted `%s')\n", delimiterStr);
-                    break;
-                }
-
-                linea[strcspn(linea, "\n")] = 0;
-
-                if (ft_strcmp(linea, delimiterStr) == 0) {
-                    free(linea);
-                    break;
-                }
-                expand_heredoc(linea, env);
-                ft_putstr_fd(linea, archivo);
-				ft_putchar_fd('\n', archivo);
-                free(linea);
-            }
-            close(archivo);
-            exit(0);
-        } else {
-            // Proceso padre
-            int status;
-            signal(SIGINT, ft_handle_sigint);
-            waitpid(pid, &status, 0);
-
-            if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT) {
-                kill(pid, SIGINT);
-				return (1);  // Enviar SIGINT al hijo si se recibió en el padre
-            }
-
-            if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
-                return 1;
-            }
-
-            // Construir el nuevo string con < archivo_creado_X.txt
-            size_t lenBeforeHeredoc = heredocStart - input;
-            size_t lenAfterDelimiter = strlen(delimiterEnd);
-            size_t nuevoStringLen = lenBeforeHeredoc + strlen("< ") + strlen(nombreArchivo) + lenAfterDelimiter + 1;
-
-            if (nuevoStringLen > 4096) {
-                ft_printf("El nuevo string excede el tamaño del buffer.\n");
-                return 1;
-            }
-
-            char nuevoString[4096];
-            strncpy(nuevoString, input, lenBeforeHeredoc);
-            nuevoString[lenBeforeHeredoc] = '\0';
-            strcat(nuevoString, "< ");
-            strcat(nuevoString, nombreArchivo);
-            strcat(nuevoString, delimiterEnd);
-
-            strncpy(input, nuevoString, 4096);
-            input[4095] = '\0';
-
-            heredocStart = input + lenBeforeHeredoc + strlen("< ") + strlen(nombreArchivo);
-        }
+    while ((heredocStart = strstr(heredocStart, "<<")) != NULL)
+    {
+        if (manejarProcesoHeredoc(heredocStart, input, env))
+            return (1);
+        heredocStart += 2;
     }
-    return 0;
+    return (0);
 }
 
 void eliminarArchivos(void)
