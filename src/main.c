@@ -21,21 +21,27 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "echa";
 	// char	line[100] = "/bin/echo hola";
 	// char	line[100] = "ls -al > b.txt";
-	char	line[100] = "ls -al '> b.txt'";
+	// char	line[100] = "ls -al '> b.txt'";
 	// char	line[100] = "wc -l < b.txt < c.txt < a.txt";
 	// char	line[100] = "cat /dev/random | head";
 	// char	line[100] = "cat | cat | ls";
 	// char	line[100] = "ls -al | grep d | wc -l";
+	// char	line[100] = "'e''c''h''o' hola ' > mundo'";
+	// char	line[100] = "'e'cho hola";
+	// char	line[100] = "'e''cho' hola";
+	char	line[100] = "e'cho' hola"; // -> echo hola
+	// char	line[100] = "e'cho' 'hola'"; // -> echo 'hola'
+	// char	line[100] = "e\'cho"; // -> echo 'hola' mundo
 
 	if (!validator(line))
 	{
 		printf("syntax error!\n");
-
+        exit(2);
 	}
 	
 	// replace_qmark(line, exit_status);
 	// printf("line = %s\n", line);
-
+    quote_manager(line);
 	// escape_special_chars(line);
 	// printf("line: %s\n", line);
 	// pop_slash(line);
@@ -53,13 +59,13 @@ int	main(int argc, char *argv[], char **env)
 
 
 	
-	if(save_fork() == 0) 
-	{
-      runcmd(parse_cmd(line), env);
-      exit(0); // Exit the child process after executing the command
-    }
-	exit_status = wait_status();
-	printf("Exit status = %d\n", exit_status);
+	// if(save_fork() == 0) 
+	// {
+    //   runcmd(parse_cmd(line), env);
+    //   exit(0); // Exit the child process after executing the command
+    // }
+	// exit_status = wait_status();
+	// printf("Exit status = %d\n", exit_status);
 }
 
 

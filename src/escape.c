@@ -43,7 +43,7 @@ void	escape_special_chars(char *str)
 	j = 0;
 	aux = malloc(strlen(str) * 2 + 1);
 	if (!aux)
-		ft_perror("Error in malloc");
+		ft_perror("Error in malloc");	
 	while (str[i])
 	{
 		if (str[i] == '"')

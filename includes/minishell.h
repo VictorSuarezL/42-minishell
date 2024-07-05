@@ -106,6 +106,8 @@ void						replace_qmark(char *line, int exit_status);
 // UTILS_TOK
 void						ft_perror(char *msg);
 char						*skip_whitespace(char *str, char *end);
+void quote_manager(char *str);
+
 
 // BUILTINS
 int							cd_builtin(const char *path, char **env,
