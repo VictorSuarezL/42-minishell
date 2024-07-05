@@ -40,6 +40,46 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
 	wait_pipe();
 }
 
+char* join_strings_with_spaces(char **input) {
+    if (input == NULL) {
+        return NULL;
+    }
+
+    // Calcula la longitud total necesaria
+    int total_length = 0;
+    int i = 0;
+    while (input[i] != NULL) {
+        total_length += strlen(input[i]);
+        total_length += 1; // Para el espacio o el terminador nulo
+        i++;
+    }
+
+    if (total_length == 0) {
+        return NULL;
+    }
+
+    // Reserva memoria para la nueva cadena
+    char *result = (char*)malloc(total_length * sizeof(char));
+    if (result == NULL) {
+        return NULL;
+    }
+
+    // Inicializa la cadena resultante
+    result[0] = '\0';
+
+    // Concatena las cadenas con un espacio entre ellas
+    i = 0;
+    while (input[i] != NULL) {
+        strcat(result, input[i]);
+        i++;
+        if (input[i] != NULL) {
+            strcat(result, " ");
+        }
+    }
+
+    return result;
+}
+
 void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 {
 	t_execcmd	*ecmd;
@@ -51,7 +91,10 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 	if (is_builtin(ecmd->argv[0]))
 	{
 		// Guardar en un entero la salida del execute_builtin
-		execute_builtin(ecmd->argv[0], NULL, &env_copy);
+		char *input = join_strings_with_spaces(ecmd->argv);
+		execute_builtin(input, NULL, &env_copy);
+		return ;
+
 	}
 	else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv,
 			env_copy) == -1)

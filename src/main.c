@@ -1001,7 +1001,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
     expand_wildcards(buf);
     if (execute_cd(buf, *copy_en, *copy_export) == 0)
         return;
-    if (is_builtin_env(buf) && (!strstr(buf, "|") || !strstr(buf, ">") || !strstr(buf, "<")))
+    if (is_builtin_env(buf) && (!strstr(buf, "|") && !strstr(buf, ">") && !strstr(buf, "<")))
     {
         execute_builtin(buf, copy_export, copy_en);
         if (ft_strcmp(buf, "exit") == 0 || ft_strncmp(buf, "exit ", 5) == 0)
