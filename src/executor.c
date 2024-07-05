@@ -48,6 +48,16 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 	ecmd = (t_execcmd *)cmd;
 	if (!ecmd->argv[0])
 		exit(1);
+	if (is_builtin(ecmd->argv[0]))
+	{
+		// Guardar en un entero la salida del execute_builtin
+		execute_builtin(ecmd->argv[0], NULL, &env_copy);
+	}
+	else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv,
+			env_copy) == -1)
+	{
+		ft_perror("error: execve");
+	}
 	cmd_path = find_path(ecmd->argv[0], env_copy);
 	if (!cmd_path)
 	{
