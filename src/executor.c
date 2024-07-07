@@ -40,43 +40,35 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
 	wait_pipe();
 }
 
-char* join_strings_with_spaces(char **input) {
-    if (input == NULL) {
+char	*join_strings_with_spaces(char **input)
+{
+    int total_length;
+    int i;
+	
+	total_length = 0;
+	i = 0;
+    if (input == NULL)
         return NULL;
-    }
-
-    // Calcula la longitud total necesaria
-    int total_length = 0;
-    int i = 0;
-    while (input[i] != NULL) {
-        total_length += strlen(input[i]);
-        total_length += 1; // Para el espacio o el terminador nulo
+    while (input[i] != NULL)
+	{
+        total_length += ft_strlen(input[i]);
+        total_length += 1;
         i++;
     }
-
-    if (total_length == 0) {
+    if (total_length == 0)
         return NULL;
-    }
-
-    // Reserva memoria para la nueva cadena
     char *result = (char*)malloc(total_length * sizeof(char));
-    if (result == NULL) {
+    if (result == NULL)
         return NULL;
-    }
-
-    // Inicializa la cadena resultante
     result[0] = '\0';
-
-    // Concatena las cadenas con un espacio entre ellas
     i = 0;
-    while (input[i] != NULL) {
-        strcat(result, input[i]);
+    while (input[i] != NULL)
+	{
+        ft_strcat(result, input[i]);
         i++;
-        if (input[i] != NULL) {
-            strcat(result, " ");
-        }
+        if (input[i] != NULL)
+            ft_strcat(result, " ");
     }
-
     return result;
 }
 
@@ -93,6 +85,7 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 		// Guardar en un entero la salida del execute_builtin
 		char *input = join_strings_with_spaces(ecmd->argv);
 		execute_builtin(input, NULL, &env_copy);
+		free(input);
 		return ;
 
 	}

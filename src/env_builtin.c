@@ -21,7 +21,7 @@ int	env_builtin(char *input, char **env)
 {
 	if (!valid_input_string(input))
 	{
-		printf("env: %s: No such file or directory\n", input);
+		ft_printf("env: %s: No such file or directory\n", input);
 		return (1);
 	}
 	if (env == NULL)

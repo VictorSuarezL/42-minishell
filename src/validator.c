@@ -2,10 +2,8 @@
 
 static int	is_pipe_end(char *str)
 {
-	int	i;
 	int	len;
 
-	i = 0;
 	len = ft_strlen(str);
 	if (str[len - 1] == '|')
 	{
@@ -47,10 +45,8 @@ static int	quote_counter(char *str)
 
 int	is_metacharacter_end(char *str)
 {
-	int	i;
 	int	len;
 
-	i = 0;
 	len = 0;
 	len = ft_strlen(str);
 	if (str[len - 2] != '\\' && ft_strchr("<>|;", str[len - 1]))

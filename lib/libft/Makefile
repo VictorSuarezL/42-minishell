@@ -54,7 +54,11 @@ SRC_FILES		= $(SRC_DIR)/ft_isalpha.c \
 			$(SRC_DIR)/ft_strcmp.c \
 			$(SRC_DIR)/ft_strcpy.c \
 			$(SRC_DIR)/ft_strcat.c \
-
+			$(SRC_DIR)/ft_strnlen.c \
+			$(SRC_DIR)/ft_strndup.c \
+			$(SRC_DIR)/ft_strncpy.c \
+			$(SRC_DIR)/ft_strncat.c \
+			$(SRC_DIR)/ft_strcspn.c \
 
 SRC_BONUS_FILES	= $(SRC_DIR)/ft_lstnew_bonus.c \
 			$(SRC_DIR)/ft_lstadd_front_bonus.c \

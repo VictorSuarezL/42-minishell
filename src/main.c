@@ -168,93 +168,153 @@ int is_builtin(char *input)
 #include <unistd.h>
 #include <ctype.h>
 
-size_t calculate_size(const char *str, char **envp) {
+void expand_heredoc(char *str, char **envp);
+char *get_env_value(const char *name, char **envp);
+// Función para procesar el tamaño de la variable de entorno
+void process_variable_size(const char **str, char **envp, size_t *size)
+{
+    const char *start = *str;
+    char varname[256];
+    size_t varname_len;
+    char *value;
+    
+    while (**str && (ft_isalnum(**str) || **str == '_'))
+        (*str)++;
+    varname_len = *str - start;
+    strncpy(varname, start, varname_len);
+    varname[varname_len] = '\0';
+    value = get_env_value(varname, envp);
+    if (value)
+        *size += ft_strlen(value);
+}
+
+// Función para procesar caracteres individuales en la cadena
+void process_single_character(const char **str, size_t *size)
+{
+    (*size)++;
+    (*str)++;
+}
+
+// Función para procesar comillas simples en la cadena
+void process_single_quote(const char **str, size_t *size, int *in_single_quotes)
+{
+    *in_single_quotes = !*in_single_quotes;
+    (*size)++;
+    (*str)++;
+}
+
+// Función para procesar secuencias de escape en la cadena
+void process_escape_sequence(const char **str, size_t *size)
+{
+    (*size) += 2;
+    (*str) += 2;
+}
+
+// Función principal para calcular el tamaño necesario para la cadena expandida
+size_t calculate_size(const char *str, char **envp)
+{
     size_t size = 0;
     int in_single_quotes = 0;
 
-    while (*str) {
-        if (*str == '\'') {
-            in_single_quotes = !in_single_quotes;
-            size++;
+    while (*str)
+    {
+        if (*str == '\'')
+        {
+            process_single_quote(&str, &size, &in_single_quotes);
+        }
+        else if (*str == '\\' && !in_single_quotes && *(str + 1) == '$')
+        {
+            process_escape_sequence(&str, &size);
+        }
+        else if (*str == '$' && !in_single_quotes)
+        {
             str++;
-        } else if (*str == '\\' && !in_single_quotes && *(str + 1) == '$') {
-            size += 2; // Count both characters
-            str += 2;
-        } else if (*str == '$' && !in_single_quotes) {
-            str++;
-            const char *start = str;
-            while (*str && (isalnum(*str) || *str == '_'))
-                str++;
-            char varname[str - start + 1];
-            strncpy(varname, start, str - start);
-            varname[str - start] = '\0';
-            char *value = NULL;
-            for (char **env = envp; *env != 0; env++) {
-                char *thisEnv = *env;
-                if (strncmp(thisEnv, varname, strlen(varname)) == 0 && thisEnv[strlen(varname)] == '=') {
-                    value = thisEnv + strlen(varname) + 1;
-                    break;
-                }
-            }
-            if (value)
-                size += strlen(value);
-        } else {
-            size++;
-            str++;
+            process_variable_size(&str, envp, &size);
+        }
+        else
+        {
+            process_single_character(&str, &size);
         }
     }
     return size;
 }
 
-// Function to expand environment variables
-void expand(char *str, char **envp) {
-    size_t new_size = calculate_size(str, envp);
-    char *result = malloc(new_size + 1);
-    if (result == NULL) {
-        fprintf(stderr, "Error: unable to allocate memory\n");
-        return;
-    }
+// Función para procesar y expandir una variable de entorno
+void process_variable_expand(const char **pos, char **envp, char *result, size_t new_size)
+{
+    char varname[256];
+    size_t varname_len;
+    char *value;
+    const char *start;
+	
+	start = *pos;
+    while (**pos && (ft_isalnum(**pos) || **pos == '_'))
+        (*pos)++;
+    varname_len = *pos - start;
+    ft_strncpy(varname, start, varname_len);
+    varname[varname_len] = '\0';
+    value = get_env_value(varname, envp);
+    if (value)
+        ft_strncat(result, value, new_size - ft_strlen(result));
+}
 
+void handle_single_quote(const char **pos, int *in_single_quotes, char *result)
+{
+    *in_single_quotes = !(*in_single_quotes);
+    ft_strncat(result, *pos, 1);
+    (*pos)++;
+}
+
+void handle_escaped_dollar(const char **pos, char *result)
+{
+    strncat(result, *pos, 2);
+    *pos += 2;
+}
+
+void handle_variable_expand(const char **pos, char **envp, char *result, size_t new_size)
+{
+    (*pos)++;
+    process_variable_expand(pos, envp, result, new_size);
+}
+
+void handle_regular_char(const char **pos, char *result)
+{
+    char temp[2];
+
+    temp[0] = **pos;
+    temp[1] = '\0';
+    strncat(result, temp, 1);
+    (*pos)++;
+}
+void expand(char *str, char **envp)
+{
+    size_t new_size;
+    char *result;
+    const char *pos;
+    int in_single_quotes;
+
+    new_size = calculate_size(str, envp);
+    result = malloc(new_size + 1);
+    pos = str;
+    in_single_quotes = 0;
+    if (result == NULL)
+    {
+        ft_printf("Error: unable to allocate memory\n");
+        exit (1);
+    }
     result[0] = '\0';
-    const char *pos = str;
-    int in_single_quotes = 0;
-
-    while (*pos) {
-        if (*pos == '\'') {
-            in_single_quotes = !in_single_quotes;
-            strncat(result, pos, 1);
-            pos++;
-        } else if (*pos == '\\' && !in_single_quotes && *(pos + 1) == '$') {
-            strncat(result, pos, 2);
-            pos += 2;
-        } else if (*pos == '$' && !in_single_quotes) {
-            pos++;
-            const char *start = pos;
-            while (*pos && (isalnum(*pos) || *pos == '_')) {
-                pos++;
-            }
-            char varname[pos - start + 1];
-            strncpy(varname, start, pos - start);
-            varname[pos - start] = '\0';
-            char *value = NULL;
-            for (char **env = envp; *env != 0; env++) {
-                char *thisEnv = *env;
-                if (strncmp(thisEnv, varname, strlen(varname)) == 0 && thisEnv[strlen(varname)] == '=') {
-                    value = thisEnv + strlen(varname) + 1;
-                    break;
-                }
-            }
-            if (value) {
-                strncat(result, value, new_size - strlen(result));
-            }
-        } else {
-            char temp[2] = {*pos, '\0'};
-            strncat(result, temp, 1);
-            pos++;
-        }
+    while (*pos)
+    {
+        if (*pos == '\'')
+            handle_single_quote(&pos, &in_single_quotes, result);
+        else if (*pos == '\\' && !in_single_quotes && *(pos + 1) == '$')
+            handle_escaped_dollar(&pos, result);
+        else if (*pos == '$' && !in_single_quotes)
+            handle_variable_expand(&pos, envp, result, new_size);
+        else
+            handle_regular_char(&pos, result);
     }
-
-    strcpy(str, result);  // Copy the result back to the original buffer
+    ft_strcpy(str, result);
     free(result);
 }
 
@@ -266,7 +326,8 @@ void expand(char *str, char **envp) {
 #include <stdlib.h>
 
 
-void intToStr(int num, char *str) {
+void intToStr(int num, char *str)
+{
     char buffer[10]; // Asumiendo que num no es muy grande
     int i = 0, j, len;
     if (num == 0) {
@@ -289,28 +350,6 @@ void intToStr(int num, char *str) {
 #include <stdlib.h>
 #include <string.h>
 
-size_t ft_strnlen(const char *s, size_t maxlen)
-{
-    size_t len;
-    
-    len = 0;
-    while (len < maxlen && s[len])
-        len++;
-    return len;
-}
-
-char *ft_strndup(const char *s, size_t n)
-{
-    char *result;
-    size_t len;
-
-    len  = ft_strnlen(s, n);
-    result = (char *)malloc(len + 1);
-    if (!result)
-        return NULL;
-    result[len] = '\0';
-    return ((char *)ft_memcpy(result, s, len));
-}
 
 void actualizar_redireccion(char *inicio_redirecciones, char *ultima_redireccion, char modo_redireccion)
 {
@@ -526,6 +565,7 @@ int expand_wildcards(char *buf)
     finalize_result(buf, result);
     return (wildcard_result(wildcard_present, any_pattern_found));
 }
+
 void initialize_variables(char *result, int *pattern_found, int *any_pattern_found, int *wildcard_present)
 {
     result[0] = '\0'; // Inicializa result a una cadena vacía
@@ -577,28 +617,29 @@ void finalize_result(char *buf, char *result)
 
 int execute_builtin(char *input, char ***export, char ***env)
 {
-    char **split_input;
+    char    **split_input;
+    int     result;
 
-    if (strncmp(input, "echo", 4) == 0)
+    if (ft_strncmp(input, "echo", 4) == 0)
         return (echo_builtin(input), 0);
-    if (strncmp(input, "exit", 4) == 0)
+    if (ft_strncmp(input, "exit", 4) == 0)
         return (exit_builtin());
-    if (strncmp(input, "env", 3) == 0)
+    if (ft_strncmp(input, "env", 3) == 0)
         return (env_builtin(input, *env));
-    if (strncmp(input, "export", 6) == 0) {
+    if (ft_strncmp(input, "export", 6) == 0)
+    {
         split_input = ft_split(input, ' ');
-        int result = export_builtin(split_input, export, env);
-		free_double(split_input);
-        return result;
+        result = export_builtin(split_input, export, env);
+        return (free_double(split_input), result);
     }
-    if (strncmp(input, "pwd", 3) == 0)
+    if (ft_strncmp(input, "pwd", 3) == 0)
         return (pwd_builtin(input));
-    if (strncmp(input, "unset", 5) == 0) {
+    if (ft_strncmp(input, "unset", 5) == 0)
+    {
         split_input = ft_split(input, ' ');
-        int result = unset_builtin(export, split_input);
+        result = unset_builtin(export, split_input);
 		unset_builtin(env, split_input);
-        free_double(split_input);
-        return result;
+        return (free_double(split_input), result);
     }
     return (47);
 }
@@ -636,40 +677,37 @@ int execute_cd(char *buf, char **env, char **export)
 
 
 
-void int_to_str(int num, char *str) {
-    int i = 0;
-    int is_negative = 0;
+void int_to_str(int num, char *str)
+{
+    int i;
+    int is_negative;
 
-    // Handle 0 explicitly, otherwise empty string is printed
-    if (num == 0) {
+    i = 0;
+    is_negative = 0;
+    if (num == 0)
+    {
         str[i++] = '0';
         str[i] = '\0';
         return;
     }
-
-    // Handle negative numbers
-    if (num < 0) {
+    if (num < 0)
+    {
         is_negative = 1;
         num = -num;
     }
-
-    // Process individual digits
-    while (num != 0) {
+    while (num != 0)
+    {
         int rem = num % 10;
         str[i++] = rem + '0';
         num = num / 10;
     }
-
-    // If number is negative, append '-'
     if (is_negative)
         str[i++] = '-';
-
-    str[i] = '\0'; // Append null character
-
-    // Reverse the string
+    str[i] = '\0';
     int start = 0;
     int end = i - 1;
-    while (start < end) {
+    while (start < end)
+    {
         char temp = str[start];
         str[start] = str[end];
         str[end] = temp;
@@ -782,12 +820,12 @@ int construir_nuevo_archivo(char *heredocStart, char *input, char *delimiterEnd,
         ft_printf("El nuevo string excede el tamaño del buffer.\n");
         return (1);
     }
-    strncpy(nuevoString, input, lenBeforeHeredoc);
+    ft_strncpy(nuevoString, input, lenBeforeHeredoc);
     nuevoString[lenBeforeHeredoc] = '\0';
     ft_strcat(nuevoString, "< ");
     ft_strcat(nuevoString, nombreArchivo);
     ft_strcat(nuevoString, delimiterEnd);
-    strncpy(input, nuevoString, 4096);
+    ft_strncpy(input, nuevoString, 4096);
     input[4095] = '\0';
     heredocStart = input + lenBeforeHeredoc + ft_strlen("< ") + ft_strlen(nombreArchivo);
     return (0);
@@ -801,8 +839,8 @@ void    construir_archivo_heredoc(char *nombreArchivo, int heredocCount)
     g_signal = 2;
     ft_strcpy(nombreArchivo, "archivo_creado_");
     int_to_str(heredocCount, heredocCountStr);
-    strcat(nombreArchivo, heredocCountStr);
-    strcat(nombreArchivo, ".txt");
+    ft_strcat(nombreArchivo, heredocCountStr);
+    ft_strcat(nombreArchivo, ".txt");
 }
 
 int hijo_done(pid_t pid)
@@ -828,10 +866,10 @@ void lectura_heredoc(char *linea, char *delimiterStr, char **env, int archivo)
         linea = readline("> ");
         if (linea == NULL)
         {
-            printf("warning: here-document at line delimited by end-of-file (wanted `%s')\n", delimiterStr);
+            ft_printf("warning: here-document at line delimited by end-of-file (wanted `%s')\n", delimiterStr);
             break;
         }
-        linea[strcspn(linea, "\n")] = 0;
+        linea[ft_strcspn(linea, "\n")] = 0;
         if (ft_strcmp(linea, delimiterStr) == 0)
         {
             free(linea);
@@ -865,7 +903,7 @@ void extraer_delimiter(char *delimiter, char *delimiterStr, size_t *lenDelimiter
     while (*delimiterEnd != ' ' && *delimiterEnd != '\0' && *delimiterEnd != '|' && *delimiterEnd != '>')
         delimiterEnd++;
     *lenDelimiter = delimiterEnd - delimiter;
-    strncpy(delimiterStr, delimiter, *lenDelimiter);
+    ft_strncpy(delimiterStr, delimiter, *lenDelimiter);
     delimiterStr[*lenDelimiter] = '\0';
 }
 
@@ -932,7 +970,7 @@ void eliminarArchivos(void)
         char heredocCountStr[10];
         int_to_str(i, heredocCountStr);
         ft_strcat(nombreArchivo, heredocCountStr);
-        strcat(nombreArchivo, ".txt");
+        ft_strcat(nombreArchivo, ".txt");
 
         if (unlink(nombreArchivo) == 0) {
             i++; // Incrementar el contador para el próximo archivo

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By:  francfer <francfer@student.42malaga.com>  +#+  +:+       +#+        */
+/*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:03:14 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/07/05 16:29:15 by  francfer        ###   ########.fr       */
+/*   Updated: 2024/07/07 09:38:32 by francfer         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef LIBFT_H
 # define LIBFT_H
@@ -74,8 +74,11 @@ char				*ft_strtok(char *str, const char *delim);
 int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strcpy(char *dest, const char *src);
 void				ft_strcat(char *dest, const char *src);
-
-
+size_t				ft_strnlen(const char *s, size_t maxlen);
+char				*ft_strndup(const char *s, size_t n);
+char				*ft_strncpy(char *dest, const char *src, size_t n);
+char				*ft_strncat(char *dest, const char *src, size_t n);
+size_t				ft_strcspn(const char *s1, const char *s2);
 
 /* GET NEXT LINE */
 char				*get_next_line(int fd);

@@ -27,7 +27,7 @@ int find_env_var(char **env, const char *var)
     size_t var_len;
     int i;
 
-    var_len = strlen(var);
+    var_len = ft_strlen(var);
     i = 0;
     while (env[i] != NULL)
     {
@@ -45,8 +45,8 @@ void allocate_new_env_var(char **env, int i, const char *var, const char *value)
     size_t var_len;
     size_t value_len;
 
-    var_len = strlen(var);
-    value_len = strlen(value);
+    var_len = ft_strlen(var);
+    value_len = ft_strlen(value);
     env[i] = malloc(var_len + value_len + 2);
     if (env[i] == NULL)
     {
@@ -103,8 +103,8 @@ char *create_expanded_path(const char *home, const char *path)
     size_t path_len;
     char *expanded_path;
 
-    home_len = strlen(home);
-    path_len = strlen(path);
+    home_len = ft_strlen(home);
+    path_len = ft_strlen(path);
     expanded_path = malloc(home_len + path_len);
     if (!expanded_path)
     {
@@ -113,7 +113,7 @@ char *create_expanded_path(const char *home, const char *path)
     }
     ft_strcpy(expanded_path, home);
     if (path[1])
-        strcat(expanded_path, path + 1);
+        ft_strcat(expanded_path, path + 1);
     return (expanded_path);
 }
 
@@ -125,7 +125,7 @@ char *handle_virguline(const char *path, char **env)
     home = get_env_value("HOME", env);
     if (!home)
     {
-        fprintf(stderr, "Error getting home directory\n");
+        ft_printf("Error getting home directory\n");
         return NULL;
     }
     expanded_path = create_expanded_path(home, path);
