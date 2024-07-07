@@ -158,70 +158,78 @@ int is_empty_or_spaces(const char *str)
     return (1);
 }
 
-// The cd_builtin function to change directory
-int cd_builtin(const char *path, char **env, char **export)
+int get_current_working_directory(char *cwd, size_t size)
 {
-    static char *prev_dir = NULL;
-    char *new_path = NULL;
-    char cwd[4096];
-
-    if (getcwd(cwd, sizeof(cwd)) == NULL) {
+    if (getcwd(cwd, size) == NULL)
+    {
         perror("getcwd");
-        return 1;
+        return (1);
     }
-
-    // If path is NULL or an empty string, set it to HOME
-    if (!path || is_empty_or_spaces(path)) {
-        path = "~";
-    }
-
-    if (strcmp(path, "~") == 0) {
-        new_path = get_env_value("HOME", env);
-        if (!new_path) {
-            fprintf(stderr, "Error getting home directory\n");
-            return 1;
-        }
-        path = new_path;
-    } else if (strcmp(path, "-") == 0) {
-        char *oldpwd = get_env_value("OLDPWD", env);
-        if (!oldpwd) {
-            fprintf(stderr, "cd: OLDPWD not set\n");
-            return 1;
-        }
-        path = oldpwd;
-    } else {
-        new_path = expand_path(path, env);
-        if (!new_path) {
-            return 1;
-        }
-        path = new_path;
-    }
-
-    if (chdir(path) == -1) {
-        perror("cd");
-        free(new_path);
-        return 1;
-    }
-
-    // Update OLDPWD to the previous working directory
-    update_env_var(env, "OLDPWD", cwd);
-    update_env_var(export, "OLDPWD", cwd);
-
-    // Update PWD to the new working directory
-    if (getcwd(cwd, sizeof(cwd)) == NULL) {
-        perror("getcwd");
-        return 1;
-    }
-    update_env_var(env, "PWD", cwd);
-    update_env_var(export, "PWD", cwd);
-
-    if (prev_dir) {
-        free(prev_dir);
-    }
-    prev_dir = strdup(cwd);
-
-    if (new_path) {
-        free(new_path);
-    }
-    return 0;
+    return (0);
 }
+
+char *get_new_path(const char *path, char **env)
+{
+    if (ft_strcmp(path, "~") == 0)
+        return (get_env_value("HOME", env));
+    else if (ft_strcmp(path, "-") == 0)
+        return (get_env_value("OLDPWD", env));
+    else
+        return (expand_path(path, env));
+}
+
+void update_environment_vars(char **env_vars[3], const char *cwd)
+{
+    update_env_var(env_vars[0], "OLDPWD", cwd);
+    update_env_var(env_vars[1], "OLDPWD", cwd);
+}
+
+void update_prev_dir(char **prev_dir, const char *cwd)
+{
+    if (*prev_dir)
+        free(*prev_dir);
+    *prev_dir = ft_strdup(cwd);
+}
+
+int change_directory(const char *path, char *cwd, size_t size, char **env_vars[3])
+{
+    if (chdir(path) == -1)
+    {
+        perror("cd");
+        return (1);
+    }
+    update_environment_vars(env_vars, cwd);
+    if (get_current_working_directory(cwd, size))
+        return (1);
+    update_env_var(env_vars[0], "PWD", cwd);
+    update_env_var(env_vars[1], "PWD", cwd);
+    update_prev_dir(env_vars[2], cwd);
+    return (0);
+}
+
+int cd_builtin(const char *path, char **env, char **export_vars)
+{
+    char cwd[4096];
+    int result;
+    char *prev_dir = NULL;
+    char *new_path = NULL;
+    char **env_vars[3] = {env, export_vars, &prev_dir};
+
+    if (get_current_working_directory(cwd, sizeof(cwd)))
+        return 1;
+    if (!path || is_empty_or_spaces(path))
+        path = "~";
+    new_path = get_new_path(path, env);
+    if (!new_path)
+    {
+        printf("Error getting directory\n");
+        return 1;
+    }
+    result = change_directory(new_path, cwd, sizeof(cwd), env_vars);
+    if (new_path != path)
+        free(new_path);
+    if (prev_dir)
+        free(prev_dir);
+    return result;
+}
+

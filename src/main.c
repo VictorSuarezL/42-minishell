@@ -663,6 +663,7 @@ int execute_cd(char *buf, char **env, char **export)
 {
     const char  *path;
     int         result;
+
     if (((ft_strncmp(buf, "cd", 2) == 0 && (buf[2] == ' ' || buf[2] == '\0'))) && (!strstr(buf, "|") && (!strstr(buf, "<") && (!strstr(buf, ">")))))
     {
         if (buf[2] == ' ')
@@ -913,9 +914,8 @@ void avanza_delimiter(char **delimiter, char *heredocStart)
     *delimiter = heredocStart + 2;
 
     // Saltar cualquier espacio en blanco después de "<<"
-    while (**delimiter == ' ') {
+    while (**delimiter == ' ')
         (*delimiter)++;
-    }
 }
 
 int manejarProcesoHeredoc(char *heredocStart, char *input, char **env)
@@ -1028,6 +1028,8 @@ void	setup_shell(char ***copy_exp, char ***copy_en, char **env)
 
 void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_export)
 {
+    int a;
+
     ft_strcpy(buf, trimmed);
     if (procesarHeredoc(buf, *copy_en) == 1)
     {
@@ -1037,7 +1039,8 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
     expand(buf, *copy_en);
     procesarredirecciones(buf);
     expand_wildcards(buf);
-    if (execute_cd(buf, *copy_en, *copy_export) == 0)
+    a = execute_cd(buf, *copy_en, *copy_export);
+    if (a == 0 || a == 1)
         return;
     if (is_builtin_env(buf) && (!strstr(buf, "|") && !strstr(buf, ">") && !strstr(buf, "<")))
     {
@@ -1046,9 +1049,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
             exit(0);
     }
     else
-    {
         setup_executor(buf, *copy_en);
-    }
 }
 
 void process_input(char *input, char ***copy_en, char ***copy_export)
@@ -1056,7 +1057,7 @@ void process_input(char *input, char ***copy_en, char ***copy_export)
     char buf[PATH_MAX];
     char *trimmed;
 
-    if (ft_strlen(input) > PATH_MAX - 1)
+    if (ft_strlen(input) > PATH_MAx - 1)
     {
         free(input);
         return;
