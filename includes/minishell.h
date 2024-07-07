@@ -65,7 +65,7 @@ typedef struct s_redircmd
 // char	**ft_split_m(char const *s);
 // int		validator(char *str);
 int							save_fork(void);
-void						runcmd(t_cmd *cmd, char **env_copy);
+void						runcmd(t_cmd *cmd, char **env_copy, char **export_copy);
 int							wait_status(void);
 void						wait_pipe(void);
 void						remove_quotes(t_execcmd *ecmd);

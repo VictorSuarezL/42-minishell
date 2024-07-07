@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void	run_redir_cmd(t_cmd *cmd, char **env_copy)
+void	run_redir_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 {
 	t_redircmd	*rcmd;
 
@@ -8,10 +8,10 @@ void	run_redir_cmd(t_cmd *cmd, char **env_copy)
 	close(rcmd->fd);
 	if (open(rcmd->file, rcmd->mode, 0644) < 0)
 		ft_perror("open failed: No such file or directory");
-	runcmd(rcmd->cmd, env_copy);
+	runcmd(rcmd->cmd, env_copy, export_copy);
 }
 
-void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
+void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 {
 	t_pipecmd	*pcmd;
 	int			p[2];
@@ -25,7 +25,7 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
 		dup(p[1]);
 		close(p[0]);
 		close(p[1]);
-		runcmd(pcmd->left, env_copy);
+		runcmd(pcmd->left, env_copy, export_copy);
 	}
 	if (save_fork() == 0)
 	{
@@ -33,7 +33,7 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy)
 		dup(p[0]);
 		close(p[0]);
 		close(p[1]);
-		runcmd(pcmd->right, env_copy);
+		runcmd(pcmd->right, env_copy, export_copy);
 	}
 	close(p[0]);
 	close(p[1]);
@@ -84,19 +84,19 @@ char	*join_strings_with_spaces(char **input)
     }
     return result;
 }
-void	builtin_exec(t_execcmd	*ecmd, char **env_copy)
+void	builtin_exec(t_execcmd	*ecmd, char **env_copy, char **export_copy)
 {
 	char		*input;
 	int			exit_status;
 
 	// Guardar en un entero la salida del execute_builtin
 	input = join_strings_with_spaces(ecmd->argv);
-	exit_status = execute_builtin(input, NULL, &env_copy);
+	exit_status = execute_builtin(input, &export_copy, &env_copy);
 	free(input);
 	exit(exit_status);
 }
 
-void	run_exec_cmd(t_cmd *cmd, char **env_copy)
+void	run_exec_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 {
 	t_execcmd	*ecmd;
 	char		*cmd_path;
@@ -104,8 +104,9 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 	ecmd = (t_execcmd *)cmd;
 	if (!ecmd->argv[0])
 		exit(1);
+	ft_printf("%s\n", ecmd->argv[0]);
 	if (is_builtin(ecmd->argv[0]))
-		builtin_exec(ecmd, env_copy);
+		builtin_exec(ecmd, env_copy, export_copy);
 	else if (execve(find_path(ecmd->argv[0], env_copy), ecmd->argv,
 			env_copy) == -1)
 	{
@@ -121,7 +122,7 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 	execve(cmd_path, ecmd->argv, env_copy);
 }
 
-void	runcmd(t_cmd *cmd, char **env_copy)
+void	runcmd(t_cmd *cmd, char **env_copy, char **export_copy)
 {
 	if (!cmd)
 	{
@@ -129,15 +130,15 @@ void	runcmd(t_cmd *cmd, char **env_copy)
 	}
 	if (cmd->type == EXEC)
 	{
-		run_exec_cmd(cmd, env_copy);
+		run_exec_cmd(cmd, env_copy, export_copy);
 	}
 	else if (cmd->type == PIPE)
 	{
-		run_pipe_cmd(cmd, env_copy);
+		run_pipe_cmd(cmd, env_copy, export_copy);
 	}
 	else if (cmd->type == REDIR)
 	{
-		run_redir_cmd(cmd, env_copy);
+		run_redir_cmd(cmd, env_copy, export_copy);
 	}
 	exit(0);
 }

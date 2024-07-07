@@ -6,7 +6,7 @@
 /*   By: francfer <francfer@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 20:03:14 by vsanz-su          #+#    #+#             */
-/*   Updated: 2024/07/07 09:38:32 by francfer         ###   ########.fr       */
+/*   Updated: 2024/07/07 20:27:45 by francfer         ###   ########.fr       */
 /*                                                                            */
 /******************************************************************************/
 
@@ -79,6 +79,7 @@ char				*ft_strndup(const char *s, size_t n);
 char				*ft_strncpy(char *dest, const char *src, size_t n);
 char				*ft_strncat(char *dest, const char *src, size_t n);
 size_t				ft_strcspn(const char *s1, const char *s2);
+char				*ft_strstr(const char *haystack, const char *needle);
 
 /* GET NEXT LINE */
 char				*get_next_line(int fd);

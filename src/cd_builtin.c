@@ -143,18 +143,14 @@ char *expand_path(const char *path, char **env)
 // Function to check if a string is empty or contains only spaces
 int is_empty_or_spaces(const char *str)
 {
-    // Check if the string is NULL or empty
     if (str == NULL || *str == '\0')
         return (1);
-    // Iterate over each character in the string
     while (*str != '\0')
     {
-        // Check if the character is not a space
         if (*str != ' ')
             return (0);
         str++;
     }
-    // If all characters are spaces, return 1
     return (1);
 }
 
@@ -206,15 +202,23 @@ int change_directory(const char *path, char *cwd, size_t size, char **env_vars[3
     update_prev_dir(env_vars[2], cwd);
     return (0);
 }
-
+void    set_variables(char **prev_dir, char **new_path, char **env_vars[3], char **env, char **export_vars)
+{
+    *prev_dir = NULL;
+    *new_path = NULL;
+    env_vars[0] = env;
+    env_vars[1] = export_vars;
+    env_vars[2] = prev_dir;
+}
 int cd_builtin(const char *path, char **env, char **export_vars)
 {
     char cwd[4096];
     int result;
-    char *prev_dir = NULL;
-    char *new_path = NULL;
-    char **env_vars[3] = {env, export_vars, &prev_dir};
+    char *prev_dir;
+    char *new_path;
+    char **env_vars[3];
 
+    set_variables(&prev_dir, &new_path, env_vars, env, export_vars);
     if (get_current_working_directory(cwd, sizeof(cwd)))
         return 1;
     if (!path || is_empty_or_spaces(path))

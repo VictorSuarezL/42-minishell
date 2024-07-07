@@ -664,7 +664,7 @@ int execute_cd(char *buf, char **env, char **export)
     const char  *path;
     int         result;
 
-    if (((ft_strncmp(buf, "cd", 2) == 0 && (buf[2] == ' ' || buf[2] == '\0'))) && (!strstr(buf, "|") && (!strstr(buf, "<") && (!strstr(buf, ">")))))
+    if (((ft_strncmp(buf, "cd", 2) == 0 && (buf[2] == ' ' || buf[2] == '\0'))) && (!ft_strstr(buf, "|") && (!ft_strstr(buf, "<") && (!ft_strstr(buf, ">")))))
     {
         if (buf[2] == ' ')
             path = buf + 3;
@@ -853,7 +853,7 @@ int hijo_done(pid_t pid)
     if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
     {
         kill(pid, SIGINT);
-        return (1);  // Enviar SIGINT al hijo si se recibió en el padre
+        return (1);
     }
     if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
         return (1);
@@ -891,7 +891,7 @@ void proceso_hijo(char *linea, char *delimiterStr, char **env, int archivo, char
         perror("Error al crear el archivo");
         exit(1);
     }
-    signal(SIGINT, 0);  // Ignorar SIGINT en el hijo
+    signal(SIGINT, 0);
     lectura_heredoc(linea, delimiterStr, env, archivo);
     close(archivo);
     exit(0);
@@ -910,10 +910,7 @@ void extraer_delimiter(char *delimiter, char *delimiterStr, size_t *lenDelimiter
 
 void avanza_delimiter(char **delimiter, char *heredocStart)
 {
-    // Inicializar el delimitador con heredocStart + 2
     *delimiter = heredocStart + 2;
-
-    // Saltar cualquier espacio en blanco después de "<<"
     while (**delimiter == ' ')
         (*delimiter)++;
 }
@@ -950,7 +947,7 @@ int procesarHeredoc(char *input, char **env)
     char *heredocStart;
 
     heredocStart = input;
-    while ((heredocStart = strstr(heredocStart, "<<")) != NULL)
+    while ((heredocStart = ft_strstr(heredocStart, "<<")) != NULL)
     {
         if (manejarProcesoHeredoc(heredocStart, input, env))
             return (1);
@@ -962,25 +959,24 @@ int procesarHeredoc(char *input, char **env)
 void eliminarArchivos(void)
 {
     char nombreArchivo[256];
-    int i = 1; // Comenzar con el primer archivo
+    char heredocCountStr[10];
+    int i;
 
+    i = 1;
     while (1)
-    { // Bucle infinito hasta que no se puedan eliminar más archivos
+    {
         ft_strcpy(nombreArchivo, "archivo_creado_");
-        char heredocCountStr[10];
         int_to_str(i, heredocCountStr);
         ft_strcat(nombreArchivo, heredocCountStr);
         ft_strcat(nombreArchivo, ".txt");
-
-        if (unlink(nombreArchivo) == 0) {
-            i++; // Incrementar el contador para el próximo archivo
-        } else {
-            break; // Salir del bucle si no se puede eliminar el archivo
-        }
+        if (unlink(nombreArchivo) == 0)
+            i++;
+        else
+            break;
     }
 }
 
-# include <termios.h>
+#include <termios.h>
 
 void	suppress_output(void)
 {
@@ -1005,13 +1001,13 @@ void	final_clean(char **exp, char **env)
 	free_double(env);
 }
 
-void	setup_executor(char *buf, char **env)
+void	setup_executor(char *buf, char **env, char **export)
 {
 	g_signal = 3;
 	signal(SIGQUIT, ft_handle_sigquit);
 	signal(SIGINT, ft_handle_sigint);
 	if (save_fork() == 0)    
-		runcmd(parse_cmd(buf), env);
+		runcmd(parse_cmd(buf), env, export);
     wait(0);
 	eliminarArchivos();
 }
@@ -1042,14 +1038,14 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
     a = execute_cd(buf, *copy_en, *copy_export);
     if (a == 0 || a == 1)
         return;
-    if (is_builtin_env(buf) && (!strstr(buf, "|") && !strstr(buf, ">") && !strstr(buf, "<")))
+    if (is_builtin_env(buf) && (!ft_strstr(buf, "|") && !ft_strstr(buf, ">") && !ft_strstr(buf, "<")))
     {
         execute_builtin(buf, copy_export, copy_en);
         if (ft_strcmp(buf, "exit") == 0 || ft_strncmp(buf, "exit ", 5) == 0)
             exit(0);
     }
     else
-        setup_executor(buf, *copy_en);
+        setup_executor(buf, *copy_en, *copy_export);
 }
 
 void process_input(char *input, char ***copy_en, char ***copy_export)
@@ -1057,7 +1053,7 @@ void process_input(char *input, char ***copy_en, char ***copy_export)
     char buf[PATH_MAX];
     char *trimmed;
 
-    if (ft_strlen(input) > PATH_MAx - 1)
+    if (ft_strlen(input) > PATH_MAX - 1)
     {
         free(input);
         return;
