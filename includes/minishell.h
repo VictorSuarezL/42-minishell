@@ -4,20 +4,24 @@
 // BORRAR
 # include <fcntl.h>
 # include <libft.h>
-# include <string.h>
 
 // NO BORRAR
+# include <ctype.h>
+# include <dirent.h>
 # include <errno.h>
+# include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
 # include <sys/wait.h>
-# include <unistd.h>
-# include <linux/limits.h>
+# include <sys/types.h>
 # include <termios.h>
+# include <unistd.h>
 
-extern	int 				g_signal;
+extern int					g_signal;
 
 typedef struct s_cmd		t_cmd;
 typedef struct s_pipecmd	t_pipecmd;
@@ -68,7 +72,8 @@ typedef struct s_redircmd
 // char	**ft_split_m(char const *s);
 // int		validator(char *str);
 int							save_fork(void);
-void						runcmd(t_cmd *cmd, char **env_copy, char **export_copy);
+void						runcmd(t_cmd *cmd, char **env_copy,
+								char **export_copy);
 int							wait_status(void);
 void						wait_pipe(void);
 void						remove_quotes(t_execcmd *ecmd);
@@ -109,7 +114,7 @@ void						replace_qmark(char *line, int exit_status);
 // UTILS_TOK
 void						ft_perror(char *msg);
 char						*skip_whitespace(char *str, char *end);
-void quote_manager(char *str, int i, int j);
+void						quote_manager(char *str, int i, int j);
 
 // BUILTINS
 int							cd_builtin(const char *path, char **env,
@@ -143,9 +148,11 @@ int							exit_builtin(void);
 int							env_builtin(char *input, char **env);
 void						split_variable(char *variable, char **key,
 								char **value);
-int							find_and_update(char **export, char *variable, char *key, char *value);
+int							find_and_update(char **export, char *variable,
+								char *key, char *value);
 char						**allocate_new_export(int count);
-int							add_new_variable(char ***export, char *variable, char *key, char *value);
+int							add_new_variable(char ***export, char *variable,
+								char *key, char *value);
 int							is_valid_variable_name(const char *name);
 int							add_variable(char *variable, char ***export);
 int							export_builtin(char **variables, char ***export,
@@ -175,13 +182,101 @@ int							execute_builtin(char *input, char ***export,
 								char ***env);
 
 void						final_clean(char **exp, char **env);
-void						setup_executor(char *buf, char **env, char **export, int *exit_status);
-void						setup_shell(char ***copy_exp, char ***copy_en, char **env);
+void						setup_executor(char *buf, char **env, char **export,
+								int *exit_status);
+void						setup_shell(char ***copy_exp, char ***copy_en,
+								char **env);
 
 void						ft_handle_sigint(int signum);
 void						ft_handle_sigquit(int signum);
 void						suppress_output(void);
 
-void 						eliminarArchivos(void);
+int							execute_builtin(char *input, char ***export,
+								char ***env);
+int							is_builtin_env(char *input);
+int							is_builtin(char *input);
+int							execute_cd(char *buf, char **env, char **export);
+
+void						eliminarArchivos(void);
+
+void						add_buf(char *result, char *token);
+int							wildcard_result(int wildcard_present,
+								int any_pattern_found);
+int							expand_wildcards(char *buf);
+int							match_pattern(const char *pattern, const char *str);
+void						initialize_variables(char *result,
+								int *pattern_found, int *any_pattern_found,
+								int *wildcard_present);
+int							process_token(char *token);
+int							expand_token(char *token, char *result,
+								int *pattern_found);
+void						finalize_result(char *buf, char *result);
+
+void						actualizar_redireccion(char *inicio_redirecciones,
+								char *ultima_redireccion,
+								char modo_redireccion);
+void						limpiar_redirecciones_restantes(char *inicio_redir,
+								char *ultima_redireccion,
+								char modo_redireccion);
+void						modificar_entrada(char *entrada,
+								char *ultima_redireccion,
+								char modo_redireccion);
+int							crear_abrir_archivo(const char *archivo,
+								char modo_redireccion);
+void						ajustar_modo_y_pos(char **pos,
+								char *modo_redireccion);
+char						*obtener_archivo_y_actualizar(char *pos,
+								char *entrada_copy, char **ultima_redireccion,
+								char modo_redireccion);
+char						*procesar_redireccion(char *pos, char *entrada_copy,
+								char **ultima_redireccion,
+								char *modo_redireccion);
+void						procesar_todas_redirecciones(char *entrada_copy,
+								char **ultima_redireccion,
+								char *modo_redireccion);
+void						procesarredirecciones(char *entrada);
+
+char						*procesar_variable(char *pos, char **envp,
+								char **res_ptr);
+void						expand_heredoc(char *str, char **envp);
+int							construir_nuevo_archivo(char *heredocstart,
+								char *input, char *delimiterend,
+								char *nombrearchivo);
+void						construir_archivo_heredoc(char *nombrearchivo,
+								int heredoccount);
+int							hijo_done(pid_t pid);
+void						lectura_heredoc(char *linea, char *delimiterstr,
+								char **env, int archivo);
+void						proceso_hijo(char *linea, char *delimiterstr,
+								char **env, int archivo, char *nombrearchivo);
+void						extraer_delimiter(char *delimiter,
+								char *delimiterstr, size_t *lendelimiter);
+void						avanza_delimiter(char **delimiter,
+								char *heredocstart);
+int							manejarProcesoHeredoc(char *heredocstart,
+								char *input, char **env);
+int							procesarHeredoc(char *input, char **env);
+void						eliminarArchivos(void);
+void						int_to_str(int num, char *str);
+
+void						process_variable_size(const char **str, char **envp,
+								size_t *size);
+void						process_single_character(const char **str,
+								size_t *size);
+void						process_single_quote(const char **str, size_t *size,
+								int *in_single_quotes);
+void						process_escape_sequence(const char **str,
+								size_t *size);
+size_t						calculate_size(const char *str, char **envp);
+void						process_variable_expand(const char **pos,
+								char **envp, char *result, size_t new_size);
+void						handle_single_quote(const char **pos,
+								int *in_single_quotes, char *result);
+void						handle_escaped_dollar(const char **pos,
+								char *result);
+void						handle_variable_expand(const char **pos,
+								char **envp, char *result, size_t new_size);
+void						handle_regular_char(const char **pos, char *result);
+void						expand(char *str, char **envp);
 
 #endif

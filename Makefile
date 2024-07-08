@@ -52,6 +52,11 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/unset_builtin.c \
 			$(SRC_DIR)/setup.c \
 			$(SRC_DIR)/signals.c \
+			$(SRC_DIR)/builtins.c \
+			$(SRC_DIR)/wildcards.c \
+			$(SRC_DIR)/redirecciones.c \
+			$(SRC_DIR)/heredoc.c \
+			$(SRC_DIR)/expand.c \
 
 # SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c
