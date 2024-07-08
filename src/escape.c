@@ -5,7 +5,7 @@ void	escape_d_chars(char *str, char *aux, int *i, int *j)
 	aux[(*j)++] = str[(*i)++];
 	while (str[*i] && str[*i] != '"')
 	{
-		if (ft_strchr("'<>|\\", str[*i]))
+		if (ft_strchr("'<>|\\*", str[*i]))
 		{
 			aux[*j] = '\\';
 			(*j)++;
@@ -21,7 +21,7 @@ void	escape_s_chars(char *str, char *aux, int *i, int *j)
 	aux[(*j)++] = str[(*i)++];
 	while (str[*i] && str[*i] != '\'')
 	{
-		if (ft_strchr("$\"<>|\\", str[*i]))
+		if (ft_strchr("$\"<>|\\*", str[*i]))
 		{
 			aux[*j] = '\\';
 			(*j)++;

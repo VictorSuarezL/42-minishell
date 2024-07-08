@@ -467,9 +467,15 @@ char *procesar_redireccion(char *pos, char *entrada_copy, char **ultima_redirecc
 
 void procesar_todas_redirecciones(char *entrada_copy, char **ultima_redireccion, char *modo_redireccion)
 {
-    char *pos = entrada_copy;
-    while ((pos = ft_strchr(pos, '>')) != NULL)
+    char *pos;
+    
+    pos = entrada_copy;
+    pos = ft_strchr(pos, '>');
+    while (pos != NULL && (*(pos - 1) != '\\'))
+    {
         pos = procesar_redireccion(pos, entrada_copy, ultima_redireccion, modo_redireccion);
+        pos = ft_strchr(pos, '>');
+    }
 }
 
 void procesarredirecciones(char *entrada)
@@ -1032,9 +1038,11 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
         eliminarArchivos();
         return;
     }
+    escape_special_chars(buf);
     expand(buf, *copy_en);
     procesarredirecciones(buf);
     expand_wildcards(buf);
+    pop_slash(buf);
     a = execute_cd(buf, *copy_en, *copy_export);
     if (a == 0 || a == 1)
         return;
