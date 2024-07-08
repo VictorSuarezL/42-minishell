@@ -41,7 +41,7 @@ void	escape_special_chars(char *str)
 
 	i = 0;
 	j = 0;
-	aux = malloc(strlen(str) * 2 + 1);
+	aux = malloc(ft_strlen(str) * 2 + 1);
 	if (!aux)
 		ft_perror("Error in malloc");
 	while (str[i])
@@ -89,14 +89,14 @@ void	replace_qmark(char *line, int exit_status)
 	int		buffer_size;
 	char	*buffer;
 
-	len = strlen(line);
+	len = ft_strlen(line);
 	exit_status_str = ft_itoa(exit_status);
-	buffer_size = len + strlen(exit_status_str) - 2 + 1;
+	buffer_size = len + ft_strlen(exit_status_str) - 2 + 1;
 	buffer = malloc(sizeof(char) * buffer_size);
 	if (!buffer)
 		ft_perror("Error in malloc");
 	pos = ft_strnstr(line, "$?", len);
-	if (!pos || (line[0] == '$' && line[1] == '?'))
+	if (!pos || (line[0] == '$' && line[1] == '?') || *(pos - 1) == '\\')
 	{
 		free(buffer);
 		free(exit_status_str);

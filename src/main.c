@@ -16,12 +16,12 @@ void	process_commands(char *trimmed, char *buf, char ***copy_en,
 
 	ft_strcpy(buf, trimmed);
 	quote_manager(buf, 0, 0);
+	escape_special_chars(buf);
 	if (procesarHeredoc(buf, *copy_en) == 1)
 	{
 		eliminarArchivos();
 		return ;
 	}
-	escape_special_chars(buf);
 	replace_qmark(buf, *exit_status);
 	expand(buf, *copy_en);
 	process(buf);

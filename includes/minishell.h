@@ -64,13 +64,6 @@ typedef struct s_redircmd
 	int						fd;
 }							t_redircmd;
 
-// int		ft_strcmp(const char *s1, const char *s2);
-// char	*get_delimiter(char **delimiter);
-// int		have_heredoc(char *str, char **delimiter);
-// void	create_file(char *info);
-// void	launch_heredoc(char *delimiter);
-// char	**ft_split_m(char const *s);
-// int		validator(char *str);
 int							save_fork(void);
 void						runcmd(t_cmd *cmd, char **env_copy,
 								char **export_copy);
