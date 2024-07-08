@@ -14,6 +14,10 @@
 # include <stdio.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <linux/limits.h>
+# include <termios.h>
+
+extern	int 				g_signal;
 
 typedef struct s_cmd		t_cmd;
 typedef struct s_pipecmd	t_pipecmd;
@@ -169,5 +173,15 @@ int							is_builtin_env(char *input);
 int							is_builtin(char *input);
 int							execute_builtin(char *input, char ***export,
 								char ***env);
+
+void						final_clean(char **exp, char **env);
+void						setup_executor(char *buf, char **env, char **export);
+void						setup_shell(char ***copy_exp, char ***copy_en, char **env);
+
+void						ft_handle_sigint(int signum);
+void						ft_handle_sigquit(int signum);
+void						suppress_output(void);
+
+void 						eliminarArchivos(void);
 
 #endif

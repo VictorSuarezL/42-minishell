@@ -724,8 +724,7 @@ void int_to_str(int num, char *str)
 }
 
 
-// Función para procesar una variable de entorno encontrada en la cadena
-char *procesar_variable(char *pos, char **envp, char **res_ptr)
+char    *procesar_variable(char *pos, char **envp, char **res_ptr)
 {
     char *start;
     char var_name[1000];
@@ -748,10 +747,10 @@ char *procesar_variable(char *pos, char **envp, char **res_ptr)
     return(start);
 }
 
-// Función principal para expandir variables de entorno en la cadena
-void expand_heredoc(char *str, char **envp)
+
+void    expand_heredoc(char *str, char **envp)
 {
-    char result[4096];;  // Buffer para la cadena resultante expandida
+    char result[4096];
     char *res_ptr;
     char *pos;
 
@@ -765,52 +764,9 @@ void expand_heredoc(char *str, char **envp)
             *res_ptr++ = *pos++;
     }
     *res_ptr = '\0';
-    ft_strcpy(str, result);  // Copia la cadena resultante de nuevo en str
+    ft_strcpy(str, result);
 }
 
-int g_signal;
-
-void	ft_handle_sigint(int signum)
-{
-	(void)signum;
-	if (g_signal == 1)
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		write(1, "\033[K\n", 5);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	else if (g_signal == 2)
-	{
-		write(1, "\033[K\n", 5);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		g_signal = 4;
-	}
-	else if (g_signal == 3)
-	{
-		write(1, "\033[K\n", 5);
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-void	ft_handle_sigquit(int signum)
-{
-	(void)signum;
-	if (g_signal == 1)
-		;
-	else if (g_signal == 2)
-		;
-	else if (g_signal == 3)
-	{
-		write(1, "Quit (core dumped)\n", sizeof(char) * 19);
-		exit(0);
-	}
-}
 
 int construir_nuevo_archivo(char *heredocStart, char *input, char *delimiterEnd, char *nombreArchivo)
 {
@@ -982,51 +938,6 @@ void eliminarArchivos(void)
     }
 }
 
-#include <termios.h>
-
-void	suppress_output(void)
-{
-	struct termios	termios_p;
-
-	if (isatty(0))
-	{
-		if (tcgetattr(0, &termios_p) != 0)
-			perror("Minishell: tcgetattr");
-		termios_p.c_lflag &= ~ECHOCTL;
-		if (tcsetattr(0, 0, &termios_p) != 0)
-			perror("Minishell: tcsetattr");
-	}
-}
-
-#include <linux/limits.h>
-
-void	final_clean(char **exp, char **env)
-{
-	eliminarArchivos();
-	free_double(exp);
-	free_double(env);
-}
-
-void	setup_executor(char *buf, char **env, char **export)
-{
-	g_signal = 3;
-	signal(SIGQUIT, ft_handle_sigquit);
-	signal(SIGINT, ft_handle_sigint);
-	if (save_fork() == 0)    
-		runcmd(parse_cmd(buf), env, export);
-    wait(0);
-	eliminarArchivos();
-}
-
-void	setup_shell(char ***copy_exp, char ***copy_en, char **env)
-{
-	*copy_exp = copy_env(env);
-	*copy_en = copy_env(env);
-	g_signal = 1;
-	signal(SIGINT, ft_handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
-	suppress_output();
-}
 
 void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_export)
 {
@@ -1051,6 +962,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
         execute_builtin(buf, copy_export, copy_en);
         if (ft_strcmp(buf, "exit") == 0 || ft_strncmp(buf, "exit ", 5) == 0)
             exit(0);
+        //return;
     }
     else
         setup_executor(buf, *copy_en, *copy_export);
@@ -1082,19 +994,21 @@ void process_input(char *input, char ***copy_en, char ***copy_export)
     process_commands(trimmed, buf, copy_en, copy_export);
     free(trimmed);
 }
+int g_signal;
 
 int main(int args, char **argv, char **env)
 {
-    char **copy_export;
-    char **copy_en;
-
+    char    **copy_export;
+    char    **copy_en;
+    char    *input;
+    
     (void)args;
     argv++;
     setup_shell(&copy_export, &copy_en, env);
     while(1)
     {
         g_signal = 1;
-        char *input = display_prompt();
+        input = display_prompt();
         if (input == NULL)
         {
             exit_builtin();
