@@ -22,9 +22,9 @@ void	ft_perror(char *msg)
 		exit(1);
 	}
 }
-/* 
- Si las comillas dobles no impiden la concatenación de cadenas adyacentes 
- fuera de las comillas. Por lo tanto, se quitan las comillas. Sin embargo si 
+/*
+ Si las comillas dobles no impiden la concatenación de cadenas adyacentes
+ fuera de las comillas. Por lo tanto, se quitan las comillas. Sin embargo si
  al remover las comillas no se concatena texto se dejan las comillas en la cadena.
 
  Si estoy en un caracter que es comillas y la anterior es una letra
@@ -38,83 +38,79 @@ void	ft_perror(char *msg)
  e'cho' 'hola' mundo -> echo 'hola' mundo
  */
 
-void quote_manager(char *str)
+void	copy_until_quoute(char *str, char quote, int *i, int *j)
 {
-	int i = 0;
-	int j = 0;
+	while (str[*i] && str[*i] != quote)
+		str[(*j)++] = str[(*i)++];
+}
+
+// void if_find_quote(char *str, int *i, int *j, char quote)
+// {
+// 	if (ft_strchr(" \t\v\n\r", str[*i - 1]))
+// 	{
+// 		str[(*j)++] = str[(*i)++];
+// 		copy_until_quoute(str, quote, i, j);
+// 		if (str[*i] == '\0')
+// 			str[(*j)++] = str[(*i)++];
+// 		else
+// 			(*i)++;
+// 	}
+// 	else if (ft_isalpha(str[*i - 1]) || ft_strchr("\"'", str[*i - 1]))
+// 	{
+// 		quote = str[(*i)++];
+// 		copy_until_quoute(str, quote, i, j);
+// 	}
+// }
+
+void manage_initial_quotes(char *str, int *i, int *j)
+{
 	int flag = 0;
 	char quote;
-	int in_quote = 0;
 
-	char *aux = malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (!aux)
-		ft_perror("Error in malloc");
-
-	while(str[i])
+	if (flag == 1)
 	{
-		if (flag == 1)
+		(*i)++;
+		flag = 0;
+	}
+	else if (*i == 0 && ft_strchr("\"'", str[*i]))
+	{
+		quote = str[(*i)++];
+		flag = 1;
+		copy_until_quoute(str, quote, i, j);
+	}
+}
+
+void	quote_manager(char *str, int i, int j, int flag)
+{
+	char	quote;
+	int		in_quote;
+	
+	while (str[i])
+	{
+		if (i == 0 && ft_strchr("\"'", str[i]))
 		{
-			i++;
-			flag = 0;
-		}
-		else if (i == 0 && ft_strchr("\"'", str[i]))
-		{
-			quote = str[i++];
-			flag = 1;
-			while (str[i] && str[i] != quote)
-				aux[j++] = str[i++];
-			// if (str[i] == quote)
-			// 	i++;
-			
+			manage_initial_quotes(str, &i, &j);
 		}
 		else if (ft_strchr("\"'", str[i]))
 		{
-			if(ft_strchr(" \t\v\n\r", str[i-1]))
+			quote = str[i];
+			if (ft_strchr(" \t\v\n\r", str[i - 1]))
 			{
-				aux[j++] = str[i++];
-				// quote = str[i++];
-				while (str[i] && str[i] != quote)
-					aux[j++] = str[i++];
+				str[j++] = str[i++];
+				copy_until_quoute(str, quote, &i, &j);
 				if (i == ft_strlen(str) - 1)
-				{
-					aux[j++] = str[i++];
-				}
+					str[j++] = str[i++];
 				else
-				{
 					i++;
-				}
 			}
-			else if (ft_isalpha(str[i - 1]) && in_quote == 0)
+			else if (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1]))
 			{
 				quote = str[i++];
-				while (str[i] && str[i] != quote)
-					aux[j++] = str[i++];
-				// if (str[i] == quote)
-				// 	i++;
+				copy_until_quoute(str, quote, &i, &j);
 			}
-			else if (ft_strchr("\"'", str[i - 1]) && in_quote == 0)
-			{
-				quote = str[i++];
-				while (str[i] && str[i] != quote)
-					aux[j++] = str[i++];
-				// if (str[i] == quote)
-				// 	i++;
-			}
-			// else
-			// {
-			// 	aux[j++] = str[i++];
-			// 	in_quote = 0;
-			// }
-			
-			// else
-			// 	in_quote = 0;
-			// while (str[i] && str[i] != quote)
-			// 	aux[j++] = str[i++];
-			// if (str[i] == quote)
-			// 	i++;
 		}
 		else
-			aux[j++] = str[i++];
+			str[j++] = str[i++];
 	}
-	printf("aux: %s\n", aux);
+	str[j] = '\0';
 }
