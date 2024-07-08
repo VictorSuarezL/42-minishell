@@ -27,10 +27,12 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "cat | cat | ls";
 	// char	line[100] = "ls -al | grep d | wc -l";
 	// char	line[100] = "'e''c''h''o' hola ' > mundo'";
+	char	line[100] = "'e'\"c\"'h'\"o\" hola ' > mundo' afadf";
 	// char	line[100] = "'e'cho hola";
 	// char	line[100] = "'e''cho' hola";
-	char	line[100] = "e'cho' hola"; // -> echo hola
-	// char	line[100] = "e'cho' 'hola'"; // -> echo 'hola'
+	// char	line[100] = "'e' 'cho' hola";
+	// char	line[100] = "\"e\" 'cho' hola"; // -> echo hola
+	// char	line[100] = "e'cho' 'hola' mundo"; // -> echo 'hola'
 	// char	line[100] = "e\'cho"; // -> echo 'hola' mundo
 
 	if (!validator(line))
@@ -41,9 +43,9 @@ int	main(int argc, char *argv[], char **env)
 	
 	// replace_qmark(line, exit_status);
 	// printf("line = %s\n", line);
-    quote_manager(line);
+    quote_manager(line, 0,0);
 	// escape_special_chars(line);
-	// printf("line: %s\n", line);
+	printf("line: %s\n", line);
 	// pop_slash(line);
 	// printf("line poped: %s\n", line);
 
