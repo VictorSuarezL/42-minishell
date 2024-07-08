@@ -38,11 +38,11 @@ void	ft_perror(char *msg)
  e'cho' 'hola' mundo -> echo 'hola' mundo
  */
 
-void	copy_until_quoute(char *str, char quote, int *i, int *j)
-{
-	while (str[*i] && str[*i] != quote)
-		str[(*j)++] = str[(*i)++];
-}
+// void	copy_until_quoute(char *str, char quote, int *i, int *j)
+// {
+// 	while (str[*i] && str[*i] != quote)
+// 		str[(*j)++] = str[(*i)++];
+// }
 
 // void if_find_quote(char *str, int *i, int *j, char quote)
 // {
@@ -62,55 +62,235 @@ void	copy_until_quoute(char *str, char quote, int *i, int *j)
 // 	}
 // }
 
-void manage_initial_quotes(char *str, int *i, int *j)
-{
-	int flag = 0;
-	char quote;
+// void manage_initial_quotes(char *str, int *i, int *j)
+// {
+// 	int flag = 0;
+// 	char quote;
 
-	if (flag == 1)
+// 	if (flag == 1)
+// 	{
+// 		(*i)++;
+// 		flag = 0;
+// 	}
+// 	else if (*i == 0 && ft_strchr("\"'", str[*i]))
+// 	{
+// 		quote = str[(*i)++];
+// 		flag = 1;
+// 		copy_until_quoute(str, quote, i, j);
+// 	}
+// }
+
+void skip_initial_quotes(char *str, int *i, int *j)
+{
+	if (ft_strchr("\"'", str[*i]))
 	{
 		(*i)++;
-		flag = 0;
-	}
-	else if (*i == 0 && ft_strchr("\"'", str[*i]))
-	{
-		quote = str[(*i)++];
-		flag = 1;
-		copy_until_quoute(str, quote, i, j);
+		while (str[*i] && !ft_strchr("\"'", str[*i]))
+			str[(*j)++] = str[(*i)++];
+		(*i)++;
 	}
 }
 
-void	quote_manager(char *str, int i, int j, int flag)
+
+void quote_manager(char *str, int i, int j)
 {
-	char	quote;
-	int		in_quote;
-	
+	skip_initial_quotes(str, &i, &j);
 	while (str[i])
 	{
-		if (i == 0 && ft_strchr("\"'", str[i]))
+		if (ft_strchr("\"'", str[i]) && ft_strchr(" \t\v\n\r", str[i - 1]))
 		{
-			manage_initial_quotes(str, &i, &j);
-		}
-		else if (ft_strchr("\"'", str[i]))
-		{
-			quote = str[i];
-			if (ft_strchr(" \t\v\n\r", str[i - 1]))
-			{
+			char quote = str[i];
+			str[j++] = str[i++];
+			while (str[i] && str[i] != quote)
 				str[j++] = str[i++];
-				copy_until_quoute(str, quote, &i, &j);
-				if (i == ft_strlen(str) - 1)
-					str[j++] = str[i++];
-				else
-					i++;
-			}
-			else if (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1]))
-			{
-				quote = str[i++];
-				copy_until_quoute(str, quote, &i, &j);
-			}
+			str[j++] = str[i++];
+		}
+		else if (ft_strchr("\"'", str[i]) && (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1])))
+		{
+			char quote = str[i++];
+			while (str[i] && str[i] != quote)
+				str[j++] = str[i++];
+			i++;
 		}
 		else
 			str[j++] = str[i++];
 	}
 	str[j] = '\0';
 }
+
+// void	copy_until_quote(char *str, char quote, int *i, int *j)
+// {
+// 	while (str[*i] && str[*i] != quote)
+// 		str[(*j)++] = str[(*i)++];
+// }
+
+
+// void	quote_manager(char *str, int i, int j, int flag)
+// {
+// 	char	quote;
+// 	int		in_quote;
+
+// 	while (str[i])
+// 	{
+// 		if (flag == 1)
+// 		{
+// 			i++;
+// 			flag = 0;
+// 		}
+// 		else if (i == 0 && ft_strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i++];
+// 			flag = 1;
+// 			copy_until_quote(str, quote, &i, &j);
+// 		}
+// 		else if (ft_strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i];
+// 			if (ft_strchr(" \t\v\n\r", str[i - 1]))
+// 			{
+// 				str[j++] = str[i++];
+// 				copy_until_quote(str, quote, &i, &j);
+// 				if (i == ft_strlen(str) - 1)
+// 					str[j++] = str[i++];
+// 				else
+// 					i++;
+// 			}
+// 			else if (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1]))
+// 			{
+// 				quote = str[i++];
+// 				copy_until_quote(str, quote, &i, &j);
+// 			}
+// 		}
+// 		else
+// 			str[j++] = str[i++];
+// 	}
+// 	str[j] = '\0';
+// 	// printf("str: %s\n", str);
+// }
+
+// void	quote_manager(char *str, int i, int j, int flag)
+// {
+// 	char	quote;
+// 	int		in_quote;
+
+// 	while (str[i])
+// 	{
+// 		if (flag == 1)
+// 		{
+// 			i++;
+// 			flag = 0;
+// 		}
+// 		else if (i == 0 && ft_strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i++];
+// 			flag = 1;
+// 			while (str[i] && str[i] != quote)
+// 				str[j++] = str[i++];
+// 		}
+// 		else if (ft_strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i];
+// 			if (ft_strchr(" \t\v\n\r", str[i - 1]))
+// 			{
+// 				str[j++] = str[i++];
+// 					while (str[i] && str[i] != quote)
+// 						str[j++] = str[i++];
+// 				if (i == ft_strlen(str) - 1)
+// 					str[j++] = str[i++];
+// 				else
+// 					i++;
+// 			}
+// 			else if (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1]))
+// 			{
+// 				quote = str[i++];
+// 				copy_until_quoute(str, quote, &i, &j);
+// 			}
+// 		}
+// 		else
+// 			str[j++] = str[i++];
+// 	}
+// 	str[j] = '\0';
+// }
+
+// void	quote_manager(char *str, int i, int j, int flag)
+// {
+// 	char	quote;
+// 	int		in_quote;
+
+// 	while (str[i])
+// 	{
+// 		if (flag == 1)
+// 	{
+// 		(*i)++;
+// 		flag = 0;
+// 	}
+// 		if (i == 0 && ft_strchr("\"'", str[i]))
+// 		{
+// 			manage_initial_quotes(str, &i, &j);
+// 		}
+// 		else if (ft_strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i];
+// 			if (ft_strchr(" \t\v\n\r", str[i - 1]))
+// 			{
+// 				str[j++] = str[i++];
+// 				copy_until_quoute(str, quote, &i, &j);
+// 				if (i == ft_strlen(str) - 1)
+// 					str[j++] = str[i++];
+// 				else
+// 					i++;
+// 			}
+// 			else if (ft_isalpha(str[i - 1]) || ft_strchr("\"'", str[i - 1]))
+// 			{
+// 				quote = str[i++];
+// 				copy_until_quoute(str, quote, &i, &j);
+// 			}
+// 		}
+// 		else
+// 			str[j++] = str[i++];
+// 	}
+// 	str[j] = '\0';
+// }
+
+// // Función auxiliar para copiar hasta encontrar una comilla
+// void	copy_until_quote(char *str, char quote, int *i, int *j)
+// {
+// 	while (str[*i] && str[*i] != quote)
+// 		str[(*j)++] = str[(*i)++];
+// 	if (str[*i] == quote)
+// 		(*i)++;
+// }
+
+// // Función principal refactorizada
+// void	quote_manager(char *str, int i, int j, int flag)
+// {
+// 	char	quote;
+
+// 	while (str[i])
+// 	{
+// 		if (flag && i++)
+// 			flag = 0;
+// 		else if (i == 0 && strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i++];
+// 			flag = 1;
+// 			copy_until_quote(str, quote, &i, &j);
+// 		}
+// 		else if (strchr("\"'", str[i]))
+// 		{
+// 			quote = str[i++];
+// 			if (isspace(str[i - 2]))
+// 			{
+// 				str[j++] = str[i - 1];
+// 				copy_until_quote(str, quote, &i, &j);
+// 				if (i == (int)strlen(str))
+// 					str[j++] = str[i++];
+// 			}
+// 			else if (isalpha(str[i - 2]) || strchr("\"'", str[i - 2]))
+// 				copy_until_quote(str, quote, &i, &j);
+// 		}
+// 		else
+// 			str[j++] = str[i++];
+// 	}
+// 	str[j] = '\0';
+// }

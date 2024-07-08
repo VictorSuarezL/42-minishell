@@ -105,7 +105,7 @@ void						replace_qmark(char *line, int exit_status);
 // UTILS_TOK
 void						ft_perror(char *msg);
 char						*skip_whitespace(char *str, char *end);
-void quote_manager(char *str, int i, int j, int flag);
+void quote_manager(char *str, int i, int j);
 
 
 // BUILTINS
