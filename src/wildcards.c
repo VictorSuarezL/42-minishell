@@ -1,5 +1,19 @@
 #include <minishell.h>
 
+// Función auxiliar para detectar si el asterisco está escapado
+int	is_escaped(char *token, char *pos)
+{
+	int	count;
+
+	count = 0;
+	while (pos > token && *(pos - 1) == '\\')
+	{
+		count++;
+		pos--;
+	}
+	return ((count % 2) != 0);
+}
+
 void	add_buf(char *result, char *token)
 {
 	ft_strcat(result, token);
@@ -39,7 +53,9 @@ int	expand_wildcards(char *buf)
 				any_pattern_found = 1;
 		}
 		else
+		{
 			add_buf(result, token);
+		}
 		token = ft_strtok(NULL, " ");
 	}
 	finalize_result(buf, result);
@@ -57,8 +73,15 @@ void	initialize_variables(char *result, int *pattern_found,
 
 int	process_token(char *token)
 {
-	if (ft_strchr(token, '*') != NULL)
-		return (1);
+	char	*pos;
+
+	pos = ft_strchr(token, '*');
+	while (pos != NULL)
+	{
+		if (!is_escaped(token, pos))
+			return (1);
+		pos = ft_strchr(pos + 1, '*');
+	}
 	return (0);
 }
 
@@ -71,17 +94,21 @@ int	expand_token(char *token, char *result, int *pattern_found)
 	if (d)
 	{
 		dir = readdir(d);
-		while ((dir != NULL))
+		while (dir != NULL)
 		{
 			if (ft_strcmp(dir->d_name, ".") == 0 || ft_strcmp(dir->d_name,
 					"..") == 0)
+			{
+				dir = readdir(d);
 				continue ;
+			}
 			if (match_pattern(token, dir->d_name))
 			{
 				ft_strcat(result, dir->d_name);
 				ft_strcat(result, " ");
 				*pattern_found = 1;
 			}
+			dir = readdir(d);
 		}
 		closedir(d);
 	}
@@ -102,6 +129,8 @@ int	match_pattern(const char *pattern, const char *str)
 {
 	if (*pattern == '\0' && *str == '\0')
 		return (1);
+	if (*pattern == '\\' && *(pattern + 1) == '*')
+		return (*str == '*' && match_pattern(pattern + 2, str + 1));
 	if (*pattern == '*')
 	{
 		while (*(pattern + 1) == '*')
