@@ -944,6 +944,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
     int a;
 
     ft_strcpy(buf, trimmed);
+    quote_manager(buf, 0, 0);
     if (procesarHeredoc(buf, *copy_en) == 1)
     {
         eliminarArchivos();
@@ -962,7 +963,6 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
         execute_builtin(buf, copy_export, copy_en);
         if (ft_strcmp(buf, "exit") == 0 || ft_strncmp(buf, "exit ", 5) == 0)
             exit(0);
-        //return;
     }
     else
         setup_executor(buf, *copy_en, *copy_export);
