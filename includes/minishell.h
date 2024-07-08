@@ -28,8 +28,7 @@ typedef enum e_type
 {
 	EXEC,
 	REDIR,
-	PIPE,
-	LIST
+	PIPE
 }							t_type;
 
 typedef struct s_cmd
@@ -110,6 +109,7 @@ void						replace_qmark(char *line, int exit_status);
 // UTILS_TOK
 void						ft_perror(char *msg);
 char						*skip_whitespace(char *str, char *end);
+void quote_manager(char *str, int i, int j);
 
 // BUILTINS
 int							cd_builtin(const char *path, char **env,
