@@ -175,7 +175,7 @@ int							execute_builtin(char *input, char ***export,
 								char ***env);
 
 void						final_clean(char **exp, char **env);
-void						setup_executor(char *buf, char **env, char **export);
+void						setup_executor(char *buf, char **env, char **export, int *exit_status);
 void						setup_shell(char ***copy_exp, char ***copy_en, char **env);
 
 void						ft_handle_sigint(int signum);

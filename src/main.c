@@ -9,10 +9,6 @@
 #include <unistd.h>
 
 
-#define BACK 5
-#define MAXARGS 10
-
-
 
 /* int execute_builtin(char *input, char ***export, char ***env) {
     char **split_input;
@@ -939,7 +935,7 @@ void eliminarArchivos(void)
 }
 
 
-void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_export)
+void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_export, int *exit_status)
 {
     int a;
 
@@ -951,6 +947,7 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
         return;
     }
     escape_special_chars(buf);
+    replace_qmark(buf, *exit_status);
     expand(buf, *copy_en);
     procesarredirecciones(buf);
     expand_wildcards(buf);
@@ -965,10 +962,10 @@ void process_commands(char *trimmed, char *buf, char ***copy_en, char ***copy_ex
             exit(0);
     }
     else
-        setup_executor(buf, *copy_en, *copy_export);
+        setup_executor(buf, *copy_en, *copy_export, exit_status);
 }
 
-void process_input(char *input, char ***copy_en, char ***copy_export)
+void process_input(char *input, char ***copy_en, char ***copy_export, int *exit_status)
 {
     char buf[PATH_MAX];
     char *trimmed;
@@ -991,7 +988,7 @@ void process_input(char *input, char ***copy_en, char ***copy_export)
         free(trimmed);
         return;
     }
-    process_commands(trimmed, buf, copy_en, copy_export);
+    process_commands(trimmed, buf, copy_en, copy_export, exit_status);
     free(trimmed);
 }
 int g_signal;
@@ -1001,6 +998,7 @@ int main(int args, char **argv, char **env)
     char    **copy_export;
     char    **copy_en;
     char    *input;
+    int     exit_status = 0;
     
     (void)args;
     argv++;
@@ -1014,7 +1012,8 @@ int main(int args, char **argv, char **env)
             exit_builtin();
             break ;
         }
-        process_input(input, &copy_en, &copy_export);
+        process_input(input, &copy_en, &copy_export, &exit_status);
     }
     final_clean(copy_export, copy_en);
+    return (exit_status);
 }
