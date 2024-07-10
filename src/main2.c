@@ -9,7 +9,6 @@ void	process(char *buf)
 
 void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 {
-	quote_manager(buf, 0, 0);
 	escape_special_chars(buf);
 	if (procesarheredoc(buf, *copy_en) == 1)
 	{
@@ -18,6 +17,7 @@ void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 	}
 	replace_qmark(buf, *exit_status);
 	expand(buf, *copy_en);
+	quote_manager(buf, 0, 0);
 	process(buf);
 }
 
