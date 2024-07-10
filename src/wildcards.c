@@ -1,67 +1,5 @@
 #include <minishell.h>
 
-// Función auxiliar para detectar si el asterisco está escapado
-int	is_escaped(char *token, char *pos)
-{
-	int	count;
-
-	count = 0;
-	while (pos > token && *(pos - 1) == '\\')
-	{
-		count++;
-		pos--;
-	}
-	return ((count % 2) != 0);
-}
-
-void	add_buf(char *result, char *token)
-{
-	ft_strcat(result, token);
-	ft_strcat(result, " ");
-}
-
-int	wildcard_result(int wildcard_present, int any_pattern_found)
-{
-	if (!wildcard_present)
-		return (0);
-	else if (any_pattern_found)
-		return (1);
-	else
-		return (-1);
-}
-
-int	expand_wildcards(char *buf)
-{
-	char	result[1000];
-	char	*token;
-	int		pattern_found;
-	int		any_pattern_found;
-	int		wildcard_present;
-
-	initialize_variables(result, &pattern_found, &any_pattern_found,
-		&wildcard_present);
-	token = ft_strtok(buf, " ");
-	while (token != NULL)
-	{
-		if (process_token(token))
-		{
-			wildcard_present = 1;
-			pattern_found = 0;
-			if (!expand_token(token, result, &pattern_found))
-				add_buf(result, token);
-			else
-				any_pattern_found = 1;
-		}
-		else
-		{
-			add_buf(result, token);
-		}
-		token = ft_strtok(NULL, " ");
-	}
-	finalize_result(buf, result);
-	return (wildcard_result(wildcard_present, any_pattern_found));
-}
-
 void	initialize_variables(char *result, int *pattern_found,
 		int *any_pattern_found, int *wildcard_present)
 {
@@ -110,9 +48,8 @@ int	expand_token(char *token, char *result, int *pattern_found)
 			}
 			dir = readdir(d);
 		}
-		closedir(d);
 	}
-	return (*pattern_found);
+	return (closedir(d), *pattern_found);
 }
 
 void	finalize_result(char *buf, char *result)
