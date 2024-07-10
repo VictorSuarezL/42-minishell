@@ -39,24 +39,36 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/utils_tok.c \
 			$(SRC_DIR)/escape.c \
 			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/main2.c \
 			$(SRC_DIR)/builtins_utils.c \
 			$(SRC_DIR)/builtins1_utils.c \
 			$(SRC_DIR)/cd_builtin.c \
+			$(SRC_DIR)/cd_builtins1.c \
+			$(SRC_DIR)/cd_builtins2.c \
+			$(SRC_DIR)/cd_builtins3.c \
 			$(SRC_DIR)/display_prompt.c \
 			$(SRC_DIR)/echo_builtin.c \
+			$(SRC_DIR)/echo_builtin1.c \
 			$(SRC_DIR)/exit_builtin.c \
 			$(SRC_DIR)/env_builtin.c \
 			$(SRC_DIR)/export_builtin.c \
-			$(SRC_DIR)/have_heredoc.c \
+			$(SRC_DIR)/export_builtin1.c \
 			$(SRC_DIR)/pwd_builtin.c \
 			$(SRC_DIR)/unset_builtin.c \
+			$(SRC_DIR)/unset_builtin1.c \
 			$(SRC_DIR)/setup.c \
 			$(SRC_DIR)/signals.c \
 			$(SRC_DIR)/builtins.c \
 			$(SRC_DIR)/wildcards.c \
+			$(SRC_DIR)/wildcards1.c \
 			$(SRC_DIR)/redirecciones.c \
+			$(SRC_DIR)/redirecciones1.c \
 			$(SRC_DIR)/heredoc.c \
+			$(SRC_DIR)/heredoc1.c \
+			$(SRC_DIR)/heredoc2.c \
 			$(SRC_DIR)/expand.c \
+			$(SRC_DIR)/expand1.c \
+			$(SRC_DIR)/expand2.c \
 
 # SRC_FILES = $(SRC_DIR)/main.c
 # SRC_FILES = $(SRC_DIR)/hhp3.c
