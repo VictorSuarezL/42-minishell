@@ -8,7 +8,7 @@ int	execute_builtin(char *input, char ***export, char ***env)
 	if (ft_strncmp(input, "echo", 4) == 0)
 		return (echo_builtin(input), 0);
 	if (ft_strncmp(input, "exit", 4) == 0)
-		return (exit_builtin());
+		return (exit_builtin(input, &result));
 	if (ft_strncmp(input, "env", 3) == 0)
 		return (env_builtin(input, *env));
 	if (ft_strncmp(input, "export", 6) == 0)

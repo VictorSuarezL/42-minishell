@@ -9,7 +9,9 @@ void	process(char *buf)
 
 void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 {
+	quote_manager(buf, 0, 0);
 	escape_special_chars(buf);
+	ft_printf("%s\n", buf);
 	if (procesarheredoc(buf, *copy_en) == 1)
 	{
 		eliminararchivos();
@@ -17,24 +19,29 @@ void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 	}
 	replace_qmark(buf, *exit_status);
 	expand(buf, *copy_en);
-	quote_manager(buf, 0, 0);
 	process(buf);
 }
 
 void	handle_execution(char *buf, char ***copy_en, char ***copy_export,
 		int *exit_status)
 {
-	int	a;
+	int	exit_code;
 
-	a = execute_cd(buf, *copy_en, *copy_export);
-	if (a == 0 || a == 1)
+	exit_stat(buf, &exit_code, copy_en, copy_export);
+	*exit_status = execute_cd(buf, *copy_en, *copy_export);
+	if (*exit_status == 0 || *exit_status == 1)
 		return ;
 	if (is_builtin_env(buf) && (!ft_strstr(buf, "|") && !ft_strstr(buf, ">")
 			&& !ft_strstr(buf, "<")))
 	{
-		execute_builtin(buf, copy_export, copy_en);
-		if (ft_strcmp(buf, "exit") == 0 || ft_strncmp(buf, "exit ", 5) == 0)
-			exit(0);
+		*exit_status = execute_builtin(buf, copy_export, copy_en);
+		if (ft_strncmp(buf, "exit", 4) == 0 && (*exit_status != 1
+				|| *exit_status == 0))
+		{
+			final_clean(*copy_en, *copy_export);
+			exit(*exit_status);
+		}
+		return ;
 	}
 	else
 		setup_executor(buf, *copy_en, *copy_export, exit_status);

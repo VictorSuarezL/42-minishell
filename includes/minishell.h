@@ -159,8 +159,10 @@ int							handle_n_option(char *input, int i, int *line);
 int							handle_escape_sequences(char *input, int i);
 void						handle_output(char *input, int i);
 void						echo_builtin(char *input);
+void						exit_stat(char *buf, int *exit_code,
+								char ***copy_en, char ***copy_exp);
 
-int							exit_builtin(void);
+int							exit_builtin(char *buf, int *should_exit);
 
 int							env_builtin(char *input, char **env);
 void						split_variable(char *variable, char **key,
@@ -267,8 +269,8 @@ void						construir_archivo_heredoc(char *nombrearchivo,
 int							hijo_done(pid_t pid);
 void						lectura_heredoc(char *linea, char *delimiterstr,
 								char **env, int archivo);
-void						process_input(char *input, char ***copy_en, char ***copy_export,
-								int *exit_status);
+void						process_input(char *input, char ***copy_en,
+								char ***copy_export, int *exit_status);
 void						proceso_hijo(char *linea, char *delimiterstr,
 								char **env, int archivo, char *nombrearchivo);
 void						extraer_delimiter(char *delimiter,

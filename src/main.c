@@ -11,7 +11,7 @@ int	main(int args, char **argv, char **env)
 
 	exit_status = 0;
 	(void)args;
-	argv[0] = "h";
+	argv++;
 	setup_shell(&copy_export, &copy_en, env);
 	while (1)
 	{
@@ -19,7 +19,7 @@ int	main(int args, char **argv, char **env)
 		input = display_prompt();
 		if (input == NULL)
 		{
-			exit_builtin();
+			ft_printf("exit\n");
 			break ;
 		}
 		process_input(input, &copy_en, &copy_export, &exit_status);

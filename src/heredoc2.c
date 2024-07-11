@@ -25,9 +25,11 @@ void	lectura_heredoc(char *linea, char *delimiterstr, char **env,
 	}
 }
 
-void	proceso_hijo(char *linea, char *delimiterstr, char **env, int archivo,
-		char *nombrearchivo)
+void	abrir_archivo_y_proceso_hijo(char *linea, char *delimiterstr,
+		char **env, char *nombrearchivo)
 {
+	int	archivo;
+
 	archivo = open(nombrearchivo, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (archivo == -1)
 	{
@@ -74,13 +76,10 @@ int	manejarprocesoheredoc(char *heredocstart, char *input, char **env)
 	construir_archivo_heredoc(nombrearchivo, 0);
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("Error al crear el proceso hijo");
-		return (1);
-	}
+		return (perror("Error al crear el proceso hijo"), 1);
 	else if (pid == 0)
 	{
-		proceso_hijo(NULL, delimiterstr, env, 0, nombrearchivo);
+		abrir_archivo_y_proceso_hijo(NULL, delimiterstr, env, nombrearchivo);
 	}
 	else
 	{
