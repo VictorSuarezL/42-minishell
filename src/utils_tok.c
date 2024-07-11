@@ -38,27 +38,37 @@ void	quote_manager(char *str, int i, int j)
 {
 	char	quote;
 
-	skip_initial_quotes(str, &i, &j);
+	// skip_initial_quotes(str, &i, &j);
 	while (str[i])
 	{
-		if (ft_strchr("\"'", str[i]) && ft_strchr(" \t\v\n\r", str[i - 1]))
-		{
-			quote = str[i];
-			str[j++] = str[i++];
-			while (str[i] && str[i] != quote)
-				str[j++] = str[i++];
-			str[j++] = str[i++];
-		}
-		else if (ft_strchr("\"'", str[i]) && (ft_isalpha(str[i - 1])
-				|| ft_strchr("\"'", str[i - 1])))
+		if (ft_strchr("\"'", str[i]))
 		{
 			quote = str[i++];
 			while (str[i] && str[i] != quote)
 				str[j++] = str[i++];
-			i++;
+			if (str[i] == quote)
+				i++;
 		}
 		else
 			str[j++] = str[i++];
+		// if (ft_strchr("\"'", str[i]) && ft_strchr(" \t\v\n\r", str[i - 1]))
+		// {
+		// 	quote = str[i];
+		// 	str[j++] = str[i++];
+		// 	while (str[i] && str[i] != quote)
+		// 		str[j++] = str[i++];
+		// 	str[j++] = str[i++];
+		// }
+		// else if (ft_strchr("\"'", str[i]) && (ft_isalpha(str[i - 1])
+		// 		|| ft_strchr("\"'", str[i - 1])))
+		// {
+		// 	quote = str[i++];
+		// 	while (str[i] && str[i] != quote)
+		// 		str[j++] = str[i++];
+		// 	i++;
+		// }
+		// else
+		// 	str[j++] = str[i++];
 	}
 	str[j] = '\0';
 }

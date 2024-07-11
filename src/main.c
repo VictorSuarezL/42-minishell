@@ -137,7 +137,7 @@ int	main(int argc, char *argv[], char **env)
 	// }
 
 	//Hacer un array de strings que contengan todas las opciones de los inputs:
-	char *input[8];	
+	char *input[9];	
 	int i = 0;
 	input[0] = "echo hola '>' a.txt";
 	input[1] = "e'c'h'o' hola";
@@ -145,11 +145,12 @@ int	main(int argc, char *argv[], char **env)
 	input[3] = "echo 'hola'mundo";
 	input[4] = "echo hola'>'>mundo";
 	input[5] = "echo 'hola''mundo'";
-	input[6] = "echo hola'>'mundo";
+	input[6] = "echo hola'>'hello";
 	input[7] = "echo 'hola'>mundo";
+	input[8] = "echo \"'hola'\"";
 
 	// while (i < 2)
-	for (int i = 0; i <= 7; i++)
+	for (int i = 8; i <= 8; i++)
 	{
 		char line[100];
 		strcpy(line, input[i]);
