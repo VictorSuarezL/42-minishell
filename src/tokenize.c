@@ -16,13 +16,22 @@
 
 char	*skip_token(char *str, char *end)
 {
-	while (str < end && !ft_strchr(" \t\r\n\v", *str) && !ft_strchr("<|>",
-			*str))
+	int escaped = 0;
+	while (str < end && (!ft_strchr(" \t\r\n\v", *str) || escaped == 1) && (!ft_strchr("<>|", *str) || escaped == 1))
 	{
+		if (escaped == 1)
+		{
+			escaped = 0;
+		}
+		if (*str == '\\')
+		{
+			escaped = 1;
+		}
 		str++;
 	}
 	return (str);
 }
+
 
 int	handle_redirection(char **aux)
 {
@@ -45,7 +54,7 @@ int	handle_quote(char **aux, char *end)
 	quote = **aux;
 	(*aux)++;
 	// *aux = skip_quote(*aux, end, quote);
-	(*aux)++; //TODO TENER EN CUENTA ESTO
+	// (*aux)++; //TODO TENER EN CUENTA ESTO
 	while (*aux < end && **aux != quote)
 	{
 		(*aux)++;
@@ -78,12 +87,21 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 		*q = aux;
 	if (*aux == '\0')
 		ret = '\0';
+	// else if (*aux == '\\' && ft_strchr("|<>",*(aux + 1)))
+	// {
+	// 	printf("entro\n");
+	// 	ret = 'a';
+	// 	while (aux < end_str && !ft_strchr(" \t\r\n\v", *aux))
+	// 	{
+	// 		aux++;
+	// 	}
+	// }
 	else if (ft_strchr("|<", *aux))
 		ret = get_special_token(&aux);
-	else if (*aux == '>')
+	else if (*aux == '>' && *(aux - 1) != '\\')
 		ret = handle_redirection(&aux);
-	else if (*aux == '"' || *aux == '\'')
-		ret = handle_quote(&aux, end_str);
+	// else if (*aux == '"')
+	// 	ret = handle_quote(&aux, end_str);
 	else
 	{
 		ret = 'a';

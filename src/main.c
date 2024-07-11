@@ -124,16 +124,59 @@ int	main(int argc, char *argv[], char **env)
 	// char	line[100] = "ls -al | grep d | wc -l";
 	// char	line[100] = "ls -al > aa.txt";
 	// char	line[100] = "echo 'hola \" son unas comillas'";
-	char	line[100] = "echo 'hola \" son unas comillas' esto esta \" mal";
+	// char	line[100] = "echo 'hola'mundo";
+	// char	line[100] = "echo hola'>'mundo";
+	// char	line[100] = "echo hola'>'mundo";
 
-	if (!validator(line))
+
+	// if (!validator(line))
+	// {
+	// 	printf("syntax error!\n");
+	// 	exit(1);
+
+	// }
+
+	//Hacer un array de strings que contengan todas las opciones de los inputs:
+	char *input[8];	
+	int i = 0;
+	input[0] = "echo hola '>' a.txt";
+	input[1] = "e'c'h'o' hola";
+	input[2] = "echo 'hola echo mundo' esto es una prueba";
+	input[3] = "echo 'hola'mundo";
+	input[4] = "echo hola'>'>mundo";
+	input[5] = "echo 'hola''mundo'";
+	input[6] = "echo hola'>'mundo";
+	input[7] = "echo 'hola'>mundo";
+
+	// while (i < 2)
+	for (int i = 0; i <= 7; i++)
 	{
-		printf("syntax error!\n");
-		exit(1);
+		char line[100];
+		strcpy(line, input[i]);
+		if (!validator(line))
+		{
+			printf("syntax error!\n");
+			continue;
+			// exit(1);
+			// printf("line = %s\n", line);
+		}
+		// printf("\n");
+		// printf("line [%d] = %s\n", i, line);
+		escape_special_chars(line);
+		// quote_manager(line, 0, 0);
+		// printf("qm: %s\n", line);
+		if(save_fork() == 0) 
+		{
+		// sleep(1);
+		runcmd(parse_cmd(line), env);
+		exit(0); // Exit the child process after executing the command
+		}
+		// runcmd(parse_cmd(line), env);
 
 	}
+
 	
-	replace_qmark(line, exit_status);
+	// replace_qmark(line, exit_status);
 	// printf("line = %s\n", line);
 
 	// escape_special_chars(line);
@@ -149,9 +192,10 @@ int	main(int argc, char *argv[], char **env)
 
 	// char *aux = ft_atoi(exit_status);
 
+	
 
 
-    runcmd(parse_cmd(line), env);
+    // runcmd(parse_cmd(line), env);
 
 	
 	// if(save_fork() == 0) 
@@ -159,6 +203,6 @@ int	main(int argc, char *argv[], char **env)
     //   runcmd(parse_cmd(line), env);
     //   exit(0); // Exit the child process after executing the command
     // }
-	exit_status = wait_status();
-	printf("Exit status = %d\n", exit_status);
+	// exit_status = wait_status();
+	// printf("Exit status = %d\n", exit_status);
 }

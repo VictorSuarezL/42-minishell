@@ -70,6 +70,7 @@ void	runcmd(t_cmd *cmd, char **env_copy);
 int wait_status(void);
 void	wait_pipe(void);
 void	remove_quotes(t_execcmd *ecmd);
+void	quote_manager(char *str, int i, int j);
 
 int	validator(char *str);
 // SEARCH_PATH.C
