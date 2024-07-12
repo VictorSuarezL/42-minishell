@@ -217,8 +217,6 @@ int							is_builtin_env(char *input);
 int							is_builtin(char *input);
 int							execute_cd(char *buf, char **env, char **export);
 
-void						eliminarArchivos(void);
-
 void						add_buf(char *result, char *token);
 int							wildcard_result(int wildcard_present,
 								int any_pattern_found);
@@ -227,60 +225,54 @@ int							match_pattern(const char *pattern, const char *str);
 void						initialize_variables(char *result,
 								int *pattern_found, int *any_pattern_found,
 								int *wildcard_present);
-void						read_directory(DIR *d, char *token, char *result,
-								int *pattern_found);
 int							process_token(char *token);
 int							expand_token(char *token, char *result,
 								int *pattern_found);
 void						finalize_result(char *buf, char *result);
 
-void						actualizar_redireccion(char *inicio_redirecciones,
+void						update_redir(char *inicio_redirecciones,
 								char *ultima_redireccion,
 								char modo_redireccion);
-void						limpiar_redirecciones_restantes(char *inicio_redir,
+void						clean_redirs_left(char *inicio_redir,
 								char *ultima_redireccion,
 								char modo_redireccion);
-void						modificar_entrada(char *entrada,
+void						modify_entry(char *entrada,
 								char *ultima_redireccion,
 								char modo_redireccion);
-int							crear_abrir_archivo(const char *archivo,
+int							create_open_file(const char *archivo,
 								char modo_redireccion);
-void						ajustar_modo_y_pos(char **pos,
-								char *modo_redireccion);
-char						*obtener_archivo_y_actualizar(char *pos,
-								char *entrada_copy, char **ultima_redireccion,
+void						adjust_mode_pos(char **pos, char *modo_redireccion);
+char						*get_file_update(char *pos, char *entrada_copy,
+								char **ultima_redireccion,
 								char modo_redireccion);
-char						*procesar_redireccion(char *pos, char *entrada_copy,
+char						*process_redir(char *pos, char *entrada_copy,
 								char **ultima_redireccion,
 								char *modo_redireccion);
-void						procesar_todas_redirecciones(char *entrada_copy,
+void						process_all_redirs(char *entrada_copy,
 								char **ultima_redireccion,
 								char *modo_redireccion);
-void						procesarredirecciones(char *entrada);
+void						processredirs(char *entrada);
 
-char						*procesar_variable(char *pos, char **envp,
+char						*process_variable(char *pos, char **envp,
 								char **res_ptr);
 void						expand_heredoc(char *str, char **envp);
-int							construir_nuevo_archivo(char *heredocstart,
-								char *input, char *delimiterend,
-								char *nombrearchivo);
-void						construir_archivo_heredoc(char *nombrearchivo,
+int							built_new_file(char *heredocstart, char *input,
+								char *delimiterend, char *nombrearchivo);
+void						built_heredoc_file(char *nombrearchivo,
 								int heredoccount);
-int							hijo_done(pid_t pid);
-void						lectura_heredoc(char *linea, char *delimiterstr,
+int							child_done(pid_t pid);
+void						read_heredoc(char *linea, char *delimiterstr,
 								char **env, int archivo);
 void						process_input(char *input, char ***copy_en,
 								char ***copy_export, int *exit_status);
-void						proceso_hijo(char *linea, char *delimiterstr,
-								char **env, int archivo, char *nombrearchivo);
-void						extraer_delimiter(char *delimiter,
+void						extract_delimiter(char *delimiter,
 								char *delimiterstr, size_t *lendelimiter);
-void						avanza_delimiter(char **delimiter,
+void						move_delimiter(char **delimiter,
 								char *heredocstart);
-int							manejarprocesoheredoc(char *heredocstart,
-								char *input, char **env);
-int							procesarheredoc(char *input, char **env);
-void						eliminararchivos(void);
+int							handlehredocprocess(char *heredocstart, char *input,
+								char **env);
+int							processheredoc(char *input, char **env);
+void						deletefiles(void);
 void						int_to_str(int num, char *str);
 
 void						process_variable_size(const char **str, char **envp,

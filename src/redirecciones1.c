@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void	actualizar_redireccion(char *inicio_redirecciones,
+void	update_redir(char *inicio_redirecciones,
 		char *ultima_redireccion, char modo_redireccion)
 {
 	char	redir_simbolo[3];
@@ -14,7 +14,7 @@ void	actualizar_redireccion(char *inicio_redirecciones,
 		ultima_redireccion);
 }
 
-void	limpiar_redirecciones_restantes(char *inicio_redirecciones,
+void	clean_redirs_left(char *inicio_redirecciones,
 		char *ultima_redireccion, char modo_redireccion)
 {
 	char	*pos_eliminar;
@@ -43,7 +43,7 @@ void	limpiar_redirecciones_restantes(char *inicio_redirecciones,
 	}
 }
 
-void	modificar_entrada(char *entrada, char *ultima_redireccion,
+void	modify_entry(char *entrada, char *ultima_redireccion,
 		char modo_redireccion)
 {
 	char	*inicio_redirecciones;
@@ -51,14 +51,14 @@ void	modificar_entrada(char *entrada, char *ultima_redireccion,
 	inicio_redirecciones = ft_strchr(entrada, '>');
 	if (inicio_redirecciones)
 	{
-		actualizar_redireccion(inicio_redirecciones, ultima_redireccion,
+		update_redir(inicio_redirecciones, ultima_redireccion,
 			modo_redireccion);
-		limpiar_redirecciones_restantes(inicio_redirecciones,
+		clean_redirs_left(inicio_redirecciones,
 			ultima_redireccion, modo_redireccion);
 	}
 }
 
-int	crear_abrir_archivo(const char *archivo, char modo_redireccion)
+int	create_open_file(const char *archivo, char modo_redireccion)
 {
 	int	flags;
 	int	archivo_fd;
@@ -77,7 +77,7 @@ int	crear_abrir_archivo(const char *archivo, char modo_redireccion)
 	return (0);
 }
 
-void	ajustar_modo_y_pos(char **pos, char *modo_redireccion)
+void	adjust_mode_pos(char **pos, char *modo_redireccion)
 {
 	if (*(*pos + 1) == '>')
 	{

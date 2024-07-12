@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-char	*obtener_archivo_y_actualizar(char *pos, char *entrada_copy,
+char	*get_file_update(char *pos, char *entrada_copy,
 		char **ultima_redireccion, char modo_redireccion)
 {
 	char	*token_start;
@@ -18,7 +18,7 @@ char	*obtener_archivo_y_actualizar(char *pos, char *entrada_copy,
 		free(entrada_copy);
 		exit(EXIT_FAILURE);
 	}
-	if (crear_abrir_archivo(archivo, modo_redireccion) == -1)
+	if (create_open_file(archivo, modo_redireccion) == -1)
 	{
 		free(archivo);
 		free(entrada_copy);
@@ -29,15 +29,15 @@ char	*obtener_archivo_y_actualizar(char *pos, char *entrada_copy,
 	return (pos);
 }
 
-char	*procesar_redireccion(char *pos, char *entrada_copy,
+char	*process_redir(char *pos, char *entrada_copy,
 		char **ultima_redireccion, char *modo_redireccion)
 {
-	ajustar_modo_y_pos(&pos, modo_redireccion);
-	return (obtener_archivo_y_actualizar(pos, entrada_copy, ultima_redireccion,
+	adjust_mode_pos(&pos, modo_redireccion);
+	return (get_file_update(pos, entrada_copy, ultima_redireccion,
 			*modo_redireccion));
 }
 
-void	procesar_todas_redirecciones(char *entrada_copy,
+void	process_all_redirs(char *entrada_copy,
 		char **ultima_redireccion, char *modo_redireccion)
 {
 	char	*pos;
@@ -46,13 +46,13 @@ void	procesar_todas_redirecciones(char *entrada_copy,
 	pos = ft_strchr(pos, '>');
 	while (pos != NULL && (*(pos - 1) != '\\'))
 	{
-		pos = procesar_redireccion(pos, entrada_copy, ultima_redireccion,
+		pos = process_redir(pos, entrada_copy, ultima_redireccion,
 				modo_redireccion);
 		pos = ft_strchr(pos, '>');
 	}
 }
 
-void	procesarredirecciones(char *entrada)
+void	processredirs(char *entrada)
 {
 	char	*entrada_copy;
 	char	*ultima_redireccion;
@@ -66,10 +66,10 @@ void	procesarredirecciones(char *entrada)
 	}
 	ultima_redireccion = NULL;
 	modo_redireccion = 'w';
-	procesar_todas_redirecciones(entrada_copy, &ultima_redireccion,
+	process_all_redirs(entrada_copy, &ultima_redireccion,
 		&modo_redireccion);
 	if (ultima_redireccion)
-		modificar_entrada(entrada, ultima_redireccion, modo_redireccion);
+		modify_entry(entrada, ultima_redireccion, modo_redireccion);
 	free(entrada_copy);
 	free(ultima_redireccion);
 }

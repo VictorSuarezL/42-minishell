@@ -2,7 +2,7 @@
 
 void	process(char *buf)
 {
-	procesarredirecciones(buf);
+	processredirs(buf);
 	expand_wildcards(buf);
 	pop_slash(buf);
 }
@@ -11,10 +11,9 @@ void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 {
 	quote_manager(buf, 0, 0);
 	escape_special_chars(buf);
-	ft_printf("%s\n", buf);
-	if (procesarheredoc(buf, *copy_en) == 1)
+	if (processheredoc(buf, *copy_en) == 1)
 	{
-		eliminararchivos();
+		deletefiles();
 		return ;
 	}
 	replace_qmark(buf, *exit_status);

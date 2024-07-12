@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-// Function to skip spaces in the input string
 int	skip_spaces(char *input, int i)
 {
 	while (input[i] == ' ')

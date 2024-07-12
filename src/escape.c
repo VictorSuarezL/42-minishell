@@ -32,7 +32,6 @@ void	escape_s_chars(char *str, char *aux, int *i, int *j)
 		aux[(*j)++] = str[(*i)++];
 }
 
-// Función principal para escapar caracteres especiales en una cadena
 void	escape_special_chars(char *str)
 {
 	int		i;

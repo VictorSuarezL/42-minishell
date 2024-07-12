@@ -1,6 +1,5 @@
 #include <minishell.h>
 
-// Función auxiliar para detectar si el asterisco está escapado
 int	is_escaped(char *token, char *pos)
 {
 	int	count;

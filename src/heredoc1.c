@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-char	*procesar_variable(char *pos, char **envp, char **res_ptr)
+char	*process_variable(char *pos, char **envp, char **res_ptr)
 {
 	char	*start;
 	char	var_name[1000];
@@ -34,7 +34,7 @@ void	expand_heredoc(char *str, char **envp)
 	while (*pos)
 	{
 		if (*pos == '$')
-			pos = procesar_variable(pos, envp, &res_ptr);
+			pos = process_variable(pos, envp, &res_ptr);
 		else
 			*res_ptr++ = *pos++;
 	}
@@ -42,7 +42,7 @@ void	expand_heredoc(char *str, char **envp)
 	ft_strcpy(str, result);
 }
 
-int	construir_nuevo_archivo(char *heredocstart, char *input, char *delimiterend,
+int	built_new_file(char *heredocstart, char *input, char *delimiterend,
 		char *nombrearchivo)
 {
 	size_t	lenbeforheredoc;
@@ -71,7 +71,7 @@ int	construir_nuevo_archivo(char *heredocstart, char *input, char *delimiterend,
 	return (0);
 }
 
-void	construir_archivo_heredoc(char *nombrearchivo, int heredoccount)
+void	built_heredoc_file(char *nombrearchivo, int heredoccount)
 {
 	char	heredoccountstr[10];
 
@@ -83,7 +83,7 @@ void	construir_archivo_heredoc(char *nombrearchivo, int heredoccount)
 	ft_strcat(nombrearchivo, ".txt");
 }
 
-int	hijo_done(pid_t pid)
+int	child_done(pid_t pid)
 {
 	int	status;
 

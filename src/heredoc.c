@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-int	procesarheredoc(char *input, char **env)
+int	processheredoc(char *input, char **env)
 {
 	char	*heredocstart;
 
@@ -8,7 +8,7 @@ int	procesarheredoc(char *input, char **env)
 	heredocstart = ft_strstr(heredocstart, "<<");
 	while (heredocstart != NULL)
 	{
-		if (manejarprocesoheredoc(heredocstart, input, env))
+		if (handlehredocprocess(heredocstart, input, env))
 			return (1);
 		heredocstart += 2;
 		heredocstart = ft_strstr(heredocstart, "<<");
@@ -16,7 +16,7 @@ int	procesarheredoc(char *input, char **env)
 	return (0);
 }
 
-void	eliminararchivos(void)
+void	deletefiles(void)
 {
 	char	nombrearchivo[256];
 	char	heredoccountstr[10];

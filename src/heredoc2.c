@@ -1,6 +1,6 @@
 #include <minishell.h>
 
-void	lectura_heredoc(char *linea, char *delimiterstr, char **env,
+void	read_heredoc(char *linea, char *delimiterstr, char **env,
 		int archivo)
 {
 	while (1)
@@ -37,12 +37,12 @@ void	abrir_archivo_y_proceso_hijo(char *linea, char *delimiterstr,
 		exit(1);
 	}
 	signal(SIGINT, 0);
-	lectura_heredoc(linea, delimiterstr, env, archivo);
+	read_heredoc(linea, delimiterstr, env, archivo);
 	close(archivo);
 	exit(0);
 }
 
-void	extraer_delimiter(char *delimiter, char *delimiterstr,
+void	extract_delimiter(char *delimiter, char *delimiterstr,
 		size_t *lendelimiter)
 {
 	char	*delimiterend;
@@ -56,14 +56,14 @@ void	extraer_delimiter(char *delimiter, char *delimiterstr,
 	delimiterstr[*lendelimiter] = '\0';
 }
 
-void	avanza_delimiter(char **delimiter, char *heredocstart)
+void	move_delimiter(char **delimiter, char *heredocstart)
 {
 	*delimiter = heredocstart + 2;
 	while (**delimiter == ' ')
 		(*delimiter)++;
 }
 
-int	manejarprocesoheredoc(char *heredocstart, char *input, char **env)
+int	handlehredocprocess(char *heredocstart, char *input, char **env)
 {
 	char	*delimiter;
 	char	nombrearchivo[256];
@@ -71,9 +71,9 @@ int	manejarprocesoheredoc(char *heredocstart, char *input, char **env)
 	size_t	lendelimiter;
 	pid_t	pid;
 
-	avanza_delimiter(&delimiter, heredocstart);
-	extraer_delimiter(delimiter, delimiterstr, &lendelimiter);
-	construir_archivo_heredoc(nombrearchivo, 0);
+	move_delimiter(&delimiter, heredocstart);
+	extract_delimiter(delimiter, delimiterstr, &lendelimiter);
+	built_heredoc_file(nombrearchivo, 0);
 	pid = fork();
 	if (pid == -1)
 		return (perror("Error al crear el proceso hijo"), 1);
@@ -83,7 +83,7 @@ int	manejarprocesoheredoc(char *heredocstart, char *input, char **env)
 	}
 	else
 	{
-		if (hijo_done(pid) || construir_nuevo_archivo(heredocstart, input,
+		if (child_done(pid) || built_new_file(heredocstart, input,
 				delimiter + lendelimiter, nombrearchivo))
 			return (1);
 	}

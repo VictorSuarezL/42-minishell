@@ -2,7 +2,7 @@
 
 void	final_clean(char **exp, char **env)
 {
-	eliminararchivos();
+	deletefiles();
 	rl_clear_history();
 	free_double(exp);
 	free_double(env);
@@ -16,7 +16,7 @@ void	setup_executor(char *buf, char **env, char **export, int *exit_status)
 	if (save_fork() == 0)
 		runcmd(parse_cmd(buf), env, export);
 	*exit_status = wait_status();
-	eliminararchivos();
+	deletefiles();
 }
 
 void	setup_shell(char ***copy_exp, char ***copy_en, char **env)

@@ -1,9 +1,4 @@
-#include <errno.h>
 #include <minishell.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 void	free_all(char **str)
 {
