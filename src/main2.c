@@ -4,12 +4,12 @@ void	process(char *buf)
 {
 	processredirs(buf);
 	expand_wildcards(buf);
-	pop_slash(buf);
+	// pop_slash(buf);
 }
 
 void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 {
-	quote_manager(buf, 0, 0);
+	// quote_manager(buf, 0, 0);
 	escape_special_chars(buf);
 	if (processheredoc(buf, *copy_en) == 1)
 	{

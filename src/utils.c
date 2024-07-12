@@ -70,18 +70,13 @@ int	save_fork(void)
 void	remove_quotes(t_execcmd *ecmd)
 {
 	int		i;
-	size_t	len;
-
+	// size_t	len;
+	char *str;
 	i = -1;
 	while (ecmd->argv[++i])
 	{
-		len = ft_strlen(ecmd->argv[i]);
-		if (len > 1 && ((ecmd->argv[i][0] == '"' && ecmd->argv[i][len
-				- 1] == '"') || (ecmd->argv[i][0] == '\''
-				&& ecmd->argv[i][len - 1] == '\'')))
-		{
-			ft_memmove(ecmd->argv[i], &ecmd->argv[i][1], len - 2);
-			ecmd->argv[i][len - 2] = '\0';
-		}
+		str = ecmd->argv[i];
+		quote_manager(str, 0, 0);
+		pop_slash(str);
 	}
 }

@@ -48,16 +48,25 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	ecmd = (t_execcmd *)cmd;
 	if (!ecmd->argv[0])
 		exit(1);
-	remove_quotes(ecmd);
+	// remove_quotes(ecmd);
 	if (is_builtin(ecmd->argv[0]))
 		builtin_exec(ecmd, env_copy, export_copy);
 	cmd_path = find_path(ecmd->argv[0], env_copy);
 	if (!cmd_path)
 	{
 		ft_putendl_fd("Command not found", STDERR_FILENO);
+		free(ecmd);
+		free(cmd_path);
+		final_clean(env_copy, export_copy);
 		exit(127);
 	}
-	execve(cmd_path, ecmd->argv, env_copy);
+	if (execve(cmd_path, ecmd->argv, env_copy) < 0)
+	{
+		free(cmd_path);
+		free(ecmd);
+		final_clean(env_copy, export_copy);
+		ft_perror("execve failed");
+	}
 }
 
 void	runcmd(t_cmd *cmd, char **env_copy, char **export_copy)

@@ -5,7 +5,7 @@ void	escape_d_chars(char *str, char *aux, int *i, int *j)
 	aux[(*j)++] = str[(*i)++];
 	while (str[*i] && str[*i] != '"')
 	{
-		if (ft_strchr("'<>|\\*", str[*i]))
+		if (ft_strchr(" \t\r\n\v'<>|\\", str[*i]))
 		{
 			aux[*j] = '\\';
 			(*j)++;
@@ -21,7 +21,7 @@ void	escape_s_chars(char *str, char *aux, int *i, int *j)
 	aux[(*j)++] = str[(*i)++];
 	while (str[*i] && str[*i] != '\'')
 	{
-		if (ft_strchr("$\"<>|\\*", str[*i]))
+		if (ft_strchr(" \t\r\n\v$\"<>|\\", str[*i]))
 		{
 			aux[*j] = '\\';
 			(*j)++;
@@ -40,7 +40,7 @@ void	escape_special_chars(char *str)
 
 	i = 0;
 	j = 0;
-	aux = malloc(ft_strlen(str) * 2 + 1);
+	aux = malloc(strlen(str) * 2 + 1);
 	if (!aux)
 		ft_perror("Error in malloc");
 	while (str[i])
