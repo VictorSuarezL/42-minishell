@@ -47,6 +47,7 @@ int	handle_redirection(char **aux)
 	return (ret);
 }
 
+
 int	handle_quote(char **aux, char *end)
 {
 	char	quote;

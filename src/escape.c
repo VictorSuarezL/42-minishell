@@ -76,6 +76,7 @@ void	pop_slash(char *str)
 		else
 			aux[j++] = str[i++];
 	}
+	aux[j] = '\0';
 	strcpy(str, aux);
 	free(aux);
 }

@@ -76,6 +76,8 @@ void	remove_quotes(t_execcmd *ecmd)
 	while (ecmd->argv[++i])
 	{
 		str = ecmd->argv[i];
+		// str = malloc(ft_strlen(ecmd->argv[i]) + 1);
+		// strcpy(str, ecmd->argv[i]);
 		// printf("str in rq: %s\n", str);
 		quote_manager(str, 0, 0);
 		pop_slash(str);
@@ -87,6 +89,8 @@ void	remove_quotes(t_execcmd *ecmd)
 		// 	ft_memmove(ecmd->argv[i], &ecmd->argv[i][1], len - 2);
 		// 	ecmd->argv[i][len - 2] = '\0';
 		// }
+		// strcpy(ecmd->argv[i], str);
+		// free(str);
 
 	}
 }

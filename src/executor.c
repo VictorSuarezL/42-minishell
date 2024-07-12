@@ -59,19 +59,19 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy)
 	// 	ft_perror("error: execve");
 	// }
 	remove_quotes(ecmd);
-	cmd_path = find_path(ecmd->argv[0], env_copy);
-	if (!cmd_path)
-	{
-		ft_putendl_fd("Command not found", STDERR_FILENO);
-		exit(127);
-	}
-	// TODO: remove quotes from ecmd->argv AND pop_slash from each argument if inside quotes
-	// for (size_t i = 0; ecmd->argv[i]; i++)
+	// cmd_path = find_path(ecmd->argv[0], env_copy);
+	// if (!cmd_path)
 	// {
-	// 	printf("argv[%zu] = %s\n", i, ecmd->argv[i]);
+	// 	ft_putendl_fd("Command not found", STDERR_FILENO);
+	// 	exit(127);
 	// }
+	// TODO: remove quotes from ecmd->argv AND pop_slash from each argument if inside quotes
+	for (size_t i = 0; ecmd->argv[i]; i++)
+	{
+		printf("argv[%zu] = %s\n", i, ecmd->argv[i]);
+	}
 	
-	execve(cmd_path, ecmd->argv, env_copy);
+	// execve(cmd_path, ecmd->argv, env_copy);
 }
 
 void	runcmd(t_cmd *cmd, char **env_copy)

@@ -152,7 +152,7 @@ int	main(int argc, char *argv[], char **env)
 	// while (i < 2)
 	for (int i = 8; i <= 8; i++)
 	{
-		char line[100];
+		char *line = malloc(100);
 		strcpy(line, input[i]);
 		if (!validator(line))
 		{
@@ -170,6 +170,7 @@ int	main(int argc, char *argv[], char **env)
 		{
 		// sleep(1);
 		runcmd(parse_cmd(line), env);
+		free(line);
 		exit(0); // Exit the child process after executing the command
 		}
 		// runcmd(parse_cmd(line), env);
