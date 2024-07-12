@@ -78,6 +78,6 @@ void	process_input(char *input, char ***copy_en, char ***copy_export,
 		return ;
 	}
 	ft_strcpy(buf, trimmed);
-	process_commands(buf, copy_en, copy_export, exit_status);
 	free(trimmed);
+	process_commands(buf, copy_en, copy_export, exit_status);
 }
