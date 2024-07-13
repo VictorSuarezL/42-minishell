@@ -24,9 +24,6 @@ void	handle_special_chars(char *buf, char ***copy_en, int *exit_status)
 void	handle_execution(char *buf, char ***copy_en, char ***copy_export,
 		int *exit_status)
 {
-	int	exit_code;
-
-	exit_stat(buf, &exit_code, copy_en, copy_export);
 	*exit_status = execute_cd(buf, *copy_en, *copy_export);
 	if (*exit_status == 0 || *exit_status == 1)
 		return ;
