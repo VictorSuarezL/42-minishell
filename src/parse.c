@@ -92,6 +92,7 @@ t_cmd	*parse_pipe(char **p_str, char *end_str)
 	if (peek(p_str, end_str, "|"))
 	{
 		get_token(p_str, end_str, NULL, NULL);
+		// Si hay más pipes crea solo con un comando ¿a la izquierda?
 		cmd = pipe_cmd(cmd, parse_pipe(p_str, end_str));
 	}
 	return (cmd);

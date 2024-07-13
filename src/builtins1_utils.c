@@ -63,6 +63,7 @@ void	builtin_exec(t_execcmd *ecmd, char **env_copy, char **export_copy)
 
 	input = join_strings_with_spaces(ecmd->argv);
 	exit_status = execute_builtin(input, &export_copy, &env_copy);
+	free(ecmd);
 	free(input);
 	exit(exit_status);
 }

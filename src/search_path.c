@@ -42,7 +42,7 @@ char	*find_path(char *command, char **export_env)
 	while (paths[++i])
 	{
 		tmp = ft_strjoin(paths[i], "/");
-		tmp2 = ft_strjoin(ft_strjoin(paths[i], "/"), command);
+		tmp2 = ft_strjoin(tmp, command);
 		free(tmp);
 		if (access(tmp2, F_OK) != -1 && access(tmp2, X_OK) != -1)
 			return (free_all(paths), tmp2);
