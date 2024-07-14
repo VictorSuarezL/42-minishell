@@ -9,7 +9,7 @@ LIBFT_SRC = ./lib/libft/
 # Compiler
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
-# CFLAGS				=	-Wall -Werror -Wextra 
+CFLAGS				=	-Wall -Werror -Wextra 
 # CC					=	gcc -g $(CFLAGS) $(INCLUDE)
 CC					=	clang -O0 -g -MMD $(CFLAGS) $(INCLUDE) 
 # Colours

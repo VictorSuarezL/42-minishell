@@ -18,12 +18,22 @@ char	*get_file_update(char *pos, char *entrada_copy,
 		free(entrada_copy);
 		exit(EXIT_FAILURE);
 	}
-	if (create_open_file(archivo, modo_redireccion) == -1)
+	if(save_fork() == 0)
 	{
-		free(archivo);
-		free(entrada_copy);
-		exit(EXIT_FAILURE);
+		if (create_open_file(archivo, modo_redireccion) == -1)
+		{
+			free(archivo);
+			free(entrada_copy);
+			exit(EXIT_FAILURE);
+		}
 	}
+	wait_status();
+	// if (create_open_file(archivo, modo_redireccion) == -1)
+	// {
+	// 	free(archivo);
+	// 	free(entrada_copy);
+	// 	exit(EXIT_FAILURE);
+	// }
 	free(*ultima_redireccion);
 	*ultima_redireccion = archivo;
 	return (pos);

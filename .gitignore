@@ -1,4 +1,5 @@
 # Prerequisites
+vgcore.*
 *.d
 .DS_Store
 minishell

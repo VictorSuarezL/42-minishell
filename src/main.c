@@ -16,12 +16,12 @@ int	main(int args, char **argv, char **env)
 	// char	buf[4096] = "ls -al | wc -l";
 	// char	buf[4096] = "echo hola |<mundo";
 	// char	buf[4096] = "echo < > mundo";
+	// char	buf[4096] = "echo hola > a.txt";
 
 	exit_status = 0;
 	(void)args;
 	argv++;
 	setup_shell(&copy_export, &copy_en, env);
-	// setup_shell(&copy_export, &copy_en, env);
 	while (1)
 	{
 		g_signal = 1;
@@ -31,11 +31,12 @@ int	main(int args, char **argv, char **env)
 			ft_printf("exit\n");
 			break ;
 		}
+		// process_input(input, env, env, &exit_status);
 		process_input(input, &copy_en, &copy_export, &exit_status);
+		// if (save_fork() == 0)
+		// 	runcmd(parse_cmd(input), env, env);
+		// exit_status = wait_status();
 	}
-		// deletefiles();
-		// process_input(input, &copy_en, &copy_export, &exit_status);
-	// }
 	// if (save_fork() == 0)
 	// 	runcmd(parse_cmd(buf), env, env);
 	// exit_status = wait_status();

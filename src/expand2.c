@@ -17,6 +17,7 @@ void	process_variable_expand(const char **pos, char **envp, char *result,
 	value = get_env_value(varname, envp);
 	if (value)
 		ft_strncat(result, value, new_size - ft_strlen(result));
+	free(value);
 }
 
 void	handle_single_quote(const char **pos, int *in_single_quotes,

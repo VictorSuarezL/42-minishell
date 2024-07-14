@@ -15,6 +15,7 @@ void	process_variable_size(const char **str, char **envp, size_t *size)
 	value = get_env_value(varname, envp);
 	if (value)
 		*size += ft_strlen(value);
+	free(value);
 }
 
 void	process_single_character(const char **str, size_t *size)
