@@ -65,8 +65,8 @@ void	builtin_exec(t_execcmd *ecmd, char **env_copy, char **export_copy)
 	exit_status = execute_builtin(input, &export_copy, &env_copy);
 	free(ecmd);
 	free(input);
+	//Añadido para elimitar leaks still recheable
 	free_double(export_copy);
 	free_double(env_copy);
-	// final_clean(export_copy, env_copy);
 	exit(exit_status);
 }

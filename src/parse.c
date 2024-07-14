@@ -39,7 +39,13 @@ t_cmd	*parse_redirs(t_cmd *cmd, char **ps, char *es)
 	{
 		tok = get_token(ps, es, 0, 0);
 		if (get_token(ps, es, &q, &eq) != 'a')
+		{
+			// Añadido para liberar memoria
+			t_redircmd	*rcmd = (t_redircmd *)cmd;
+			// free(rcmd->cmd);
+			free(rcmd);
 			ft_perror("Error: missing file for redirection");
+		}
 		if (tok == '<')
 		{
 			cmd = redir_in_cmd(cmd, q, eq, O_RDONLY);
@@ -73,7 +79,10 @@ t_cmd	*parse_exec(char **p_str, char *e_str, int argc)
 		if (!tok)
 			break ;
 		if (tok != 'a')
+		{
 			ft_perror("syntax!\n");
+			free(cmd);
+		}
 		struct_execcmd->argv[argc] = q;
 		struct_execcmd->eargv[argc] = end_q;
 		argc++;

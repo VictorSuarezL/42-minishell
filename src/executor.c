@@ -28,15 +28,8 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 		dup(p[1]);
 		close(p[0]);
 		close(p[1]);
-		// free(pcmd->right);
 		// t_execcmd *right = (t_execcmd *)pcmd->right;
-		// free_all(right->argv);
-		// free(right);
 		// t_cmd *left = (t_cmd *)pcmd->left;
-		// free(pcmd);
-		// // // for (int i = 0; pcmd->left; i++)
-		// // // 	printf("pcmd->left->argv[%d]: %s\n", i, pcmd->left->argv[i]);
-		// // // printf("pcmd->left->type: %d\n", pcmd->left->type);
 		// free(right);
 		// runcmd((t_cmd *)left, env_copy, export_copy);
 		runcmd(pcmd->left, env_copy, export_copy);
@@ -48,15 +41,9 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 		dup(p[0]);
 		close(p[0]);
 		close(p[1]);
-		// free(pcmd->left);
+
 		// t_execcmd *left = (t_execcmd *)pcmd->left;
-		// free_all(left->argv);
-		// free(left);
 		// t_cmd *right = (t_cmd *)pcmd->right;
-		// free(pcmd);
-		// // // for (int i = 0; pcmd->right; i++)
-		// // // 	printf("pcmd->right->argv[%d]: %s\n", i, pcmd->right->argv[i]);
-		// // // printf("pcmd->right->type: %d\n", pcmd->right->type);
 		// free(left);
 		// runcmd((t_cmd *)right, env_copy, export_copy);
 		runcmd(pcmd->right, env_copy, export_copy);
@@ -67,12 +54,12 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	wait_pipe();
 	// t_execcmd *left = (t_execcmd *)pcmd->left;
 	// t_execcmd *right = (t_execcmd *)pcmd->right;
-	// // for(int i = 0; left->argv[i]; i++)
-	// // 	printf("left->argv[%d]: %s\n", i, left->argv[i]);
-	// // free_all(left->argv);
+	// for(int i = 0; left->argv[i]; i++)
+	// 	printf("left->argv[%d]: %s\n", i, left->argv[i]);
+	// free_all(left->argv);
 	// free(left);
 	// free(right);
-	// // free(pcmd);
+	// free(pcmd);
 	// // free_all(pcmd->left);
 	// // free_all(pcmd->right);
 	// free(pcmd);
@@ -89,6 +76,7 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	remove_quotes(ecmd);
 	if (is_builtin(ecmd->argv[0]))
 		builtin_exec(ecmd, env_copy, export_copy);
+	// free_all(export_copy);
 	cmd_path = find_path(ecmd->argv[0], env_copy);
 	if (!cmd_path)
 	{
