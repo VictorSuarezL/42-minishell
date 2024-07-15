@@ -2,8 +2,11 @@
 
 char	*skip_token(char *str, char *end)
 {
-	int escaped = 0;
-	while (str < end && (!ft_strchr(" \t\r\n\v", *str) || escaped == 1) && (!ft_strchr("<>|", *str) || escaped == 1))
+	int	escaped;
+
+	escaped = 0;
+	while (str < end && (!ft_strchr(" \t\r\n\v", *str) || escaped == 1)
+		&& (!ft_strchr("<>|", *str) || escaped == 1))
 	{
 		if (escaped == 1)
 		{
@@ -74,8 +77,6 @@ int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 		ret = get_special_token(&aux);
 	else if (*aux == '>' && *(aux - 1) != '\\')
 		ret = handle_redirection(&aux);
-	// else if (*aux == '"')
-	// 	ret = handle_quote(&aux, end_str);
 	else
 	{
 		ret = 'a';

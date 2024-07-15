@@ -10,8 +10,8 @@ LIBFT_SRC = ./lib/libft/
 RM					=	rm -f
 INCLUDE 			= 	-I ./includes -I $(LIBFT_SRC)
 CFLAGS				=	-Wall -Werror -Wextra 
-# CC					=	gcc -g $(CFLAGS) $(INCLUDE)
 CC					=	clang -O0 -g -MMD $(CFLAGS) $(INCLUDE) 
+
 # Colours
 RED					=	\033[0;31m
 GREEN				=	\033[0;32m
@@ -22,13 +22,6 @@ CYAN				=	\033[0;36m
 WHITE				=	\033[0;37m
 RESET				=	\033[0m
 
-# SRC_FILES 	= $(SRC_DIR)/have_heredoc.c \
-# 				$(SRC_DIR)/split_m.c \
-# 				$(SRC_DIR)/main.c \
-# 				$(SRC_DIR)/validator.c \
-
-# SRC_FILES = $(SRC_DIR)/sh.c
-# SRC_FILES = $(SRC_DIR)/search_path.c
 SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/parse.c \
 			$(SRC_DIR)/tokenize.c \

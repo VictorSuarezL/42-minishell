@@ -23,17 +23,6 @@ void	ft_perror(char *msg)
 	}
 }
 
-void	skip_initial_quotes(char *str, int *i, int *j)
-{
-	if (ft_strchr("\"'", str[*i]))
-	{
-		(*i)++;
-		while (str[*i] && !ft_strchr("\"'", str[*i]))
-			str[(*j)++] = str[(*i)++];
-		(*i)++;
-	}
-}
-
 void	quote_manager(char *str, int i, int j)
 {
 	char	quote;

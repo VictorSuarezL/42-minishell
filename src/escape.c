@@ -64,9 +64,6 @@ void	pop_slash(char *str)
 
 	i = 0;
 	j = 0;
-	// aux = malloc(ft_strlen(str));
-	// if (!aux)
-	// 	ft_perror("Error in malloc");
 	while (str[i])
 	{
 		if (str[i] == '\\')
@@ -75,8 +72,6 @@ void	pop_slash(char *str)
 			str[j++] = str[i++];
 	}
 	str[j] = '\0';
-	// ft_strcpy(str, aux);
-	// free(aux);
 }
 
 void	replace_qmark(char *line, int exit_status)

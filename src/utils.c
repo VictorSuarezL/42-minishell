@@ -55,7 +55,6 @@ int	peek(char **ps, char *es, char *toks)
 		return (0);
 }
 
-// Utils
 int	save_fork(void)
 {
 	int	pid;
@@ -66,12 +65,11 @@ int	save_fork(void)
 	return (pid);
 }
 
-// Utils
 void	remove_quotes(t_execcmd *ecmd)
 {
 	int		i;
-	// size_t	len;
-	char *str;
+	char	*str;
+
 	i = -1;
 	while (ecmd->argv[++i])
 	{

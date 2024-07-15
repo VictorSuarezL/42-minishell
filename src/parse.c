@@ -31,42 +31,34 @@ t_cmd	*nulterminate(t_cmd *cmd)
 
 t_cmd	*parse_redirs(t_cmd *cmd, char **ps, char *es)
 {
-	int		tok;
-	char	*q;
-	char	*eq;
+	int			tok;
+	char		*q;
+	char		*eq;
+	t_redircmd	*rcmd;
 
 	while (peek(ps, es, "<>"))
 	{
 		tok = get_token(ps, es, 0, 0);
 		if (get_token(ps, es, &q, &eq) != 'a')
 		{
-			// Añadido para liberar memoria
-			t_redircmd	*rcmd = (t_redircmd *)cmd;
-			// free(rcmd->cmd);
+			rcmd = (t_redircmd *)cmd;
 			free(rcmd);
 			ft_perror("Error: missing file for redirection");
 		}
 		if (tok == '<')
-		{
 			cmd = redir_in_cmd(cmd, q, eq, O_RDONLY);
-		}
 		else if (tok == '>')
-		{
 			cmd = redir_out_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_TRUNC);
-		}
 		else if (tok == '+')
-		{
 			cmd = redir_out_cmd(cmd, q, eq, O_WRONLY | O_CREAT | O_APPEND);
-		}
 	}
 	return (cmd);
 }
 
-t_cmd	*parse_exec(char **p_str, char *e_str, int argc)
+t_cmd	*parse_exec(char **p_str, char *e_str, int argc, int tok)
 {
 	char		*q;
 	char		*end_q;
-	int			tok;
 	t_execcmd	*struct_execcmd;
 	t_cmd		*cmd;
 
@@ -84,8 +76,7 @@ t_cmd	*parse_exec(char **p_str, char *e_str, int argc)
 			free(cmd);
 		}
 		struct_execcmd->argv[argc] = q;
-		struct_execcmd->eargv[argc] = end_q;
-		argc++;
+		struct_execcmd->eargv[argc++] = end_q;
 		cmd = parse_redirs(cmd, p_str, e_str);
 	}
 	struct_execcmd->argv[argc] = NULL;
@@ -97,11 +88,10 @@ t_cmd	*parse_pipe(char **p_str, char *end_str)
 {
 	t_cmd	*cmd;
 
-	cmd = parse_exec(p_str, end_str, 0);
+	cmd = parse_exec(p_str, end_str, 0, 0);
 	if (peek(p_str, end_str, "|"))
 	{
 		get_token(p_str, end_str, NULL, NULL);
-		// Si hay más pipes crea solo con un comando ¿a la izquierda?
 		cmd = pipe_cmd(cmd, parse_pipe(p_str, end_str));
 	}
 	return (cmd);
