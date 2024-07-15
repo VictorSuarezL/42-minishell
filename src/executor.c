@@ -41,7 +41,6 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 		dup(p[0]);
 		close(p[0]);
 		close(p[1]);
-
 		// t_execcmd *left = (t_execcmd *)pcmd->left;
 		// t_cmd *right = (t_cmd *)pcmd->right;
 		// free(left);
@@ -51,6 +50,7 @@ void	run_pipe_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	}
 	close(p[0]);
 	close(p[1]);
+	final_clean(export_copy, env_copy);
 	wait_pipe();
 	// t_execcmd *left = (t_execcmd *)pcmd->left;
 	// t_execcmd *right = (t_execcmd *)pcmd->right;

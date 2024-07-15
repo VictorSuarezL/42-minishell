@@ -17,17 +17,19 @@ int	is_digit_str(char *str)
 	}
 	return (1);
 }
-int handle_exit_no_args(int *should_exit)
+
+int	handle_exit_no_args(int *should_exit)
 {
-    ft_printf("exit\n");
-    *should_exit = 1;
-    return 0;
+	ft_printf("exit\n");
+	*should_exit = 1;
+	return (0);
 }
-int handle_exit_with_invalid_arg(char *arg1)
+
+int	handle_exit_with_invalid_arg(char *arg1)
 {
-    ft_printf("exit\n");
-    ft_printf("exit: %s: numeric argument required\n", arg1);
-    return 2;
+	ft_printf("exit\n");
+	ft_printf("exit: %s: numeric argument required\n", arg1);
+	return (2);
 }
 
 int	exit_builtin(char *input, int *should_exit)

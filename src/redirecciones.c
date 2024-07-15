@@ -1,7 +1,7 @@
 #include <minishell.h>
 
-char	*get_file_update(char *pos, char *entrada_copy,
-		char **ultima_redireccion, char modo_redireccion)
+char	*get_file_update(char *pos, char *entry_copy,
+		char **last_redir, char redir_mode)
 {
 	char	*token_start;
 	size_t	token_length;
@@ -15,71 +15,68 @@ char	*get_file_update(char *pos, char *entrada_copy,
 	if (!archivo)
 	{
 		ft_printf("malloc failed: Cannot allocate memory\n");
-		free(entrada_copy);
+		free(entry_copy);
 		exit(EXIT_FAILURE);
 	}
-	if(save_fork() == 0)
+	if (create_open_file(archivo, redir_mode) == -1)
 	{
-		if (create_open_file(archivo, modo_redireccion) == -1)
-		{
-			free(archivo);
-			free(entrada_copy);
-			exit(EXIT_FAILURE);
-		}
+		free(archivo);
+		free(entry_copy);
+		exit(EXIT_FAILURE);
 	}
-	wait_status();
-	// if (create_open_file(archivo, modo_redireccion) == -1)
+	
+	// if (create_open_file(archivo, redir_mode) == -1)
 	// {
 	// 	free(archivo);
-	// 	free(entrada_copy);
+	// 	free(entry_copy);
 	// 	exit(EXIT_FAILURE);
 	// }
-	free(*ultima_redireccion);
-	*ultima_redireccion = archivo;
+	free(*last_redir);
+	*last_redir = archivo;
 	return (pos);
 }
 
-char	*process_redir(char *pos, char *entrada_copy,
-		char **ultima_redireccion, char *modo_redireccion)
+char	*process_redir(char *pos, char *entry_copy,
+		char **last_redir, char *redir_mode)
 {
-	adjust_mode_pos(&pos, modo_redireccion);
-	return (get_file_update(pos, entrada_copy, ultima_redireccion,
-			*modo_redireccion));
+	adjust_mode_pos(&pos, redir_mode);
+	return (get_file_update(pos, entry_copy, last_redir,
+			*redir_mode));
 }
 
-void	process_all_redirs(char *entrada_copy,
-		char **ultima_redireccion, char *modo_redireccion)
+void	process_all_redirs(char *entry_copy,
+		char **last_redir, char *redir_mode)
 {
 	char	*pos;
 
-	pos = entrada_copy;
+	pos = entry_copy;
 	pos = ft_strchr(pos, '>');
 	while (pos != NULL && (*(pos - 1) != '\\'))
 	{
-		pos = process_redir(pos, entrada_copy, ultima_redireccion,
-				modo_redireccion);
+		pos = process_redir(pos, entry_copy, last_redir,
+				redir_mode);
 		pos = ft_strchr(pos, '>');
 	}
 }
 
 void	processredirs(char *entrada)
 {
-	char	*entrada_copy;
-	char	*ultima_redireccion;
-	char	modo_redireccion;
+	char	*entry_copy;
+	char	*last_redir;
+	char	redir_mode;
 
-	entrada_copy = ft_strdup(entrada);
-	if (!entrada_copy)
+	entry_copy = ft_strdup(entrada);
+	if (!entry_copy)
 	{
 		ft_printf("malloc failed: Cannot allocate memory\n");
 		exit(EXIT_FAILURE);
 	}
-	ultima_redireccion = NULL;
-	modo_redireccion = 'w';
-	process_all_redirs(entrada_copy, &ultima_redireccion,
-		&modo_redireccion);
-	if (ultima_redireccion)
-		modify_entry(entrada, ultima_redireccion, modo_redireccion);
-	free(entrada_copy);
-	free(ultima_redireccion);
+	last_redir = NULL;
+	redir_mode = 'w';
+	process_all_redirs(entry_copy, &last_redir,
+		&redir_mode);
+	if (last_redir)
+		modify_entry(entrada, last_redir, redir_mode);
+	free(entry_copy);
+	free(last_redir);
 }
