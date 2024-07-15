@@ -31,19 +31,24 @@ int	execute_builtin(char *input, char ***export, char ***env)
 
 int	is_builtin_env(char *input)
 {
-	if (ft_strncmp(input, "export", 6) == 0 || ft_strncmp(input, "unset",
-			5) == 0 || ft_strncmp(input, "env", 3) == 0 || ft_strcmp(input,
-			"exit") == 0 || ft_strncmp(input, "exit ", 5) == 0)
+	char	**args;
+
+	args = ft_split(input, ' ');
+	if (ft_strcmp(args[0], "export") == 0 || ft_strcmp(args[0], "unset") == 0
+		|| ft_strcmp(args[0], "env") == 0 || ft_strcmp(args[0], "exit") == 0)
+	{
+		free_double(args);
 		return (1);
+	}
+	free_double(args);
 	return (0);
 }
 
 int	is_builtin(char *input)
 {
-	if (ft_strncmp(input, "echo", 4) == 0 || ft_strncmp(input, "exit", 4) == 0
-		|| ft_strncmp(input, "env", 3) == 0 || ft_strncmp(input, "export",
-			6) == 0 || ft_strncmp(input, "pwd", 3) == 0 || ft_strncmp(input,
-			"unset", 5) == 0)
+	if (ft_strcmp(input, "echo") == 0 || ft_strcmp(input, "exit") == 0
+		|| ft_strcmp(input, "env") == 0 || ft_strcmp(input, "export") == 0
+		|| ft_strcmp(input, "pwd") == 0 || ft_strcmp(input, "unset") == 0)
 		return (1);
 	return (0);
 }
