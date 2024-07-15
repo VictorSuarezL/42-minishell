@@ -14,7 +14,7 @@ CC					=	clang -O0 -g -MMD $(CFLAGS) $(INCLUDE)
 
 # Colours
 RED					=	\033[0;31m
-GREEN				=	\033[0;32m
+GREEN				=	\033[0;32
 YELLOW				=	\033[0;33m
 BLUE				=	\033[0;34m
 PURPLE				=	\033[0;35m
@@ -62,9 +62,6 @@ SRC_FILES = $(SRC_DIR)/search_path.c \
 			$(SRC_DIR)/expand.c \
 			$(SRC_DIR)/expand1.c \
 			$(SRC_DIR)/expand2.c \
-
-# SRC_FILES = $(SRC_DIR)/main.c
-# SRC_FILES = $(SRC_DIR)/hhp3.c
 
 OBJ_FILES = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 DEP = $(addsuffix .d, $(basename $(SRC_FILES)))

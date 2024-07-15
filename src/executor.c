@@ -51,7 +51,6 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	if (is_builtin(ecmd->argv[0]))
 		builtin_exec(ecmd, env_copy, export_copy);
 	cmd_path = find_path(ecmd->argv[0], env_copy);
-	printf("cmd_path: %s\n", cmd_path);
 	if (!cmd_path)
 	{
 		ft_putendl_fd("Command not found", STDERR_FILENO);

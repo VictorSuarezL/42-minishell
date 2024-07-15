@@ -24,13 +24,6 @@ char	*get_file_update(char *pos, char *entry_copy,
 		free(entry_copy);
 		exit(EXIT_FAILURE);
 	}
-	
-	// if (create_open_file(archivo, redir_mode) == -1)
-	// {
-	// 	free(archivo);
-	// 	free(entry_copy);
-	// 	exit(EXIT_FAILURE);
-	// }
 	free(*last_redir);
 	*last_redir = archivo;
 	return (pos);

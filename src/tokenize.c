@@ -61,7 +61,6 @@ int	get_special_token(char **aux)
 	return (ret);
 }
 
-// Función principal refactorizada
 int	get_token(char **p_str, char *end_str, char **q, char **end_q)
 {
 	char	*aux;
