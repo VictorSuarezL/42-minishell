@@ -47,6 +47,10 @@ int	is_metacharacter_end(char *str)
 {
 	int	len;
 
+	if (!str || str[0] == '\0')
+	{
+		return (1);
+	}
 	len = 0;
 	len = ft_strlen(str);
 	if (str[len - 2] != '\\' && ft_strchr("<>|;", str[len - 1]))
@@ -59,15 +63,11 @@ int	is_metacharacter_end(char *str)
 	}
 }
 
-/**
- * Flag the number of single and double quotes in a given string.
- *
- * @param str The string to count quotes in.
- * @return The number of quotes found in the string.
- */
 int	validator(char *str)
 {
-	if (quote_counter(str))
+	if (!str[0] || !str)
+		return (1);
+	else if (quote_counter(str))
 	{
 		return (0);
 	}

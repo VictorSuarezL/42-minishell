@@ -34,7 +34,7 @@ int	is_builtin_env(char *input)
 	char	**args;
 
 	args = ft_split(input, ' ');
-	if(!args[0])
+	if (!args[0])
 	{
 		free_double(args);
 		return (0);
