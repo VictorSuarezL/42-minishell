@@ -64,6 +64,11 @@ typedef struct s_redircmd
 	int						fd;
 }							t_redircmd;
 
+void						final_expand(char *str, char *result);
+char						*expand_start(size_t *new_size, char *str,
+								char **envp, char *result);
+void						setup_expand(const char **pos, char *str,
+								char *result, int *in_single_quotes);
 int							save_fork(void);
 void						runcmd(t_cmd *cmd, char **env_copy,
 								char **export_copy);
