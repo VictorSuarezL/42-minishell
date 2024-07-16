@@ -61,7 +61,6 @@ void	run_exec_cmd(t_cmd *cmd, char **env_copy, char **export_copy)
 	}
 	if (execve(cmd_path, ecmd->argv, env_copy) < 0)
 	{
-		free(cmd_path);
 		free(ecmd);
 		final_clean(env_copy, export_copy);
 		ft_perror("execve failed");

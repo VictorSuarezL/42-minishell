@@ -42,3 +42,20 @@ void	quote_manager(char *str, int i, int j)
 	}
 	str[j] = '\0';
 }
+
+void	pop_slash(char *str)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '\\')
+			i++;
+		else
+			str[j++] = str[i++];
+	}
+	str[j] = '\0';
+}

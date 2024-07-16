@@ -67,6 +67,7 @@ int	execute_cd(char *buf, char **env, char **export)
 		&& (!ft_strstr(buf, "|") && (!ft_strstr(buf, "<") && (!ft_strstr(buf,
 						">")))))
 	{
+		quote_manager(buf, 0, 0);
 		if (buf[2] == ' ')
 			path = buf + 3;
 		else

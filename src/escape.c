@@ -57,21 +57,14 @@ void	escape_special_chars(char *str)
 	free(aux);
 }
 
-void	pop_slash(char *str)
+void	safe_pos(char *pos, char *exit_status_str, char *buffer, char *line)
 {
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (str[i])
+	if (!pos || (line[0] == '$' && line[1] == '?') || *(pos - 1) == '\\')
 	{
-		if (str[i] == '\\')
-			i++;
-		else
-			str[j++] = str[i++];
+		free(buffer);
+		free(exit_status_str);
+		return ;
 	}
-	str[j] = '\0';
 }
 
 void	replace_qmark(char *line, int exit_status)
@@ -89,16 +82,15 @@ void	replace_qmark(char *line, int exit_status)
 	if (!buffer)
 		ft_perror("Error in malloc");
 	pos = ft_strnstr(line, "$?", len);
-	if (!pos || (line[0] == '$' && line[1] == '?') || *(pos - 1) == '\\')
+	while (pos)
 	{
-		free(buffer);
-		free(exit_status_str);
-		return ;
+		safe_pos(pos, exit_status_str, buffer, line);
+		ft_strlcpy(buffer, line, pos - line + 1);
+		ft_strlcat(buffer, exit_status_str, buffer_size);
+		ft_strlcat(buffer, pos + 2, buffer_size);
+		ft_strcpy(line, buffer);
+		pos = ft_strnstr(line, "$?", len);
 	}
-	ft_strlcpy(buffer, line, pos - line + 1);
-	ft_strlcat(buffer, exit_status_str, buffer_size);
-	ft_strlcat(buffer, pos + 2, buffer_size);
-	ft_strcpy(line, buffer);
 	free(buffer);
 	free(exit_status_str);
 }
